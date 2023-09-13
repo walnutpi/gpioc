@@ -33,7 +33,7 @@ uint32_t MAP_MASK = 0Xfff;
 #define PAGE_SIZE (4 * 1024)
 #define BLOCK_SIZE (4 * 1024)
 
-static int fd_mem;
+static int fd_mem = 0;
 volatile uint32_t *mmap_gpio;
 volatile uint32_t *mmap_pwm;
 
@@ -183,6 +183,8 @@ int gpio2pwm(int gpio_num)
 
 void H616_pwmWrite(int gpio_num, int value, int freq)
 {
+    sunxi_pwm_init();
+
     // printf("H616_pwmWrite\r\n");
     // printf("gpio_num = %d\r\n", gpio_num);
     // printf("value = %d\r\n", value);
@@ -246,6 +248,7 @@ void H616_pwmWrite(int gpio_num, int value, int freq)
 
 void H616_pwmwrite_time(int gpio_num, int high_time, int period_time)
 {
+    sunxi_pwm_init();
 
     int pwm_num = gpio2pwm(gpio_num);
     if (pwm_num < 0)
@@ -307,24 +310,25 @@ void H616_pwmwrite_time(int gpio_num, int high_time, int period_time)
 
 void _open()
 {
-
-    fd_mem = open("/dev/mem", O_RDWR | O_SYNC | O_CLOEXEC);
-    if (fd_mem < 0)
+    if (fd_mem == 0)
     {
-        printf("Failed to open /dev/mem\r\n");
-        exit(-1);
+
+        fd_mem = open("/dev/mem", O_RDWR | O_SYNC | O_CLOEXEC);
+
+        if (fd_mem < 0)
+        {
+            printf("Failed to open /dev/mem\r\n");
+            exit(-1);
+        }
+        if (fd_mem > 1)
+        {
+            mmap_gpio = (uint32_t *)mmap(0, BLOCK_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd_mem, MEN_GPIOA_BASE);
+            mmap_pwm = (uint32_t *)mmap(0, BLOCK_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd_mem, MEN_PWM_BASE);
+        }
     }
 
-    mmap_gpio = (uint32_t *)mmap(0, BLOCK_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd_mem, MEN_GPIOA_BASE);
-    mmap_pwm = (uint32_t *)mmap(0, BLOCK_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd_mem, MEN_PWM_BASE);
+}
 
-    sunxi_pwm_init();
-}
-void _close()
-{
-    munmap(mmap_gpio, BLOCK_SIZE);
-    close(fd_mem);
-}
 const char *int2bin(uint32_t param)
 {
     int bits = sizeof(uint32_t) * CHAR_BIT;
@@ -347,7 +351,6 @@ void write_mem_gpio(unsigned int val, unsigned int addr)
     unsigned int mmap_seek = ((addr - mmap_base) >> 2);
 
     *(mmap_gpio + mmap_seek) = val;
-    _close();
 }
 
 unsigned int read_mem_gpio(unsigned int addr)
@@ -358,7 +361,6 @@ unsigned int read_mem_gpio(unsigned int addr)
     uint32_t mmap_seek = ((addr - mmap_base) >> 2);
     val = *(mmap_gpio + mmap_seek);
     return val;
-    _close();
 }
 
 void H616_gpio_write(int gpio_num, int value)

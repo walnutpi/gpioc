@@ -23,8 +23,6 @@
 #define NS_1s 1000000000
 #define FREQ_CLOCK 24000000
 
-extern void H616_init();
-
 extern void H616_pin_set_mode (int gpio_num, int mode);
 extern void H616_pin_set_alt (int gpio_num, int mode);
 extern int H616_pin_get_alt (int gpio_num);
