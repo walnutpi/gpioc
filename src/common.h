@@ -16,4 +16,6 @@ static char *chips_compatible[]={
     "sun50i-h616"
 };
 
+int detect();
+
 #endif

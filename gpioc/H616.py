@@ -8,7 +8,6 @@ class Pwm(_PWM):
 
 class Pin(_PIN):
 
-    # self.setup(self.id, self.IN, pull_up_down=self.PUD_UP)
     def _setup(self, gpio_num, dir, pull_up_down=None ):
         if dir == _gpio.f_INPUT :
             _gpio.set_mode(gpio_num, _gpio.f_INPUT)

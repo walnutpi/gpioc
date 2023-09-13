@@ -1,5 +1,5 @@
-#ifndef _WIRING_ALLWINNER_H
-#define _WIRING_ALLWINNER_H
+#ifndef _H616_H
+#define _H616_H
 
 #define SUNXI_PUD_OFF   0
 #define SUNXI_PUD_UP    1
