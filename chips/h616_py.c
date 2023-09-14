@@ -1,7 +1,7 @@
 #include <Python.h>
 
 #include "h616.h"
-#include "../src/common.h"
+#include "../src/common_py.h"
 
 static PyObject *py_write(PyObject *self, PyObject *args)
 {

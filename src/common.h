@@ -11,10 +11,7 @@
 
 #define	CHIP_H616       1
 
-static char *chips_compatible[]={
-    "占位符",
-    "sun50i-h616"
-};
+
 
 int detect();
 

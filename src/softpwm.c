@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include <time.h>
 #include <signal.h>
+#include <unistd.h>
 
 #include "softpwm.h"
 #include "common.h"
@@ -74,7 +75,6 @@ void remove_pwm(unsigned int gpio)
 
 void calculate_times(struct pwm *p)
 {
-    long long usec;
 
     int full_cycle, cycle_high, cycle_low;
     // printf("freq=%d\r\n", p->freq);
