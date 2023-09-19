@@ -1,6 +1,6 @@
 #include "common.h"
 #include "common_py.h"
-
+#include "gpioc.h"
 
 void define_commons(PyObject *module)
 {

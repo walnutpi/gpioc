@@ -8,6 +8,7 @@
 
 #include "softpwm.h"
 #include "common.h"
+#include "gpioc.h"
 #include "../chips/h616.h"
 
 #define NS_1S 1000000000

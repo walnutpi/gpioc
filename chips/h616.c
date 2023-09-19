@@ -22,6 +22,7 @@
 
 #include "h616.h"
 #include "../src/common.h"
+#include "../src/gpioc.h"
 
 #define MEN_GPIOA_BASE 0x0300B000
 #define MEN_GPIOL_BASE 0x07022000
@@ -101,7 +102,7 @@ void reg_print()
     printf("PPR3=%x\r\n", read_mem_pwm(PPR3));
     printf("PPR4=%x\r\n", read_mem_pwm(PPR4));
 }
-void sunxi_pwm_init()
+void H616_pwm_init()
 {
     // 4和5共用时钟源，而5被用作phy的时钟，所以就不改了
     //  设置时钟源为apb100M，分频系数1
@@ -152,7 +153,7 @@ void pwm_set_div(int pwm_num, int div)
     value += 0x10;
     write_mem_pwm(value, reg);
 }
-void sunxi_pwm_set_period_cycle(int num, uint16_t period, uint16_t act)
+void H616_pwm_set_period_cycle(int num, uint16_t period, uint16_t act)
 {
     uint32_t tmp;
     tmp = period << 16;
@@ -183,7 +184,7 @@ int gpio2pwm(int gpio_num)
 
 void H616_pwmWrite(int gpio_num, int value, int freq)
 {
-    sunxi_pwm_init();
+    H616_pwm_init();
 
     // printf("H616_pwmWrite\r\n");
     // printf("gpio_num = %d\r\n", gpio_num);
@@ -241,14 +242,14 @@ void H616_pwmWrite(int gpio_num, int value, int freq)
 
     H616_pin_set_alt(gpio_num, 5);
     pwm_set_div(pwm_num, div);
-    sunxi_pwm_set_period_cycle(pwm_num, cycle_period, cycle_k1);
+    H616_pwm_set_period_cycle(pwm_num, cycle_period, cycle_k1);
     write_mem_pwm(0x20, PER);
     write_mem_pwm(0xff, PER);
 }
 
 void H616_pwmwrite_time(int gpio_num, int high_time, int period_time)
 {
-    sunxi_pwm_init();
+    H616_pwm_init();
 
     int pwm_num = gpio2pwm(gpio_num);
     if (pwm_num < 0)
@@ -303,7 +304,7 @@ void H616_pwmwrite_time(int gpio_num, int high_time, int period_time)
     // printf("cycle_k1=%d\r\n", cycle_k1);
     H616_pin_set_alt(gpio_num, 5);
     pwm_set_div(pwm_num, div);
-    sunxi_pwm_set_period_cycle(pwm_num, cycle_period, cycle_k1);
+    H616_pwm_set_period_cycle(pwm_num, cycle_period, cycle_k1);
     write_mem_pwm(0x20, PER);
     write_mem_pwm(0xff, PER);
 }
@@ -326,7 +327,6 @@ void _open()
             mmap_pwm = (uint32_t *)mmap(0, BLOCK_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd_mem, MEN_PWM_BASE);
         }
     }
-
 }
 
 const char *int2bin(uint32_t param)
@@ -494,18 +494,21 @@ void H616_gpio_set_PullUpDn(int gpio_num, int pud)
     unsigned int offset;
 
     unsigned int pullOffset = 0x1C;
+#define H616_PUD_OFF 0
+#define H616_PUD_UP 1
+#define H616_PUD_DOWN 2
     switch (pud)
     {
     case PUD_OFF:
-        bit_value = PUD_OFF;
+        bit_value = H616_PUD_OFF;
         break;
     case PUD_UP:
         H616_pin_set_mode(gpio_num, 0);
-        bit_value = SUNXI_PUD_UP;
+        bit_value = H616_PUD_UP;
         break;
     case PUD_DOWN:
         H616_pin_set_mode(gpio_num, 0);
-        bit_value = SUNXI_PUD_DOWN;
+        bit_value = H616_PUD_DOWN;
         break;
     default:
         printf("Unknow pull mode\n");

@@ -8,7 +8,7 @@ CFLAGS = -Wall -Wextra -fPIC
 LDFLAGS = -shared
 
 # 定义源文件目录
-SRCDIRS = chips src
+SRCDIRS = chips src gpioc
 
 # 找到所有的.c源文件，但跳过文件名中带有_py的文件
 SRCS = $(shell find $(SRCDIRS) -name "*.c" ! -name "*_py*")
@@ -20,6 +20,9 @@ OBJS = $(SRCS:.c=.o)
 STATIC_LIBNAME = libproject.a
 DYNAMIC_LIBNAME = libproject.so
 
+# 定义库文件的安装路径
+LIB_INSTALL_PATH = /lib
+
 all: $(STATIC_LIBNAME) $(DYNAMIC_LIBNAME)
 
 $(STATIC_LIBNAME): $(OBJS)
@@ -29,10 +32,10 @@ $(STATIC_LIBNAME): $(OBJS)
 $(DYNAMIC_LIBNAME): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+install: all
+	cp $(STATIC_LIBNAME) $(DYNAMIC_LIBNAME) $(LIB_INSTALL_PATH)
 
 clean:
 	rm -f $(OBJS) $(STATIC_LIBNAME) $(DYNAMIC_LIBNAME)
 
-.PHONY: all clean
+.PHONY: all install clean

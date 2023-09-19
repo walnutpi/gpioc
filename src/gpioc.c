@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "common.h"
-#include "softpwm.h"
+#include "../src/common.h"
+#include "../src/softpwm.h"
 #include "../chips/h616.h"
 
 void (*chip_pin_set_mode[])(int, int) = {
