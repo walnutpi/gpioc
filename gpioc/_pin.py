@@ -1,5 +1,7 @@
 
-class PIN_father:
+import gpioc._gpioc as _gpio
+
+class Pin:
     IN = 0
     OUT = 1
     LOW = 0
@@ -12,10 +14,25 @@ class PIN_father:
     _value = LOW
     _mode = IN
 
-    # 需要在子类中定义这3个函数
-    _setup = None
-    _output = None
-    _input = None
+    def _setup(self, gpio_num, dir, pull_up_down=None ):
+        if dir == _gpio.f_INPUT :
+            _gpio.set_mode(gpio_num, _gpio.f_INPUT)
+            if pull_up_down == self.PULL_UP:
+                _gpio.set_pullUpDn(gpio_num, _gpio.f_pullUp)
+            elif pull_up_down == self.PULL_DOWN:
+                _gpio.set_pullUpDn(gpio_num, _gpio.f_pullDown)
+            else:
+                _gpio.set_pullUpDn(gpio_num, _gpio.f_pull_OFF)
+        if dir == _gpio.f_OUTPUT :
+            _gpio.set_mode(gpio_num, _gpio.f_OUTPUT)
+                
+    # self.output(self.id, val)
+    def _output(self, gpio_num, val):
+        _gpio.write(gpio_num, val)
+
+    # return _gpio.input(self.id)
+    def _input(self, gpio_num):
+        return _gpio.read(gpio_num)
 
     def __init__(self, pin_name):
         if isinstance(pin_name, tuple):
