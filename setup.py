@@ -31,12 +31,12 @@ setup(
     packages=['gpioc'],
       
     ext_modules = [
-                   Extension('gpioc._h616', ['chips/h616.c', 'chips/h616_py.c', 'src/common_py.c', 'src/common.c']),
+                #    Extension('gpioc._h616', ['chips/h616.c', 'chips/h616_py.c']),
                    Extension('gpioc._softpwm', ['src/softpwm.c', 'src/softpwm_py.c',  'chips/h616.c']),
-                   Extension('gpioc._common', ['src/common.c', 'src/common_py.c']),
-                   Extension('gpioc._gpioc', ['src/gpioc_py.c', 'src/common_py.c', 'src/common.c'], libraries=['project']),
+                #    Extension('gpioc._common', ['src/common.c', 'src/common_py.c']),
+                   Extension('gpioc._gpioc', ['src/gpioc_py.c'], libraries=['gpioc']),
                    ],
-    # cmdclass={
-    #     'install': CustomInstall,
-    # }
+    cmdclass={
+        'install': CustomInstall,
+    }
 )

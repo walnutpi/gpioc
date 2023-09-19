@@ -1,7 +1,25 @@
 #include <Python.h>
 
 // #include "h616.h"
-#include "common_py.h"
+// #include "common_py.h"
+#include "gpioc.h"
+
+void define_commons(PyObject *module)
+{
+    PyModule_AddObject(module, "CHIP_H616", Py_BuildValue("i", CHIP_H616));
+
+    PyModule_AddObject(module, "f_INPUT", Py_BuildValue("i", INPUT));
+    PyModule_AddObject(module, "f_OUTPUT", Py_BuildValue("i", OUTPUT));
+
+    PyModule_AddObject(module, "f_pull_OFF", Py_BuildValue("i", PUD_OFF));
+    PyModule_AddObject(module, "f_pullDown", Py_BuildValue("i", PUD_DOWN));
+    PyModule_AddObject(module, "f_pullUp", Py_BuildValue("i", PUD_UP));
+}
+
+static PyObject *py_detect(PyObject *self, PyObject *args)
+{
+    return Py_BuildValue("i", detect());
+}
 
 static PyObject *py_write(PyObject *self, PyObject *args)
 {
@@ -37,7 +55,7 @@ static PyObject *py_set_PullUpDn(PyObject *self, PyObject *args)
 }
 static PyObject *py_set_mode(PyObject *self, PyObject *args)
 {
-   int ret;
+    int ret;
     int gpio_num, mode;
     ret = PyArg_ParseTuple(args, "ii", &gpio_num, &mode);
     gpio_set_Mode(gpio_num, mode);
@@ -45,7 +63,7 @@ static PyObject *py_set_mode(PyObject *self, PyObject *args)
 }
 static PyObject *py_set_alt(PyObject *self, PyObject *args)
 {
-   int ret;
+    int ret;
     int gpio_num, mode;
     ret = PyArg_ParseTuple(args, "ii", &gpio_num, &mode);
     gpio_set_Alt(gpio_num, mode);
@@ -63,6 +81,7 @@ static PyObject *py_get_alt(PyObject *self, PyObject *args)
 static const char moduledocstring[] = "GPIO functionality of allwinner h616";
 
 PyMethodDef gpioc_methods[] = {
+    {"detect", py_detect, METH_VARARGS, "detect now chip by device-tree"},
     {"write", py_write, METH_VARARGS, "write value to gpio"},
     {"read", py_read, METH_VARARGS, "read value from gpio"},
     {"set_pullUpDn", py_set_PullUpDn, METH_VARARGS, "set the gpio with pullup or pulldown"},
@@ -73,7 +92,7 @@ PyMethodDef gpioc_methods[] = {
 };
 static struct PyModuleDef gpiocmodule = {
     PyModuleDef_HEAD_INIT,
-    "gpioc._gpioc",      // name of module
+    "gpioc._gpioc",  // name of module
     moduledocstring, // module documentation, may be NULL
     -1,              // size of per-interpreter state of the module, or -1 if the module keeps state in global variables.
     gpioc_methods};
@@ -88,6 +107,6 @@ PyMODINIT_FUNC PyInit__gpioc(void)
         return NULL;
 
     define_commons(module);
-    
+
     return module;
 }

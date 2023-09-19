@@ -7,7 +7,6 @@
 #include <unistd.h>
 
 #include "softpwm.h"
-#include "common.h"
 #include "gpioc.h"
 #include "../chips/h616.h"
 

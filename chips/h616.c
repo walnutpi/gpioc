@@ -21,7 +21,6 @@
 #include <limits.h>
 
 #include "h616.h"
-#include "../src/common.h"
 #include "../src/gpioc.h"
 
 #define MEN_GPIOA_BASE 0x0300B000

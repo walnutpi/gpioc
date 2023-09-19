@@ -4,7 +4,7 @@ src = $(wildcard *.c)
 target = $(patsubst %.c, %, $(src) )
 
 %:%.c
-	$(cc)  $< -o $@     -lproject 
+	$(cc)  $< -o $@     -lgpioc
 
 all:$(target)
 

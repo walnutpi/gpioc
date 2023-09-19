@@ -1,7 +1,7 @@
 #include <Python.h>
 
 #include "h616.h"
-#include "../src/common_py.h"
+// #include "../src/common_py.h"
 
 static PyObject *py_write(PyObject *self, PyObject *args)
 {
@@ -68,8 +68,6 @@ PyMODINIT_FUNC PyInit__h616(void)
 
     if ((module = PyModule_Create(&gpiocmodule)) == NULL)
         return NULL;
-
-    define_commons(module);
     
     return module;
 }

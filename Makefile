@@ -17,8 +17,8 @@ SRCS = $(shell find $(SRCDIRS) -name "*.c" ! -name "*_py*")
 OBJS = $(SRCS:.c=.o)
 
 # 定义输出库文件名
-STATIC_LIBNAME = libproject.a
-DYNAMIC_LIBNAME = libproject.so
+STATIC_LIBNAME = libgpioc.a
+DYNAMIC_LIBNAME = libgpioc.so
 
 # 定义库文件的安装路径
 LIB_INSTALL_PATH = /lib

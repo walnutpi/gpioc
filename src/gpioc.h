@@ -10,6 +10,7 @@
 
 #define	CHIP_H616       1
 
+
 // 使用gpio编号
 extern int gpio_get_Alt(int gpio_num);
 extern void gpio_set_Alt(int gpio_num, int mode);
