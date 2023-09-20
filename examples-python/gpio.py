@@ -5,6 +5,8 @@ led = PC13
 key.init(key.IN,key.PULL_UP)
 led.init(led.OUT)
 
+PC12.init(PC12.IN,PC12.PULL_UP)
+PC13.init(PC13.OUT)
 
 while True:
     time.sleep(0.1)

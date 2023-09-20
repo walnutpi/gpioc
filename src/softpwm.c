@@ -6,9 +6,9 @@
 #include <signal.h>
 #include <unistd.h>
 
-#include "softpwm.h"
-#include "gpioc.h"
-#include "../chips/h616.h"
+#include "../include/softpwm.h"
+#include "../include/gpioc.h"
+#include "../include/h616.h"
 
 #define NS_1S 1000000000
 #define DUTY_CYCLE_FULL 65535

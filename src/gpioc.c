@@ -3,8 +3,8 @@
 #include <unistd.h>
 #include <string.h>
 
-#include "../src/softpwm.h"
-#include "../chips/h616.h"
+#include "../include/softpwm.h"
+#include "../include/h616.h"
 
 
 

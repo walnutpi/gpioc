@@ -20,8 +20,8 @@
 #include <sys/ioctl.h>
 #include <limits.h>
 
-#include "h616.h"
-#include "../src/gpioc.h"
+#include "../include/h616.h"
+#include "../include/gpioc.h"
 
 #define MEN_GPIOA_BASE 0x0300B000
 #define MEN_GPIOL_BASE 0x07022000

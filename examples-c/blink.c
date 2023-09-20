@@ -10,7 +10,6 @@ int main()
 
     while(1)
     {
-
         gpio_write(77, 0);
         sleep(1);
         gpio_write(77, 1);
