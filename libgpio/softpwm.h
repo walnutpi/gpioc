@@ -1,7 +1,6 @@
 #ifndef _SOFTPWM_H
 #define _SOFTPWM_H
 
-void switch_chip(int flag);
 
 void pwm_set_duty_cycle(unsigned int gpio, int dutycycle);
 void pwm_set_frequency(unsigned int gpio, int freq);

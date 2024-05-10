@@ -1,33 +1,4 @@
 from gpioc._pin import Pin
-# from gpioc._pwm import PWMOut_father as _PWM
-
-# import gpioc._libgpio as _common
-
-# class Pwm(_PWM):
-#     _chip = _common.CHIP_H616
-
-# class Pin(_PIN):
-
-    # def _setup(self, gpio_num, dir, pull_up_down=None ):
-    #     if dir == _gpio.f_INPUT :
-    #         _gpio.set_mode(gpio_num, _gpio.f_INPUT)
-    #         if pull_up_down == self.PULL_UP:
-    #             _gpio.set_pullUpDn(gpio_num, _gpio.f_pullUp)
-    #         elif pull_up_down == self.PULL_DOWN:
-    #             _gpio.set_pullUpDn(gpio_num, _gpio.f_pullDown)
-    #         else:
-    #             _gpio.set_pullUpDn(gpio_num, _gpio.f_pull_OFF)
-    #     if dir == _gpio.f_OUTPUT :
-    #         _gpio.set_mode(gpio_num, _gpio.f_OUTPUT)
-                
-    # # self.output(self.id, val)
-    # def _output(self, gpio_num, val):
-    #     _gpio.write(gpio_num, val)
-
-    # # return _gpio.input(self.id)
-    # def _input(self, gpio_num):
-    #     return _gpio.read(gpio_num)
-    
 
 PC0 = Pin(64)
 PC1 = Pin(65)

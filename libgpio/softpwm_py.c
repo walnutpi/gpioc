@@ -1,8 +1,5 @@
 #include <Python.h>
 
-// #include "h616_gpio.h"
-// #include "common.h"
-
 
 static PyObject *py_switch_chip(PyObject *self, PyObject *args)
 {

@@ -1,4 +1,3 @@
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
@@ -6,28 +5,11 @@
 #include <signal.h>
 #include <unistd.h>
 
-#include "../include/softpwm.h"
-#include "../include/gpioc.h"
-#include "../include/h616.h"
+#include "pinctrl.h"
 
 #define NS_1S 1000000000
-#define DUTY_CYCLE_FULL 65535
+#define DUTY_CYCLE_FULL 100
 
-// 不同芯片的寄存器不同，write函数也不一样
-void (*gpio_out)(int, int) = H616_gpio_write;
-void switch_chip(int flag)
-{
-    switch (flag)
-    {
-    case CHIP_H616:
-        gpio_out = H616_gpio_write;
-
-        break;
-
-    default:
-        break;
-    }
-}
 struct pwm
 {
     unsigned int gpio;
@@ -72,20 +54,14 @@ void remove_pwm(unsigned int gpio)
     }
 }
 
-
 void calculate_times(struct pwm *p)
 {
 
     int full_cycle, cycle_high, cycle_low;
-    // printf("freq=%d\r\n", p->freq);
-    // printf("dutycycle=%d\r\n", p->dutycycle);
 
     full_cycle = NS_1S / p->freq;
     cycle_high = full_cycle / DUTY_CYCLE_FULL * p->dutycycle;
     cycle_low = full_cycle - cycle_high;
-
-    // printf("cycle_high=%d\r\n", cycle_high);
-    // printf("cycle_low=%d\r\n", cycle_low);
     p->req_on.tv_sec = 0;
     p->req_on.tv_nsec = (long)cycle_high;
 
@@ -95,40 +71,30 @@ void calculate_times(struct pwm *p)
 void full_sleep(struct timespec *req)
 {
     struct timespec rem = {0};
-
     if (nanosleep(req, &rem) == -1)
     {
-        // printf("nanosleep(req, &rem) == -1");
         full_sleep(&rem);
     }
-        usleep(100);
-}   
+}
 
 void *pwm_thread(void *threadarg)
 {
     struct pwm *p = (struct pwm *)threadarg;
-    // printf("pwm_thread\r\n");
     while (p->running)
     {
         if (p->dutycycle > 0)
         {
-            // printf("-");
-            gpio_out(p->gpio, 1);
-            
-            // usleep(p->cycle_high);
+            gpio_write(p->gpio, 1);
             full_sleep(&p->req_on);
         }
 
         if (p->dutycycle < DUTY_CYCLE_FULL)
         {
-            // printf("+");
-            gpio_out(p->gpio, 0);
-            // usleep(p->cycle_low);
-
+            gpio_write(p->gpio, 0);
             full_sleep(&p->req_off);
         }
     }
-    gpio_out(p->gpio, 0);
+    gpio_write(p->gpio, 0);
     // clean up
     free(p);
     pthread_exit(NULL);
@@ -265,14 +231,11 @@ int pwm_exists(unsigned int gpio)
     return 0;
 }
 
-// int main()
-// {
-//     gpio_out = H616_gpio_write;
-//     pwm_set_duty_cycle(270, 1);
-//     pwm_set_frequency(270, 1000);
-//     pwm_start(270);
-//     while (1)
-//         ;
-//     //  gpio_out(270, 0);
-//     return 0;
-// }
+int main()
+{
+    pwm_set_duty_cycle(270, 50);
+    pwm_set_frequency(270, 2000);
+    pwm_start(270);
+    while (1);
+    return 0;
+}
