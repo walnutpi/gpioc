@@ -23,8 +23,6 @@ setup(
     packages=find_packages(),
 
     ext_modules = [
-                #    Extension('gpioc._softpwm', ['softpwm/softpwm.c', 'src/softpwm_py.c',  'chips/h616.c']),
-                #    Extension('gpioc._gpioc', ['src/gpioc_py.c', 'src/gpioc.c', 'chips/h616.c']),
                    Extension('gpioc._softpwm', sources=softpwm_files),
                    Extension('gpioc._pinctrl', sources=pinctrl_files),
                    ],
