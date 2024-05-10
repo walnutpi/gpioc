@@ -65,12 +65,12 @@ class Pin:
             if self._mode != self.IN:
                 raise RuntimeError("Cannot set pull resistor on output")
             if pull == self.PULL_UP:
-                # GPIO.setup(self.id, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+                # GPIO.setup(self.id, GPIO.IN, pull_up_down=GPIO.PULL_UP)
                 self._setup(self.gpio_num, self.IN, pull_up_down=self.PULL_UP)
                 
 
             elif pull == self.PULL_DOWN:
-                # GPIO.setup(self.id, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+                # GPIO.setup(self.id, GPIO.IN, pull_up_down=GPIO.PULL_DOWN)
                 self._setup(self.gpio_num, self.IN, pull_up_down=self.PULL_DOWN)
 
                 pass

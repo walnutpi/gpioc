@@ -247,21 +247,21 @@ void sunxi_gpio_set_PullUpDn(int gpio_num, int pud)
     unsigned int offset;
 
     unsigned int pullOffset = 0x1C;
-#define H616_PUD_OFF 0
-#define H616_PUD_UP 1
-#define H616_PUD_DOWN 2
+#define H616_PULL_OFF 0
+#define H616_PULL_UP 1
+#define H616_PULL_DOWN 2
     switch (pud)
     {
-    case PUD_OFF:
-        bit_value = H616_PUD_OFF;
+    case PULL_OFF:
+        bit_value = H616_PULL_OFF;
         break;
-    case PUD_UP:
+    case PULL_UP:
         sunxi_pin_set_mode(gpio_num, 0);
-        bit_value = H616_PUD_UP;
+        bit_value = H616_PULL_UP;
         break;
-    case PUD_DOWN:
+    case PULL_DOWN:
         sunxi_pin_set_mode(gpio_num, 0);
-        bit_value = H616_PUD_DOWN;
+        bit_value = H616_PULL_DOWN;
         break;
     default:
         printf("Unknow pull mode\n");

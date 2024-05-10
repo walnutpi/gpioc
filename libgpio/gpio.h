@@ -4,9 +4,9 @@
 #define	INPUT			 0
 #define	OUTPUT			 1
 
-#define	PUD_OFF			 0
-#define	PUD_DOWN		 1
-#define	PUD_UP			 2
+#define	PULL_OFF			 0
+#define	PULL_DOWN		 1
+#define	PULL_UP			 2
 
 int pin_get_mode(int pin_num);
 void pin_set_mode(int pin_num, int mode);
