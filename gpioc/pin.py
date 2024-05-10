@@ -10,21 +10,21 @@ class Pin:
     PULL_UP = 1
     PULL_DOWN = 2
 
-    id = None
+    gpio_num = None
     _value = LOW
     _mode = IN
 
-    def _setup(self, gpio_num, dir, pull_up_down=None ):
+    def _setup(self, gpio:int, dir, pull_up_down=None ):
         if dir == _gpio.f_INPUT :
-            _gpio.set_mode(gpio_num, _gpio.f_INPUT)
+            _gpio.set_mode(gpio, _gpio.f_INPUT)
             if pull_up_down == self.PULL_UP:
-                _gpio.set_pullUpDn(gpio_num, _gpio.f_pullUp)
+                _gpio.set_pullUpDn(gpio, _gpio.f_pullUp)
             elif pull_up_down == self.PULL_DOWN:
-                _gpio.set_pullUpDn(gpio_num, _gpio.f_pullDown)
+                _gpio.set_pullUpDn(gpio, _gpio.f_pullDown)
             else:
-                _gpio.set_pullUpDn(gpio_num, _gpio.f_pull_OFF)
+                _gpio.set_pullUpDn(gpio, _gpio.f_pull_OFF)
         if dir == _gpio.f_OUTPUT :
-            _gpio.set_mode(gpio_num, _gpio.f_OUTPUT)
+            _gpio.set_mode(gpio, _gpio.f_OUTPUT)
                 
     # self.output(self.id, val)
     def _output(self, gpio_num, val):
@@ -34,17 +34,17 @@ class Pin:
     def _input(self, gpio_num):
         return _gpio.read(gpio_num)
 
-    def __init__(self, pin_name):
-        if isinstance(pin_name, tuple):
-            self.id = int(pin_name[1])
+    def __init__(self, gpio_num):
+        if isinstance(gpio_num, tuple):
+            self.gpio_num = int(gpio_num[1])
         else:
-            self.id = int(pin_name)
+            self.gpio_num = int(gpio_num)
 
     def __repr__(self):
-        return str(self.id)
+        return str(self.gpio_num)
 
     def __eq__(self, other):
-        return self.id == other
+        return self.gpio_num == other
 
     def init(self, mode=IN, pull=None):
         """Initialize the Pin"""
@@ -52,30 +52,30 @@ class Pin:
             if mode == self.IN:
                 self._mode = self.IN
                 # GPIO.setup(self.id, GPIO.IN)
-                self._setup(self.id, self.IN)
+                self._setup(self.gpio_num, self.IN)
 
             elif mode == self.OUT:
                 self._mode = self.OUT
                 # GPIO.setup(self.id, GPIO.OUT)
-                self._setup(self.id, self.OUT)
+                self._setup(self.gpio_num, self.OUT)
 
             else:
-                raise RuntimeError("Invalid mode for pin: %s" % self.id)
+                raise RuntimeError("Invalid mode for pin: %s" % self.gpio_num)
         if pull is not None:
             if self._mode != self.IN:
                 raise RuntimeError("Cannot set pull resistor on output")
             if pull == self.PULL_UP:
                 # GPIO.setup(self.id, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-                self._setup(self.id, self.IN, pull_up_down=self.PULL_UP)
+                self._setup(self.gpio_num, self.IN, pull_up_down=self.PULL_UP)
                 
 
             elif pull == self.PULL_DOWN:
                 # GPIO.setup(self.id, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-                self._setup(self.id, self.IN, pull_up_down=self.PULL_DOWN)
+                self._setup(self.gpio_num, self.IN, pull_up_down=self.PULL_DOWN)
 
                 pass
             else:
-                raise RuntimeError("Invalid pull for pin: %s" % self.id)
+                raise RuntimeError("Invalid pull for pin: %s" % self.gpio_num)
             
     def value(self, val=None):
             """Set or return the Pin Value"""
@@ -83,14 +83,14 @@ class Pin:
                 if val == self.LOW:
                     self._value = val
                     # GPIO.output(self.id, val)
-                    self._output(self.id, val)
+                    self._output(self.gpio_num, val)
 
                 elif val == self.HIGH:
                     self._value = val
                     # GPIO.output(self.id, val)
-                    self._output(self.id, val)
+                    self._output(self.gpio_num, val)
 
                 else:
                     raise RuntimeError("Invalid value for pin")
                 return None
-            return self._input(self.id)
+            return self._input(self.gpio_num)

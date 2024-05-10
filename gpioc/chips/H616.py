@@ -1,4 +1,4 @@
-from gpioc._pin import Pin
+from gpioc.pin import Pin
 
 PC0 = Pin(64)
 PC1 = Pin(65)
