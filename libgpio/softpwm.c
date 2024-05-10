@@ -80,6 +80,7 @@ void full_sleep(struct timespec *req)
 void *pwm_thread(void *threadarg)
 {
     struct pwm *p = (struct pwm *)threadarg;
+    gpio_set_mode(p->gpio, OUTPUT);
     while (p->running)
     {
         if (p->dutycycle > 0)
