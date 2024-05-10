@@ -1,7 +1,7 @@
 #!/bin/bash
-PATH_PWD="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+# PATH_PWD="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
-bin_file="sudo ${PATH_PWD}/gpioc"
+bin_file="/usr/bin/_gpiocommand"
 
 
 
