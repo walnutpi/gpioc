@@ -40,17 +40,17 @@ int do_mode(int argc, char *argv[])
     char *str = argv[3];
     if (strcasecmp(str, "UP") == 0)
     {
-        pin_set_pullUpDn(ph_num, PUD_UP);
+        pin_set_pullUpDn(ph_num, PULL_UP);
         pin_set_mode(ph_num, INPUT);
     }
     else if (strcasecmp(str, "DOWN") == 0)
     {
-        pin_set_pullUpDn(ph_num, PUD_DOWN);
+        pin_set_pullUpDn(ph_num, PULL_DOWN);
         pin_set_mode(ph_num, INPUT);
     }
     else
     {
-        pin_set_pullUpDn(ph_num, PUD_OFF);
+        pin_set_pullUpDn(ph_num, PULL_OFF);
         pin_set_mode_by_name(ph_num, str);
     }
 }
