@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "pinctrl.h"
+#include "softpwm.h"
 #include "board.h"
 
 static int _board_select = 0;
@@ -19,17 +20,17 @@ static int _board_select = 0;
 
 struct BOARD_PIN
 {
-    int ph_num;   // 在板上的引脚编号
+    int pin_num;  // 在板上的引脚编号
     int gpio_num; // 芯片上的gpio编号
     char *name;   // 要显示出来的引脚名称
     int color;    // 引脚颜色
 };
-#define A_BOARD_PIN(_ph_num, _gpio_num, _name, _color) \
-    {                                                  \
-        .ph_num = _ph_num,                             \
-        .gpio_num = _gpio_num,                         \
-        .name = _name,                                 \
-        .color = _color,                               \
+#define A_BOARD_PIN(_pin_num, _gpio_num, _name, _color) \
+    {                                                   \
+        .pin_num = _pin_num,                            \
+        .gpio_num = _gpio_num,                          \
+        .name = _name,                                  \
+        .color = _color,                                \
     }
 
 static struct BOARD_PIN walnutpi1b_pins[] = {
@@ -118,7 +119,7 @@ static void select_board()
         _board_select = 1;
     }
 }
-int board_ph_to_gpio(int ph_num)
+int board_ph_to_gpio(int pin_num)
 {
     if (_board_select == 0)
     {
@@ -128,29 +129,29 @@ int board_ph_to_gpio(int ph_num)
     {
     case 1:
         /* code */
-        if (ph_num > 42)
+        if (pin_num > 42)
         {
             return PH_NONE;
         }
-        return walnutpi1b_pins[ph_num].gpio_num;
+        return walnutpi1b_pins[pin_num].gpio_num;
 
     default:
         printf("ERROR: no support for your board\n");
     }
     return -99;
 }
-void exit_if_no_gpio(int ph_num)
+void exit_if_no_gpio(int pin_num)
 {
-    int gpio_num = board_ph_to_gpio(ph_num);
+    int gpio_num = board_ph_to_gpio(pin_num);
     if (gpio_num < 0)
     {
         printf("ERROR: pin %d cannot do this operation \n");
         exit(-1);
     }
 }
-int pin_get_mode(int ph_num)
+int pin_get_mode(int pin_num)
 {
-    int gpio_num = board_ph_to_gpio(ph_num);
+    int gpio_num = board_ph_to_gpio(pin_num);
     if (gpio_num < 0)
     {
         return -1;
@@ -158,64 +159,107 @@ int pin_get_mode(int ph_num)
     return gpio_get_mode(gpio_num);
 }
 
-void pin_set_mode(int ph_num, int mode)
+void pin_set_mode(int pin_num, int mode)
 {
-    if (board_ph_to_gpio(ph_num) < 0)
+    if (board_ph_to_gpio(pin_num) < 0)
         return;
-    gpio_set_mode(board_ph_to_gpio(ph_num), mode);
+    gpio_set_mode(board_ph_to_gpio(pin_num), mode);
 }
-void pin_set_mode_by_name(int ph_num, char *mode)
+void pin_set_mode_by_name(int pin_num, char *mode)
 {
-    if (board_ph_to_gpio(ph_num) < 0)
+    if (board_ph_to_gpio(pin_num) < 0)
         return;
     for (int i = 0; i <= 7; i++)
     {
-        const char *str = pin_get_mode_name_by_num(ph_num, i);
+        const char *str = pin_get_mode_name_by_num(pin_num, i);
         if (str != NULL)
             if (strcasecmp(str, mode) == 0)
             {
-                pin_set_mode(ph_num, i);
+                pin_set_mode(pin_num, i);
             }
     }
 }
-void pin_set_pullUpDn(int ph_num, int pud)
+void pin_set_pullUpDn(int pin_num, int pud)
 {
-    // exit_if_no_gpio(ph_num);
-    if (board_ph_to_gpio(ph_num) < 0)
+    // exit_if_no_gpio(pin_num);
+    if (board_ph_to_gpio(pin_num) < 0)
         return;
-    gpio_set_pullUpDn(board_ph_to_gpio(ph_num), pud);
+    gpio_set_pullUpDn(board_ph_to_gpio(pin_num), pud);
 }
-int pin_read(int ph_num)
+int pin_read(int pin_num)
 {
-    // exit_if_no_gpio(ph_num);
-    if (board_ph_to_gpio(ph_num) < 0)
+    // exit_if_no_gpio(pin_num);
+    if (board_ph_to_gpio(pin_num) < 0)
         return -1;
-    return gpio_read(board_ph_to_gpio(ph_num));
+    return gpio_read(board_ph_to_gpio(pin_num));
 }
-void pin_write(int ph_num, int value)
+void pin_write(int pin_num, int value)
 {
-    if (board_ph_to_gpio(ph_num) < 0)
+    if (board_ph_to_gpio(pin_num) < 0)
         return;
-    // exit_if_no_gpio(ph_num);
-    gpio_write(board_ph_to_gpio(ph_num), value);
+    // exit_if_no_gpio(pin_num);
+    gpio_write(board_ph_to_gpio(pin_num), value);
 }
-const char *pin_get_mode_name_now(int ph_num)
+const char *pin_get_mode_name_now(int pin_num)
 {
-    int gpio_num = board_ph_to_gpio(ph_num);
+    int gpio_num = board_ph_to_gpio(pin_num);
     if (gpio_num < 0)
     {
         return "";
     }
     return gpio_pin_get_mode_name(gpio_num);
 }
-const char *pin_get_mode_name_by_num(int ph_num, int mode_num)
+const char *pin_get_mode_name_by_num(int pin_num, int mode_num)
 {
-    int gpio_num = board_ph_to_gpio(ph_num);
+    int gpio_num = board_ph_to_gpio(pin_num);
     if (gpio_num < 0)
     {
         return "";
     }
     return gpio_pin_get_mode_name_by_num(gpio_num, mode_num);
+}
+
+void soft_pwm_set_duty_cycle(int pin_num, int dutycycle)
+{
+    if (board_ph_to_gpio(pin_num) < 0)
+        return;
+    pwm_set_duty_cycle(board_ph_to_gpio(pin_num), dutycycle);
+}
+void soft_pwm_set_frequency(int pin_num, int freq)
+{
+    if (board_ph_to_gpio(pin_num) < 0)
+        return;
+    pwm_set_frequency(board_ph_to_gpio(pin_num), freq);
+}
+int soft_pwm_get_duty_cycle(int pin_num)
+{
+    if (board_ph_to_gpio(pin_num) < 0)
+        return -1;
+    return pwm_get_duty_cycle(board_ph_to_gpio(pin_num));
+}
+int soft_pwm_get_frequency(int pin_num)
+{
+    if (board_ph_to_gpio(pin_num) < 0)
+        return -1;
+    return pwm_get_frequency(board_ph_to_gpio(pin_num));
+}
+void soft_pwm_start(int pin_num)
+{
+    if (board_ph_to_gpio(pin_num) < 0)
+        return;
+    pwm_start(board_ph_to_gpio(pin_num));
+}
+void soft_pwm_stop(int pin_num)
+{
+    if (board_ph_to_gpio(pin_num) < 0)
+        return;
+    pwm_stop(board_ph_to_gpio(pin_num));
+}
+int soft_pwm_exists(int pin_num)
+{
+    if (board_ph_to_gpio(pin_num) < 0)
+        return -1;
+    return pwm_exists(board_ph_to_gpio(pin_num));
 }
 
 void printf_pins_l(int ph)
@@ -525,13 +569,13 @@ void print_all_gpio_on_ph()
         }
     }
 }
-void print_mode_name_inoutoff(int ph_num)
+void print_mode_name_inoutoff(int pin_num)
 {
     select_board();
     if (_board_select == 1)
     {
-        printf("%s ", pin_get_mode_name_by_num(ph_num, 0));
-        printf("%s ", pin_get_mode_name_by_num(ph_num, 1));
-        printf("%s ", pin_get_mode_name_by_num(ph_num, 7));
+        printf("%s ", pin_get_mode_name_by_num(pin_num, 0));
+        printf("%s ", pin_get_mode_name_by_num(pin_num, 1));
+        printf("%s ", pin_get_mode_name_by_num(pin_num, 7));
     }
 }

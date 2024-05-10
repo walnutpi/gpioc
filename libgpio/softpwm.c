@@ -231,11 +231,11 @@ int pwm_exists(unsigned int gpio)
     return 0;
 }
 
-int main()
-{
-    pwm_set_duty_cycle(270, 50);
-    pwm_set_frequency(270, 2000);
-    pwm_start(270);
-    while (1);
-    return 0;
-}
+// int main()
+// {
+//     pwm_set_duty_cycle(270, 50);
+//     pwm_set_frequency(270, 2000);
+//     pwm_start(270);
+//     while (1);
+//     return 0;
+// }
