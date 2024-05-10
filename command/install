@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -e
+
+echo_red() {
+    echo -e "\r\033[31m$1\033[0m"
+}
+echo_green() {
+    echo -e "\r\033[32m$1\033[0m"
+}
+echo_blue() {
+    echo -e "\r\033[36m$1\033[0m"
+}
+
+
+PATH_PWD="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+VERSION=$(uname -r)
+VERSION_digit=${VERSION:0:1}
+
+
+
+bin_path="/usr/bin/gpioc"
+bin_file_name="gpioc.sh"
+comple_path="/etc/bash_completion.d/gpioc"
+comple_file_name="gpioc-completion.sh"
+
+chmod +x $PATH_PWD/gpioc.sh
+if [ -f $bin_path ]; then
+    rm $bin_path
+fi
+if [ ! -e $bin_path ]; then
+    ln -s ${PATH_PWD}/$bin_file_name ${bin_path}
+fi
+if [[ ! -d /etc/bash_completion.d/ ]]; then
+    mkdir /etc/bash_completion.d/
+fi
+
+cp ${PATH_PWD}/${comple_file_name}  $comple_path
+
+
+bash_str="source /etc/bash_completion.d/gpioc"
+if ! grep -q  ${bash_str}  /etc/bash.bashrc; then
+    echo ${bash_str} >> /etc/bash.bashrc
+fi
+

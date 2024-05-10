@@ -1,0 +1,11 @@
+#!/bin/bash
+
+cd libgpio
+make
+make install
+cd ../command
+make
+./install
+
+
+

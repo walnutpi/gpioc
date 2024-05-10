@@ -1,4 +1,5 @@
 from setuptools import setup, Extension, find_packages
+import glob
 classifiers = [
     'Development Status :: 3 - Alpha',
     'Intended Audience :: Developers',
@@ -7,6 +8,7 @@ classifiers = [
     'Programming Language :: Python :: 3',
 ]
 
+libgpio_files = glob.glob('libgpio/*.c')
 
 setup(
     name="gpioc",
@@ -20,9 +22,9 @@ setup(
     packages=find_packages(),
 
     ext_modules = [
-                #    Extension('gpioc._h616', ['chips/h616.c', 'chips/h616_py.c']),
-                   Extension('gpioc._softpwm', ['src/softpwm.c', 'src/softpwm_py.c',  'chips/h616.c']),
-                   Extension('gpioc._gpioc', ['src/gpioc_py.c', 'src/gpioc.c', 'chips/h616.c']),
+                #    Extension('gpioc._softpwm', ['src/softpwm.c', 'src/softpwm_py.c',  'chips/h616.c']),
+                #    Extension('gpioc._gpioc', ['src/gpioc_py.c', 'src/gpioc.c', 'chips/h616.c']),
+                   Extension('gpioc._libgpio', sources=libgpio_files),
                    ],
 
 )

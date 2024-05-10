@@ -1,2 +1,2 @@
-recursive-include include *
+recursive-include libgpio *
 recursive-include examples-python *

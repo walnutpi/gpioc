@@ -87,7 +87,7 @@ PyMethodDef pwm_methods[] = {
     {"exists", py_exists, METH_VARARGS, "exists"},
 
 };
-static struct PyModuleDef gpiocmodule = {
+static struct PyModuleDef module_pinctrl = {
     PyModuleDef_HEAD_INIT,
     "gpioc._pwm",      // name of module
     moduledocstring, // module documentation, may be NULL
@@ -99,7 +99,7 @@ PyMODINIT_FUNC PyInit__softpwm(void)
 {
     PyObject *module = NULL;
 
-    if ((module = PyModule_Create(&gpiocmodule)) == NULL)
+    if ((module = PyModule_Create(&module_pinctrl)) == NULL)
         return NULL;
 
     return module;

@@ -1,5 +1,5 @@
 
-import gpioc._gpioc as _gpio
+import gpioc._libgpio as _gpio
 
 class Pin:
     IN = 0

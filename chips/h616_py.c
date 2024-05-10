@@ -53,7 +53,7 @@ PyMethodDef h616_methods[] = {
     {"set_mode", py_set_mode, METH_VARARGS, "set the gpio mode with in or out"},
     {NULL, NULL, 0, NULL},
 };
-static struct PyModuleDef gpiocmodule = {
+static struct PyModuleDef module_pinctrl = {
     PyModuleDef_HEAD_INIT,
     "gpioc._h616",      // name of module
     moduledocstring, // module documentation, may be NULL
@@ -66,7 +66,7 @@ PyMODINIT_FUNC PyInit__h616(void)
     // printf("PyInit__h616\r\n");
     PyObject *module = NULL;
 
-    if ((module = PyModule_Create(&gpiocmodule)) == NULL)
+    if ((module = PyModule_Create(&module_pinctrl)) == NULL)
         return NULL;
     
     return module;

@@ -1,10 +1,10 @@
 from gpioc._pin import Pin
-from gpioc._pwm import PWMOut_father as _PWM
+# from gpioc._pwm import PWMOut_father as _PWM
 
-import gpioc._gpioc as _common
+# import gpioc._libgpio as _common
 
-class Pwm(_PWM):
-    _chip = _common.CHIP_H616
+# class Pwm(_PWM):
+#     _chip = _common.CHIP_H616
 
 # class Pin(_PIN):
 
