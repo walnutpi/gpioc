@@ -1,4 +1,4 @@
-from gpioc import *
+from gpioc.chips.H616 import *
 import time
 key = PC12
 led = PC13

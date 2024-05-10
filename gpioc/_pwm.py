@@ -9,7 +9,6 @@ class PWMOut_father:
         self._gpio_num = pin.id
 
         pin.init(pin.OUT)
-        _pwm.switch_chip(self._chip)
         _pwm.set_frequency(self._gpio_num, frequency)
         _pwm.set_duty_cycle(self._gpio_num, duty_cycle)
         _pwm.start(self._gpio_num)

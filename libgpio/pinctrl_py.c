@@ -62,13 +62,13 @@ PyMethodDef pinctrl_methods[] = {
 };
 static struct PyModuleDef module_pinctrl = {
     PyModuleDef_HEAD_INIT,
-    "_libgpio",      // name of module
+    "_pinctrl",      // name of module
     moduledocstring, // module documentation, may be NULL
     -1,              // size of per-interpreter state of the module, or -1 if the module keeps state in global variables.
     pinctrl_methods};
 
 // 在import时会被调出来执行
-PyMODINIT_FUNC PyInit__libgpio(void)
+PyMODINIT_FUNC PyInit__pinctrl(void)
 {
     PyObject *module = NULL;
 

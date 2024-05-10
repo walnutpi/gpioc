@@ -8,7 +8,7 @@ classifiers = [
     'Programming Language :: Python :: 3',
 ]
 
-libgpio_files = glob.glob('libgpio/*.c')
+pinctrl_files = glob.glob('libgpio/pinctrl*.c')
 softpwm_files = glob.glob('softpwm/*.c')
 
 setup(
@@ -23,9 +23,9 @@ setup(
     packages=find_packages(),
 
     ext_modules = [
-                   Extension('gpioc._softpwm', ['softpwm/softpwm.c', 'src/softpwm_py.c',  'chips/h616.c']),
+                #    Extension('gpioc._softpwm', ['softpwm/softpwm.c', 'src/softpwm_py.c',  'chips/h616.c']),
                 #    Extension('gpioc._gpioc', ['src/gpioc_py.c', 'src/gpioc.c', 'chips/h616.c']),
-                   Extension('gpioc._libgpio', sources=libgpio_files),
+                   Extension('gpioc._pinctrl', sources=pinctrl_files),
                    ],
 
 )
