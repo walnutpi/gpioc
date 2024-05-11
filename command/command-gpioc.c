@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "../libgpio/board.h"
+const char *command_name = "gpio";
 
 int do_pri_all_gpio_on_ph(int argc, char *argv[])
 {
@@ -14,10 +15,20 @@ int do_pri_pin_para(int argc, char *argv[])
 }
 int do_pin(int argc, char *argv[])
 {
+    if (argc != 3)
+    {
+        // fprintf(stderr, "Usage: \n\t%s pin [keyword]\n\n", command_name);
+        exit(1);
+    }
     print_pin_by_mode_name(argv[2]);
 }
 int do_search(int argc, char *argv[])
 {
+    if (argc != 3)
+    {
+        // fprintf(stderr, "Usage: \n\t%s search [keyword]\n\n", command_name);
+        exit(1);
+    }
     print_pin_by_search_all_mode_name(argv[2]);
 }
 int do_pins(int argc, char *argv[])
@@ -27,23 +38,23 @@ int do_pins(int argc, char *argv[])
 int do_pri_mode_para(int argc, char *argv[])
 {
     print_mode_name_inoutoff(atoi(argv[2]));
-    printf(" UP DOWN");
+    printf(" IN_PULLUP IN_PULLDOWN");
 }
 int do_mode(int argc, char *argv[])
 {
     if (argc != 4)
     {
-        fprintf(stderr, "Usage: %s mode [pin] [value]\n", argv[0]);
+        // fprintf(stderr, "Usage:\n\t %s mode [pin] [mode]\n\n", command_name);
         exit(1);
     }
     int ph_num = atoi(argv[2]);
     char *str = argv[3];
-    if (strcasecmp(str, "UP") == 0)
+    if (strcasecmp(str, "IN_PULLUP") == 0)
     {
         pin_set_pullUpDn(ph_num, PULL_UP);
         pin_set_mode(ph_num, INPUT);
     }
-    else if (strcasecmp(str, "DOWN") == 0)
+    else if (strcasecmp(str, "IN_PULLDOWN") == 0)
     {
         pin_set_pullUpDn(ph_num, PULL_DOWN);
         pin_set_mode(ph_num, INPUT);
@@ -59,7 +70,7 @@ int do_read(int argc, char *argv[])
     int pin, val;
     if (argc != 3)
     {
-        fprintf(stderr, "Usage: %s read [pin]\n", argv[0]);
+        // fprintf(stderr, "Usage: \n\t%s read [pin]\n\n", command_name);
         exit(1);
     }
     pin = atoi(argv[2]);
@@ -75,7 +86,7 @@ int do_write(int argc, char *argv[])
 {
     if (argc != 4)
     {
-        fprintf(stderr, "Usage: %s write [pin] [value]\n", argv[0]);
+        // fprintf(stderr, "Usage: \n\t%s write [pin] [value]\n\n", command_name);
         exit(1);
     }
     int ph_num = atoi(argv[2]);
@@ -103,7 +114,7 @@ int do_toggle(int argc, char *argv[])
     pin = atoi(argv[2]);
     if (argc != 3)
     {
-        fprintf(stderr, "Usage: %s toggle [pin]\n", argv[0]);
+        // fprintf(stderr, "Usage: \n\t%s toggle [pin]\n\n", command_name);
         exit(1);
     }
     pin_write(pin, !pin_read(pin));

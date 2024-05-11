@@ -19,12 +19,12 @@ VERSION_digit=${VERSION:0:1}
 
 
 
-bin_path="/usr/bin/gpioc"
-bin_file_name="gpioc.sh"
-comple_path="/etc/bash_completion.d/gpioc"
-comple_file_name="gpioc-completion.sh"
+bin_path="/usr/bin/gpio"
+bin_file_name="gpio.sh"
+comple_path="/etc/bash_completion.d/gpio"
+comple_file_name="gpio-completion.sh"
 
-chmod +x $PATH_PWD/gpioc.sh
+chmod +x $PATH_PWD/gpio.sh
 if [ -f $bin_path ]; then
     rm $bin_path
 fi
@@ -38,7 +38,7 @@ fi
 cp ${PATH_PWD}/${comple_file_name}  $comple_path
 
 
-bash_str="source /etc/bash_completion.d/gpioc"
+bash_str="source /etc/bash_completion.d/gpio"
 if ! grep -q  ${bash_str}  /etc/bash.bashrc; then
     echo ${bash_str} >> /etc/bash.bashrc
 fi
