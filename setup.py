@@ -13,7 +13,7 @@ softpwm_files = glob.glob('libgpio/*.c')
 
 setup(
     name="gpioc",
-    version="0.2",
+    version="1.0",
     author="sc-bin",
     author_email="3335447573@qq.com",
     description="A module to control GPIO",

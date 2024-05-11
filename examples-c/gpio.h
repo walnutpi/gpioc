@@ -1,5 +1,7 @@
 #ifndef _GPIO_H
 #define _GPIO_H
+// version: 1.0
+
 
 #define	INPUT			 0
 #define	OUTPUT			 1

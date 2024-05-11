@@ -1,5 +1,5 @@
 #!/bin/bash
-# PATH_PWD="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+this_script_version_str="Script version : V1.0"
 
 bin_file="/usr/bin/_gpiocommand"
 
@@ -135,7 +135,7 @@ do_pin(){
 }
 
 do_-h(){
-    echo ""
+    echo -e "$this_script_version_str\n"
     echo -e "${STR_AUTO['help_pins_desc']}\n"
     echo -e "${STR_AUTO['help_pin_desc']}\n"
     echo -e "${STR_AUTO['help_mode_desc']}\n"
