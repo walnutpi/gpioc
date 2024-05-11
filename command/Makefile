@@ -9,7 +9,7 @@ all:$(src)
 	chown root:root $(target) 
 	chmod 4755 $(target) 
 	chmod +s $(target) 
-	cp ${target} /usr/bin
+	ln ${target} /usr/bin/${target}
 
 clean:
 	-rm $(target)
