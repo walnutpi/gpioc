@@ -18,13 +18,16 @@ VERSION=$(uname -r)
 VERSION_digit=${VERSION:0:1}
 
 
-
+wiringpi_bin="/usr/local/bin/gpio"
 bin_path="/usr/bin/gpio"
 bin_file_name="gpio.sh"
 comple_path="/etc/bash_completion.d/gpio"
 comple_file_name="gpio-completion.sh"
 
 chmod +x $PATH_PWD/gpio.sh
+if [ -f $wiringpi_bin ]; then
+    rm $wiringpi_bin
+fi
 if [ -f $bin_path ]; then
     rm $bin_path
 fi
