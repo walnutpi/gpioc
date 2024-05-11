@@ -1,6 +1,8 @@
 gpioc
 ======
-This library can be used to control gpio by Python and C.
+
+
+This library can be used to control gpio by `Python` 、`C` 、 `shell`
 
 Reading and writing gpio registers through `/dev/mem`
 
