@@ -1,2 +1,3 @@
+include *.md
 recursive-include libgpio *
 recursive-include examples-python *
