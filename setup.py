@@ -17,6 +17,7 @@ setup(
     author="sc-bin",
     author_email="3335447573@qq.com",
     description="A module to control GPIO",
+    platforms=['manylinux'],
     long_description = open('README.md').read(),
     license          = 'MIT',
     url="https://github.com/sc-bin/gpioc", 
