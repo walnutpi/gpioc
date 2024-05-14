@@ -13,13 +13,9 @@ classifiers = [
 pinctrl_files = glob.glob('libgpio/pinctrl*.c')
 softpwm_files = glob.glob('libgpio/*.c')
 
-# 获取当前时间并格式化
-now = datetime.datetime.now()
-time_str = now.strftime("%y%m%d%H%M")
-
 setup(
     name="gpioc",
-    version="1.0_rc7-" + time_str,  # 将时间字符串添加到版本号中，为了自动上传到test.pypi时不用过来改
+    version="1.0.1",
     author="sc-bin",
     author_email="3335447573@qq.com",
     description="A module to control GPIO",
