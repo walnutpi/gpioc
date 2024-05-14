@@ -2,7 +2,7 @@ from gpioc.pwm import Pwm
 from gpioc.chips.H616 import *
 import time
 
-led = Pwm(PC13.gpio_num)
+led = Pwm(PC13.id)
 led.frequency = 1000
 while 1:
     for i in range(1,100,5):

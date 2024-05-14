@@ -10,7 +10,7 @@ class Pin:
     PULL_UP = 1
     PULL_DOWN = 2
 
-    gpio_num = None
+    id = None
     _value = LOW
     _mode = IN
 
@@ -36,15 +36,15 @@ class Pin:
 
     def __init__(self, gpio_num):
         if isinstance(gpio_num, tuple):
-            self.gpio_num = int(gpio_num[1])
+            self.id = int(gpio_num[1])
         else:
-            self.gpio_num = int(gpio_num)
+            self.id = int(gpio_num)
 
     def __repr__(self):
-        return str(self.gpio_num)
+        return str(self.id)
 
     def __eq__(self, other):
-        return self.gpio_num == other
+        return self.id == other
 
     def init(self, mode=IN, pull=None):
         """Initialize the Pin"""
@@ -52,30 +52,30 @@ class Pin:
             if mode == self.IN:
                 self._mode = self.IN
                 # GPIO.setup(self.id, GPIO.IN)
-                self._setup(self.gpio_num, self.IN)
+                self._setup(self.id, self.IN)
 
             elif mode == self.OUT:
                 self._mode = self.OUT
                 # GPIO.setup(self.id, GPIO.OUT)
-                self._setup(self.gpio_num, self.OUT)
+                self._setup(self.id, self.OUT)
 
             else:
-                raise RuntimeError("Invalid mode for pin: %s" % self.gpio_num)
+                raise RuntimeError("Invalid mode for pin: %s" % self.id)
         if pull is not None:
             if self._mode != self.IN:
                 raise RuntimeError("Cannot set pull resistor on output")
             if pull == self.PULL_UP:
                 # GPIO.setup(self.id, GPIO.IN, pull_up_down=GPIO.PULL_UP)
-                self._setup(self.gpio_num, self.IN, pull_up_down=self.PULL_UP)
+                self._setup(self.id, self.IN, pull_up_down=self.PULL_UP)
                 
 
             elif pull == self.PULL_DOWN:
                 # GPIO.setup(self.id, GPIO.IN, pull_up_down=GPIO.PULL_DOWN)
-                self._setup(self.gpio_num, self.IN, pull_up_down=self.PULL_DOWN)
+                self._setup(self.id, self.IN, pull_up_down=self.PULL_DOWN)
 
                 pass
             else:
-                raise RuntimeError("Invalid pull for pin: %s" % self.gpio_num)
+                raise RuntimeError("Invalid pull for pin: %s" % self.id)
             
     def value(self, val=None):
             """Set or return the Pin Value"""
@@ -83,14 +83,14 @@ class Pin:
                 if val == self.LOW:
                     self._value = val
                     # GPIO.output(self.id, val)
-                    self._output(self.gpio_num, val)
+                    self._output(self.id, val)
 
                 elif val == self.HIGH:
                     self._value = val
                     # GPIO.output(self.id, val)
-                    self._output(self.gpio_num, val)
+                    self._output(self.id, val)
 
                 else:
                     raise RuntimeError("Invalid value for pin")
                 return None
-            return self._input(self.gpio_num)
+            return self._input(self.id)
