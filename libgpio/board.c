@@ -191,7 +191,6 @@ int pin_read(int pin_num)
     // exit_if_no_gpio(pin_num);
     if (board_ph_to_gpio(pin_num) < 0)
         return -1;
-    gpio_set_mode(board_ph_to_gpio(pin_num),INPUT);
     return gpio_read(board_ph_to_gpio(pin_num));
 }
 void pin_write(int pin_num, int value)
@@ -199,7 +198,6 @@ void pin_write(int pin_num, int value)
     if (board_ph_to_gpio(pin_num) < 0)
         return;
     // exit_if_no_gpio(pin_num);
-    gpio_set_mode(board_ph_to_gpio(pin_num),OUTPUT);
     gpio_write(board_ph_to_gpio(pin_num), value);
 }
 const char *pin_get_mode_name_now(int pin_num)
