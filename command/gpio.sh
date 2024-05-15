@@ -12,8 +12,8 @@ STR_EN['command_para_error']="command parameter error"
 STR_CN['para_can_choose']="该位置可选命令行参数有这些"
 STR_EN['para_can_choose']="Available parameters are"
 
-STR_CN['help_pins_desc']="gpio mode pins \n\t显示所有引脚及当前状态"
-STR_EN['help_pins_desc']="gpio mode pins  \n\tDisplays all pins and current status"
+STR_CN['help_pins_desc']="gpio pins \n\t显示所有引脚及当前状态"
+STR_EN['help_pins_desc']="gpio pins  \n\tDisplays all pins and current status"
 
 STR_CN['help_mode_desc']="gpio mode [PIN] [MODE] \n\t设置[PIN]引脚的工作模式为[MODE]"
 STR_EN['help_mode_desc']="gpio mode [PIN] [MODE]  \n\tSet the [PIN] work as [MODE]"
