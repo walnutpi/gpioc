@@ -160,7 +160,10 @@ check_para() {
         if declare -f $para_function_name > /dev/null; then
             IFS=' ' read -ra ADDR <<< `$para_function_name  $para_key2`
             for i in "${ADDR[@]}"; do
-                if [ "$i" == "$para_str" ]; then
+                temp1=$(echo $i | tr [a-z] [A-Z])    # 转变成大写再做比较
+                temp2=$(echo $para_str | tr [a-z] [A-Z])    # 转变成大写再做比较
+
+                if [ x"$temp1" = x"$temp2" ];then        # x$"temp1"前面加x防止其中为空
                     return
                 fi
             done
