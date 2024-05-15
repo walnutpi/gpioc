@@ -174,7 +174,7 @@ check_para() {
 # 如果函数存在，执行它
 if declare -f $FUNCTION_NAME > /dev/null; then
     paras=$@
-    para_key2=$2
+    para_key2=$1
     para_num=2
     while [ ! -z "$1" ]
     do
