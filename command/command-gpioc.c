@@ -13,6 +13,11 @@ int do_pri_pin_para(int argc, char *argv[])
 {
     print_pin_para();
 }
+int do_pri_mode_name(int argc, char *argv[])
+{
+    int ph_num = atoi(argv[2]);
+    printf("%s\n", pin_get_mode_name_now(ph_num));
+}
 int do_pin(int argc, char *argv[])
 {
     if (argc != 3)
@@ -131,6 +136,7 @@ struct ops commands[] = {
     {"do_pri_write_para", do_pri_write_para},
     {"do_pri_pin_para", do_pri_pin_para},
     {"do_pri_all_gpio_on_ph", do_pri_all_gpio_on_ph},
+    {"do_pri_mode_name", do_pri_mode_name},
     {"search", do_search},
     {"pin", do_pin},
     {"pins", do_pins},
