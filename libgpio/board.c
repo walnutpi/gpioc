@@ -7,11 +7,14 @@
 #include "board.h"
 
 static int _board_select = 0;
+#define _BOARD_DEF_WANUTPI_1B 1
+#define _BOARD_DEF_WANUTPI_1B_EMMC 2
 
-#define PH_NONE -1
+#define PH_NUM_ERROR -1
 #define PH_5V -2
 #define PH_3V3 -3
 #define PH_GND -4
+#define PH_NC -1
 #define PH_COLOR_BLACK 0
 #define PH_COLOR_RED 1
 #define PH_COLOR_GREEEN 2
@@ -38,17 +41,13 @@ static struct BOARD_PIN walnutpi1b_pins[] = {
     A_BOARD_PIN(1, PH_3V3, "3.3v", PH_COLOR_YELLOW),
     A_BOARD_PIN(2, PH_5V, "5v", PH_COLOR_RED),
     A_BOARD_PIN(3, 264, "PI8", PH_COLOR_GREEEN),
-    // A_BOARD_PIN(3, 264, "SDA.1"),
     A_BOARD_PIN(4, PH_5V, "5v", PH_COLOR_RED),
     A_BOARD_PIN(5, 263, "PI7", PH_COLOR_GREEEN),
-    // A_BOARD_PIN(5, 263, "SCL.1"),
     A_BOARD_PIN(6, PH_GND, "GND", PH_COLOR_BLACK),
     A_BOARD_PIN(7, 72, "PC8", PH_COLOR_GREEEN),
     A_BOARD_PIN(8, 261, "PI5", PH_COLOR_GREEEN),
-    // A_BOARD_PIN(8, 261, "TXD.2"),
     A_BOARD_PIN(9, PH_GND, "GND", PH_COLOR_BLACK),
     A_BOARD_PIN(10, 262, "PI6", PH_COLOR_GREEEN),
-    // A_BOARD_PIN(10, 262, "RXD.2"),
     A_BOARD_PIN(11, 73, "PC9", PH_COLOR_GREEEN),
     A_BOARD_PIN(12, 74, "PC10", PH_COLOR_GREEEN),
     A_BOARD_PIN(13, 75, "PC11", PH_COLOR_GREEEN),
@@ -58,22 +57,15 @@ static struct BOARD_PIN walnutpi1b_pins[] = {
     A_BOARD_PIN(17, PH_3V3, "3.3v", PH_COLOR_YELLOW),
     A_BOARD_PIN(18, 78, "PC14", PH_COLOR_GREEEN),
     A_BOARD_PIN(19, 231, "PH7", PH_COLOR_GREEEN),
-    // A_BOARD_PIN(19, 231, "MOSI.1"),
     A_BOARD_PIN(20, PH_GND, "GND", PH_COLOR_BLACK),
     A_BOARD_PIN(21, 232, "PH8", PH_COLOR_GREEEN),
-    // A_BOARD_PIN(21, 232, "MISO.1"),
     A_BOARD_PIN(22, 79, "PC15", PH_COLOR_GREEEN),
     A_BOARD_PIN(23, 230, "PH6", PH_COLOR_GREEEN),
-    // A_BOARD_PIN(23, 230, "SCLK.1"),
     A_BOARD_PIN(24, 229, "PH5", PH_COLOR_GREEEN),
-    // A_BOARD_PIN(24, 229, "CS1.0"),
     A_BOARD_PIN(25, PH_GND, "GND", PH_COLOR_BLACK),
     A_BOARD_PIN(26, 233, "PH9", PH_COLOR_GREEEN),
-    // A_BOARD_PIN(26, 233, "CS1.1"),
     A_BOARD_PIN(27, 266, "PI10", PH_COLOR_BLUE),
-    // A_BOARD_PIN(27, 266, "SDA.2"),
     A_BOARD_PIN(28, 265, "PI9", PH_COLOR_BLUE),
-    // A_BOARD_PIN(28, 265, "SCL.2"),
     A_BOARD_PIN(29, 256, "PI0", PH_COLOR_GREEEN),
     A_BOARD_PIN(30, PH_GND, "GND", PH_COLOR_BLACK),
     A_BOARD_PIN(31, 257, "PI1", PH_COLOR_GREEEN),
@@ -88,14 +80,59 @@ static struct BOARD_PIN walnutpi1b_pins[] = {
     A_BOARD_PIN(40, 270, "PI14", PH_COLOR_GREEEN),
     A_BOARD_PIN(41, 76, "KEY", PH_COLOR_BLACK),
     A_BOARD_PIN(42, 77, "LED", PH_COLOR_BLACK),
-
 };
 static int walnutpi1b_pin_pwm[][2] = {{15, 5}, {16, 5}, {38, 5}, {40, 5}};
 static int walnutpi1b_pin_uart[][2] = {{8, 3}, {10, 3}, {38, 3}, {40, 3}};
 static int walnutpi1b_pin_spi[][2] = {{19, 4}, {21, 4}, {23, 4}, {24, 4}, {26, 4}};
 static int walnutpi1b_pin_i2c[][2] = {{3, 5}, {5, 5}, {27, 5}, {28, 5}};
 
-static void select_board()
+static struct BOARD_PIN walnutpi1b_emmc_pins[] = {
+    A_BOARD_PIN(0, 0, "", 0),
+    A_BOARD_PIN(1, PH_3V3, "3.3v", PH_COLOR_YELLOW),
+    A_BOARD_PIN(2, PH_5V, "5v", PH_COLOR_RED),
+    A_BOARD_PIN(3, 264, "PI8", PH_COLOR_GREEEN),
+    A_BOARD_PIN(4, PH_5V, "5v", PH_COLOR_RED),
+    A_BOARD_PIN(5, 263, "PI7", PH_COLOR_GREEEN),
+    A_BOARD_PIN(6, PH_GND, "GND", PH_COLOR_BLACK),
+    A_BOARD_PIN(7, PH_NC, "----", PH_COLOR_GREEEN),
+    A_BOARD_PIN(8, 261, "PI5", PH_COLOR_GREEEN),
+    A_BOARD_PIN(9, PH_GND, "GND", PH_COLOR_BLACK),
+    A_BOARD_PIN(10, 262, "PI6", PH_COLOR_GREEEN),
+    A_BOARD_PIN(11, PH_NC, "----", PH_COLOR_GREEEN),
+    A_BOARD_PIN(12, PH_NC, "----", PH_COLOR_GREEEN),
+    A_BOARD_PIN(13, PH_NC, "----", PH_COLOR_GREEEN),
+    A_BOARD_PIN(14, PH_GND, "GND", PH_COLOR_BLACK),
+    A_BOARD_PIN(15, 267, "PI11", PH_COLOR_GREEEN),
+    A_BOARD_PIN(16, 268, "PI12", PH_COLOR_GREEEN),
+    A_BOARD_PIN(17, PH_3V3, "3.3v", PH_COLOR_YELLOW),
+    A_BOARD_PIN(18, PH_NC, "----", PH_COLOR_GREEEN),
+    A_BOARD_PIN(19, 231, "PH7", PH_COLOR_GREEEN),
+    A_BOARD_PIN(20, PH_GND, "GND", PH_COLOR_BLACK),
+    A_BOARD_PIN(21, 232, "PH8", PH_COLOR_GREEEN),
+    A_BOARD_PIN(22, PH_NC, "----", PH_COLOR_GREEEN),
+    A_BOARD_PIN(23, 230, "PH6", PH_COLOR_GREEEN),
+    A_BOARD_PIN(24, 229, "PH5", PH_COLOR_GREEEN),
+    A_BOARD_PIN(25, PH_GND, "GND", PH_COLOR_BLACK),
+    A_BOARD_PIN(26, 233, "PH9", PH_COLOR_GREEEN),
+    A_BOARD_PIN(27, 266, "PI10", PH_COLOR_BLUE),
+    A_BOARD_PIN(28, 265, "PI9", PH_COLOR_BLUE),
+    A_BOARD_PIN(29, 256, "PI0", PH_COLOR_GREEEN),
+    A_BOARD_PIN(30, PH_GND, "GND", PH_COLOR_BLACK),
+    A_BOARD_PIN(31, 257, "PI1", PH_COLOR_GREEEN),
+    A_BOARD_PIN(32, 272, "PI16", PH_COLOR_GREEEN),
+    A_BOARD_PIN(33, 258, "PI2", PH_COLOR_GREEEN),
+    A_BOARD_PIN(34, PH_GND, "GND", PH_COLOR_BLACK),
+    A_BOARD_PIN(35, 259, "PI3", PH_COLOR_GREEEN),
+    A_BOARD_PIN(36, 271, "PI15", PH_COLOR_GREEEN),
+    A_BOARD_PIN(37, 260, "PI4", PH_COLOR_GREEEN),
+    A_BOARD_PIN(38, 269, "PI13", PH_COLOR_GREEEN),
+    A_BOARD_PIN(39, PH_GND, "GND", PH_COLOR_BLACK),
+    A_BOARD_PIN(40, 270, "PI14", PH_COLOR_GREEEN),
+    A_BOARD_PIN(41, 76, "KEY", PH_COLOR_BLACK),
+    A_BOARD_PIN(42, 71, "LED", PH_COLOR_BLACK),
+};
+
+static int select_board()
 {
     FILE *fp;
     char buffer[1024];
@@ -115,26 +152,39 @@ static void select_board()
     model = strtok(buffer, "\n");
 
     if (strcmp(model, "walnutpi-1b") == 0)
+        _board_select = _BOARD_DEF_WANUTPI_1B;
+    else if (strcmp(model, "walnutpi-1b-emmc") == 0)
+        _board_select = _BOARD_DEF_WANUTPI_1B_EMMC;
+    else
     {
-        _board_select = 1;
+        printf("you /proc/device-tree/model string is not in support list");
+        exit(-1);
     }
+    return _board_select;
+}
+static struct BOARD_PIN *get_BOARD_PIN()
+{
+    struct BOARD_PIN *PIN;
+    switch (select_board())
+    {
+    case _BOARD_DEF_WANUTPI_1B:
+        return walnutpi1b_pins;
+    case _BOARD_DEF_WANUTPI_1B_EMMC:
+        return walnutpi1b_emmc_pins;
+    }
+    return NULL;
 }
 int board_ph_to_gpio(int pin_num)
 {
-    if (_board_select == 0)
+    switch (select_board())
     {
-        select_board();
-    }
-    switch (_board_select)
-    {
-    case 1:
-        /* code */
+    case _BOARD_DEF_WANUTPI_1B:
+    case _BOARD_DEF_WANUTPI_1B_EMMC:
         if (pin_num > 42)
         {
-            return PH_NONE;
+            return PH_NUM_ERROR;
         }
-        return walnutpi1b_pins[pin_num].gpio_num;
-
+        return get_BOARD_PIN()[pin_num].gpio_num;
     default:
         printf("ERROR: no support for your board\n");
     }
@@ -277,9 +327,9 @@ void printf_pins_l(int ph)
         printf(" %9s ", "");
 
     printf("|");
-    printf(" %4s ", walnutpi1b_pins[ph].name);
+    printf(" %4s ", get_BOARD_PIN()[ph].name);
 
-    switch (walnutpi1b_pins[ph].color)
+    switch (get_BOARD_PIN()[ph].color)
     {
     case PH_COLOR_RED:
         printf("\033[37;41m");
@@ -297,13 +347,16 @@ void printf_pins_l(int ph)
         printf("\033[37;40m");
     }
     printf("|");
-    printf(" %2d ", ph);
+    if (get_BOARD_PIN()[ph].gpio_num == PH_NC)
+        printf(" -- ");
+    else
+        printf(" %2d ", ph);
     printf("|");
     printf("\033[0m");
 }
 void printf_pins_r(int ph)
 {
-    switch (walnutpi1b_pins[ph].color)
+    switch (get_BOARD_PIN()[ph].color)
     {
     case PH_COLOR_RED:
         printf("\033[37;41m");
@@ -321,10 +374,13 @@ void printf_pins_r(int ph)
         printf("\033[37;40m");
     }
     printf("|");
-    printf(" %-2d ", ph);
+    if (get_BOARD_PIN()[ph].gpio_num == PH_NC)
+        printf(" -- ");
+    else
+        printf(" %-2d ", ph);
     printf("|");
     printf("\033[0m");
-    printf(" %4s ", walnutpi1b_pins[ph].name);
+    printf(" %4s ", get_BOARD_PIN()[ph].name);
 
     printf("|");
     if (board_ph_to_gpio(ph) >= 0)
@@ -342,9 +398,10 @@ void printf_pins_r(int ph)
 
 void print_pins()
 {
-    select_board();
-    if (_board_select == 1)
+    switch (select_board())
     {
+    case _BOARD_DEF_WANUTPI_1B:
+    case _BOARD_DEF_WANUTPI_1B_EMMC:
         printf("+---+-----------+------+----------+------+-----------+---+\n");
         printf("| V |    Mode   | Name | Physical | Name |    Mode   | V |\n");
         printf("+---+-----------+------+----------+------+-----------+---+\n");
@@ -364,6 +421,11 @@ void print_pins()
         printf_pins_r(42);
         printf("\n");
         printf("+---+-----------+------+----------+------+-----------+---+\n");
+
+        break;
+
+    default:
+        break;
     }
 
     printf("");
@@ -375,9 +437,9 @@ void print_search_none_l(int ph)
     printf("|");
     printf(" %9s ", "");
     printf("|");
-    printf(" %4s ", walnutpi1b_pins[ph].name);
+    printf(" %4s ", get_BOARD_PIN()[ph].name);
 
-    switch (walnutpi1b_pins[ph].color)
+    switch (get_BOARD_PIN()[ph].color)
     {
     case PH_COLOR_RED:
         printf("\033[37;41m");
@@ -395,13 +457,16 @@ void print_search_none_l(int ph)
         printf("\033[37;40m");
     }
     printf("|");
-    printf(" %2d ", ph);
+    if (get_BOARD_PIN()[ph].gpio_num == PH_NC)
+        printf(" -- ");
+    else
+        printf(" %2d ", ph);
     printf("|");
     printf("\033[0m");
 }
 void print_search_none_r(int ph)
 {
-    switch (walnutpi1b_pins[ph].color)
+    switch (get_BOARD_PIN()[ph].color)
     {
     case PH_COLOR_RED:
         printf("\033[37;41m");
@@ -419,10 +484,13 @@ void print_search_none_r(int ph)
         printf("\033[37;40m");
     }
     printf("|");
-    printf(" %-2d ", ph);
+    if (get_BOARD_PIN()[ph].gpio_num == PH_NC)
+        printf(" -- ");
+    else
+        printf(" %-2d ", ph);
     printf("|");
     printf("\033[0m");
-    printf(" %-4s ", walnutpi1b_pins[ph].name);
+    printf(" %-4s ", get_BOARD_PIN()[ph].name);
 
     printf("|");
     printf(" %9s ", "");
@@ -436,9 +504,12 @@ void print_search_hit_l(int ph, int mode_num)
     printf("|");
     printf(" %9s ", pin_get_mode_name_by_num(ph, mode_num));
     printf("|");
-    printf(" %4s ", walnutpi1b_pins[ph].name);
+    printf(" %4s ", get_BOARD_PIN()[ph].name);
     printf("|");
-    printf(" %2d ", ph);
+    if (get_BOARD_PIN()[ph].gpio_num == PH_NC)
+        printf(" -- ");
+    else
+        printf(" %2d ", ph);
     printf("|");
     printf("\033[0m");
 }
@@ -446,9 +517,12 @@ void print_search_hit_r(int ph, int mode_num)
 {
     printf("\033[30;42m");
     printf("|");
-    printf(" %2d ", ph);
+    if (get_BOARD_PIN()[ph].gpio_num == PH_NC)
+        printf(" -- ");
+    else
+        printf(" %-2d ", ph);
     printf("|");
-    printf(" %-4s ", walnutpi1b_pins[ph].name);
+    printf(" %-4s ", get_BOARD_PIN()[ph].name);
     printf("|");
     printf(" %-9s ", pin_get_mode_name_by_num(ph, mode_num));
     printf("|");
@@ -456,13 +530,22 @@ void print_search_hit_r(int ph, int mode_num)
 }
 void print_pin_by_search_all_mode_name(char *str)
 {
-    printf("传入字符串%s\n", str);
-    printf("传入字节%d\n", strlen(str));
+    printf("serach: %s\n", str);
     printf("+-----------+------+----------+------+-----------+\n");
     printf("|    Mode   | Name | Physical | Name |    Mode   |\n");
     printf("+-----------+------+----------+------+-----------+\n");
 
-    for (int ph = 1; board_ph_to_gpio(ph) != PH_NONE; ph++)
+    int max_pin = 0;
+    switch (select_board())
+    {
+    case _BOARD_DEF_WANUTPI_1B:
+    case _BOARD_DEF_WANUTPI_1B_EMMC:
+        max_pin = 43;
+        break;
+    default:
+        printf("ERROR: no support for your board\n");
+    }
+    for (int ph = 1; ph < max_pin; ph++)
     {
         int j = 7;
         if (board_ph_to_gpio(ph) > 0) // 不是电源引脚
@@ -474,7 +557,6 @@ void print_pin_by_search_all_mode_name(char *str)
                 {
                     if (strncasecmp(str, mode_desc, strlen(str)) == 0)
                     {
-                        // printf("ph=%d\n", ph);
                         if (ph % 2 == 1)
                             print_search_hit_l(ph, j);
                         else
@@ -485,12 +567,10 @@ void print_pin_by_search_all_mode_name(char *str)
                         break;
                     }
                 }
-                // strcmp(gpio_pin_get_mode_name_by_num(board_ph_to_gpio(j)) "unkonw") != 0
             }
         }
         if (j >= 7)
         {
-
             // 输出代表空的行
             if (ph % 2 == 1)
                 print_search_none_l(ph);
@@ -509,9 +589,10 @@ void print_pin_para()
 }
 void print_pin_by_mode_name(char *str)
 {
-    select_board();
-    if (_board_select == 1)
+    switch (select_board())
     {
+    case _BOARD_DEF_WANUTPI_1B:
+    case _BOARD_DEF_WANUTPI_1B_EMMC:
         int pins[43] = {-1};
         if (strcasecmp(str, "pwm") == 0)
             for (int i = 0; i < sizeof(walnutpi1b_pin_pwm) / (sizeof(int) * 2); i++)
@@ -555,25 +636,33 @@ void print_pin_by_mode_name(char *str)
                 printf("+-----------+------+----------+------+-----------+\n");
         }
         printf("+-----------+------+----------+------+-----------+\n");
+        break;
     }
 }
 void print_all_gpio_on_ph()
 {
-    select_board();
-    if (_board_select == 1)
+    switch (select_board())
     {
+    case _BOARD_DEF_WANUTPI_1B:
+    case _BOARD_DEF_WANUTPI_1B_EMMC:
+
         for (int ph = 1; ph <= 42; ph++)
         {
-            if (walnutpi1b_pins[ph].gpio_num >= 0)
+            if (get_BOARD_PIN()[ph].gpio_num >= 0)
                 printf(" %d ", ph);
         }
+        break;
+
+    default:
+        break;
     }
 }
 void print_mode_name_inoutoff(int pin_num)
 {
-    select_board();
-    if (_board_select == 1)
+    switch (select_board())
     {
+    case _BOARD_DEF_WANUTPI_1B:
+    case _BOARD_DEF_WANUTPI_1B_EMMC:
         printf("%s ", pin_get_mode_name_by_num(pin_num, 0));
         printf("%s ", pin_get_mode_name_by_num(pin_num, 1));
         printf("%s ", pin_get_mode_name_by_num(pin_num, 7));
