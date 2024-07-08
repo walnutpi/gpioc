@@ -12,6 +12,14 @@ class Pwm:
         _pwm.set_duty_cycle(self.gpio_num, duty_cycle)
         _pwm.start(self.gpio_num)
         
+    def __init__(self, gpio:Pin, *, frequency=500, duty_cycle=0, variable_frequency=False):
+
+        self.gpio_num = gpio.id
+        gpio.init(Pin.OUT)
+        _pwm.set_frequency(self.gpio_num, frequency)
+        _pwm.set_duty_cycle(self.gpio_num, duty_cycle)
+        _pwm.start(self.gpio_num)
+        
 
     def __del__(self):
         self.deinit()
