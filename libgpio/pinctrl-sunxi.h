@@ -1,9 +1,6 @@
 #ifndef _PINCTRL_SUNXI_H
 #define _PINCTRL_SUNXI_H
 
-#define MEN_GPIOA_BASE 0x0300B000
-#define MEN_GPIOL_BASE 0x07022000
-#define MEN_PWM_BASE 0x0300A000
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -12,18 +9,24 @@
 // #include <linux/kernel.h>
 // #include <linux/spinlock.h>
 
-#define PA_BASE	0
-#define PB_BASE	32
-#define PC_BASE	64
-#define PD_BASE	96
-#define PE_BASE	128
-#define PF_BASE	160
-#define PG_BASE	192
-#define PH_BASE	224
-#define PI_BASE	256
-#define PL_BASE	352
-#define PM_BASE	384
-#define PN_BASE	416
+#define SUNXI_BANK_OFFSET(bank, bankbase)	((bank) - (bankbase))
+#define SUNXI_PIN_BASE(bank)			(SUNXI_BANK_OFFSET(bank, 'A') * 32)
+
+#define PA_BASE			SUNXI_PIN_BASE('A')
+#define PB_BASE			SUNXI_PIN_BASE('B')
+#define PC_BASE			SUNXI_PIN_BASE('C')
+#define PD_BASE			SUNXI_PIN_BASE('D')
+#define PE_BASE			SUNXI_PIN_BASE('E')
+#define PF_BASE			SUNXI_PIN_BASE('F')
+#define PG_BASE			SUNXI_PIN_BASE('G')
+#define PH_BASE			SUNXI_PIN_BASE('H')
+#define PI_BASE			SUNXI_PIN_BASE('I')
+#define PJ_BASE			SUNXI_PIN_BASE('J')
+#define PK_BASE			SUNXI_PIN_BASE('K')
+#define PL_BASE			SUNXI_PIN_BASE('L')
+#define PM_BASE			SUNXI_PIN_BASE('M')
+#define PN_BASE			SUNXI_PIN_BASE('N')
+
 
 #define PINCTRL_PIN(a, b) { .number = a, .name = b }
 #define SUNXI_PINCTRL_PIN(bank, pin)		\
@@ -299,6 +302,8 @@ int sunxi_pinctrl_init_with_variant(
 
 extern const struct sunxi_pinctrl_desc h616_pinctrl_data;
 extern const struct sunxi_pinctrl_desc sun50i_h616_r_pinctrl_data;
+extern const struct sunxi_pinctrl_desc sun55iw3_pinctrl_data;
+extern const struct sunxi_pinctrl_desc sun55iw3_r_pinctrl_data;
 
 
 

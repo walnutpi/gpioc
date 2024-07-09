@@ -20,6 +20,10 @@ static const struct sunxi_pinctrl_desc *compatible_to_pinctrl_desc(char *str)
         return &h616_pinctrl_data;
     else if (strcmp(str, "allwinner,sun50i-h616-r-pinctrl") == 0)
         return &sun50i_h616_r_pinctrl_data;
+    else if (strcmp(str, "allwinner,sun55iw3-pinctrl") == 0)
+        return &sun55iw3_pinctrl_data;
+    else if (strcmp(str, "allwinner,sun55iw3-r-pinctrl") == 0)
+        return &sun55iw3_r_pinctrl_data;
     else
     {
         printf("can not support pinctrl compatible : %s\n", str);
