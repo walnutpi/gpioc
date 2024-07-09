@@ -224,7 +224,7 @@ const struct sunxi_pinctrl_desc sun55iw3_r_pinctrl_data = {
 	.irq_banks = ARRAY_SIZE(sun55iw3_r_irq_bank_map),
 	.irq_bank_map = sun55iw3_r_irq_bank_map,
 	.pin_base = SUNXI_PIN_BASE('L'),
-	// .hw_type = SUNXI_PCTL_HW_TYPE_1,
+	.hw_type = SUNXI_PCTL_HW_TYPE_1,
 };
 
 // static int sun55iw3_r_pinctrl_probe(struct platform_device *pdev)

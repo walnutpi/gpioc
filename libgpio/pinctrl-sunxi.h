@@ -117,6 +117,47 @@ enum sunxi_desc_bias_voltage {
 	 */
 	BIAS_VOLTAGE_PIO_POW_MODE_CTL,
 };
+enum sunxi_pinctrl_hw_type {
+	SUNXI_PCTL_HW_TYPE_0,  /* Older chips */
+	SUNXI_PCTL_HW_TYPE_1,  /* Newer chips: sun8iw20, sun20iw1, sun50iw12 */
+	SUNXI_PCTL_HW_TYPE_2,  /* Newer chips: sun60iw1 */
+	SUNXI_PCTL_HW_TYPE_3,  /* Newer chips: sun55iw3 */
+	SUNXI_PCTL_HW_TYPE_4,  /* Newer chips: sun60iw2 */
+	SUNXI_PCTL_HW_TYPE_5,  /* Support self-adaption */
+	/* Add new types here ... */
+	SUNXI_PCTL_HW_TYPE_CNT,
+};
+
+/* Reference <Port_Controller_Spec: Port Register List> for the information below: */
+struct sunxi_pinctrl_hw_info {
+	uint8_t initial_bank_offset;	/* First bank offset to pin base */
+	uint8_t mux_regs_offset;	/* Configure Register's offset */
+	uint8_t data_regs_offset;	/* Data Register's offset */
+	uint8_t dlevel_regs_offset;	/* Multi Driving Register's offset */
+	uint8_t bank_mem_size;  	/* Size of the basic registers (including CFG/DAT/DRV/PUL) of any bank  */
+	uint8_t pull_regs_offset;	/* Pull Register's offset */
+	uint8_t dlevel_pins_per_reg; /* How many pins does a 'Multi-Driving Register' contain? */
+	uint8_t dlevel_pins_bits;	/* How many bits does a 'Multi-Driving Register' use for a pin? */
+	uint8_t dlevel_pins_mask;	/* Bit mask for 'dlevel_pins_bits' */
+	uint8_t irq_mux_val;		/* Mux value for IRQ function */
+	uint32_t irq_cfg_reg;
+	uint32_t irq_ctrl_reg;
+	uint32_t irq_status_reg;
+	uint32_t irq_debounce_reg;
+	uint32_t irq_mem_size;
+	uint32_t irq_mem_base;
+	uint32_t irq_mem_used;
+	uint32_t power_mode_sel_reg;
+	uint32_t mode_sel_vccio_bit;
+	uint32_t power_mode_ctrl_reg;
+	uint32_t mode_ctrl_vccio_bit;
+	uint32_t power_mode_val_reg;  /* GPIO_POW_VAL: the register read the voltage withstand */
+	uint32_t mode_val_vccio_bit;
+	uint32_t pio_pow_ctrl_reg;
+	bool power_mode_reverse;  /* true: GPIO_POW_VAL and GPIO_POW_MID_SEL bit reverse, A523 SOC, for example */
+	bool power_mode_detect;  /* true: Config voltage withstand by reading power_mode_val_reg */
+};
+
 
 struct sunxi_desc_function {
 	unsigned long	variant;
@@ -153,6 +194,7 @@ struct sunxi_pinctrl_desc {
 	bool				irq_read_needs_mux;
 	bool				disable_strict_mode;
 	enum sunxi_desc_bias_voltage	io_bias_cfg_variant;
+	enum sunxi_pinctrl_hw_type	hw_type;
 };
 
 struct sunxi_pinctrl_function {
@@ -313,6 +355,7 @@ struct pins
 {
     const struct sunxi_desc_pin *pinctrl_desc; //单个引脚的描述
     uint8_t *mem_bank_base; //指向mmap映射后的bank基地址
+	struct sunxi_pinctrl_hw_info *hw_info; //不同芯片的寄存器组合不同，用于记录那些不同点
 };
 extern struct pins _pins[448];
 int sunxi_init(void);
