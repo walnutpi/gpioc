@@ -307,7 +307,7 @@ int sunxi_init()
             {
                 _pins[pinctrl_desc->pins[i].pin.number].pinctrl_desc = &(pinctrl_desc->pins[i]);
                 _pins[pinctrl_desc->pins[i].pin.number].mem_bank_base = mmap_gpio + ((pinctrl_desc->pins[i].pin.number) / 32 * sunxi_pinctrl_hw_info[pinctrl_desc->hw_type].bank_mem_size);
-                _pins[pinctrl_desc->pins[i].pin.number].hw_info = &sunxi_pinctrl_hw_info[pinctrl_desc->hw_type];
+                _pins[pinctrl_desc->pins[i].pin.number].reg_info = &sunxi_pinctrl_hw_info[pinctrl_desc->hw_type];
             }
         }
     }
@@ -327,7 +327,7 @@ void sunxi_pin_set_mode(int gpio_num, int mode)
     int offset = ((index - ((index >> 3) << 3)) << 2);
 
     uint32_t *reg;
-    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + ((index >> 3) << 2));
+    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + _pins[gpio_num].reg_info->mux_regs_offset + ((index >> 3) << 2));
     val = *reg;
 
     switch (mode)
@@ -361,7 +361,7 @@ int sunxi_pin_get_mode(int gpio_num)
     {
         return 0xff;
     }
-    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + ((index >> 3) << 2));
+    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + _pins[gpio_num].reg_info->mux_regs_offset +((index >> 3) << 2));
 
     val = *reg;
     mode = (val >> offset) & 0xf;
@@ -408,7 +408,7 @@ int sunxi_gpio_read(int gpio_num)
     uint32_t val;
 
     uint32_t *reg;
-    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + 0x10);
+    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + _pins[gpio_num].reg_info->data_regs_offset);
 
     val = *reg;
 
@@ -422,7 +422,7 @@ void sunxi_gpio_write(int gpio_num, int value)
     uint32_t val;
 
     uint32_t *reg;
-    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + 0x10);
+    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + _pins[gpio_num].reg_info->data_regs_offset);
 
     val = *reg;
 
@@ -471,7 +471,7 @@ void sunxi_gpio_set_PullUpDn(int gpio_num, int pud)
     offset = ((index - ((index >> 4) << 4)) << 1);
     pullOffset = 0x1C;
     uint32_t *reg;
-    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + 0x1C + ((index >> 4) << 2));
+    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + _pins[gpio_num].reg_info->pull_regs_offset + ((index >> 4) << 2));
 
     val = *reg;
 

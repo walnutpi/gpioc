@@ -355,7 +355,7 @@ struct pins
 {
     const struct sunxi_desc_pin *pinctrl_desc; //单个引脚的描述
     uint8_t *mem_bank_base; //指向mmap映射后的bank基地址
-	struct sunxi_pinctrl_hw_info *hw_info; //不同芯片的寄存器组合不同，用于记录那些不同点
+	struct sunxi_pinctrl_hw_info *reg_info; //记录各寄存器的偏移地址
 };
 extern struct pins _pins[448];
 int sunxi_init(void);
