@@ -1,9 +1,11 @@
 #!/bin/bash
+PATH_PWD="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
-cd libgpio
+cd ${PATH_PWD}/libgpio
 make
 make install
-cd ../command
+
+cd ${PATH_PWD}/command
 make
 ./install
 
