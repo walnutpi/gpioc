@@ -155,6 +155,8 @@ static int select_board()
         _board_select = _BOARD_DEF_WANUTPI_1B;
     else if (strcmp(model, "walnutpi-1b-emmc") == 0)
         _board_select = _BOARD_DEF_WANUTPI_1B_EMMC;
+    else if (strcmp(model, "Walnutpi 2b") == 0)
+        _board_select = _BOARD_DEF_WANUTPI_1B_EMMC;
     else
     {
         printf("you /proc/device-tree/model string is not in support list");
@@ -195,7 +197,7 @@ void exit_if_no_gpio(int pin_num)
     int gpio_num = board_ph_to_gpio(pin_num);
     if (gpio_num < 0)
     {
-        printf("ERROR: pin %d cannot do this operation \n");
+        printf("ERROR: pin %d cannot do this operation \n", pin_num);
         exit(-1);
     }
 }
@@ -427,8 +429,6 @@ void print_pins()
     default:
         break;
     }
-
-    printf("");
 }
 
 void print_search_none_l(int ph)

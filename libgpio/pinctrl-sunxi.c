@@ -250,7 +250,7 @@ int sunxi_init()
         printf("无法打开目录\n");
         return 1;
     }
-    char path_soc[100];
+    char path_soc[300];
     while ((entry = readdir(dir_dtree)) != NULL)
     {
         if (strncmp(entry->d_name, "soc", 3) == 0)
@@ -273,7 +273,7 @@ int sunxi_init()
     {
         if (strncmp(entry->d_name, "pinctrl@", 8) == 0)
         {
-            char path_pinctrl[100];
+            char path_pinctrl[600];
             sprintf(path_pinctrl, "%s/%s", path_soc, entry->d_name);
 
             // 读取compatible值
@@ -504,7 +504,7 @@ void sunxi_print_who_has_function(char *name_buf, int len)
     {
         if (strncmp(entry->d_name, "pinctrl@", 8) == 0)
         {
-            char path_pinctrl[100];
+            char path_pinctrl[300];
             sprintf(path_pinctrl, "/proc/device-tree/soc/%s", entry->d_name);
 
             // 读取compatible值
