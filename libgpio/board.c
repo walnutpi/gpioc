@@ -7,29 +7,11 @@
 #include "board.h"
 #include "board-pin.h"
 
-static struct BOARD_DESC
-{
-    char *model;           // 设备树model字段
-    struct BOARD_PIN *pin; // 描述板子所带的所有引脚
+static struct BOARD_DESC *board_list[] = {
+    &walnutpi_1b,
+    &walnutpi_1b_emmc,
 };
 
-static struct BOARD_DESC board_list[] = {
-    {
-        .model = "walnutpi-1b",
-        .pin = walnutpi1b_pins,
-    },
-    {
-        .model = "Walnutpi 2b",
-        // .model = "walnutpi-1b-emmc",
-        .pin = walnutpi1b_emmc_pins,
-    },
-
-};
-
-static int walnutpi1b_pin_pwm[][2] = {{15, 5}, {16, 5}, {38, 5}, {40, 5}};
-static int walnutpi1b_pin_uart[][2] = {{8, 3}, {10, 3}, {38, 3}, {40, 3}};
-static int walnutpi1b_pin_spi[][2] = {{19, 4}, {21, 4}, {23, 4}, {24, 4}, {26, 4}};
-static int walnutpi1b_pin_i2c[][2] = {{3, 5}, {5, 5}, {27, 5}, {28, 5}};
 static struct BOARD_DESC *now_board_desc = NULL;
 struct BOARD_DESC *get_board_desc()
 {
@@ -52,11 +34,11 @@ struct BOARD_DESC *get_board_desc()
 
     model = strtok(buffer, "\n");
 
-    for (i = 0; i < sizeof(board_list) / sizeof(struct BOARD_DESC); i++)
+    for (i = 0; i < sizeof(board_list) / sizeof(board_list[0]); i++)
     {
-        if (strcmp(model, board_list[i].model) == 0)
+        if (strcmp(model, board_list[i]->model) == 0)
         {
-            now_board_desc = &(board_list[i]);
+            now_board_desc = board_list[i];
             return now_board_desc;
         }
     }
@@ -65,59 +47,16 @@ struct BOARD_DESC *get_board_desc()
     exit(-1);
 }
 
-static int select_board()
-{
-    FILE *fp;
-    char buffer[1024];
-    char *model;
-    int i;
-    int _board_select = 0;
-
-    fp = fopen("/proc/device-tree/model", "r");
-    if (fp == NULL)
-    {
-        printf("Failed to open /proc/device-tree/model \n");
-        exit(-1);
-    }
-
-    fgets(buffer, 100, fp);
-    fclose(fp);
-
-    model = strtok(buffer, "\n");
-
-    if (strcmp(model, "walnutpi-1b") == 0)
-        _board_select = _BOARD_DEF_WANUTPI_1B;
-    else if (strcmp(model, "walnutpi-1b-emmc") == 0)
-        _board_select = _BOARD_DEF_WANUTPI_1B_EMMC;
-    else if (strcmp(model, "Walnutpi 2b") == 0)
-        _board_select = _BOARD_DEF_WANUTPI_1B_EMMC;
-    else
-    {
-        printf("you /proc/device-tree/model string is not in support list");
-        exit(-1);
-    }
-    return _board_select;
-}
 static struct BOARD_PIN *get_BOARD_PIN()
 {
     struct BOARD_PIN *PIN;
-    return get_board_desc()->pin;
+    return get_board_desc()->pins;
 }
 int board_ph_to_gpio(int pin_num)
 {
-    switch (select_board())
-    {
-    case _BOARD_DEF_WANUTPI_1B:
-    case _BOARD_DEF_WANUTPI_1B_EMMC:
-        if (pin_num > 42)
-        {
-            return PH_NUM_ERROR;
-        }
-        return get_BOARD_PIN()[pin_num].gpio_num;
-    default:
-        printf("ERROR: no support for your board\n");
-    }
-    return -99;
+    if (pin_num > get_board_desc()->pin_num)
+        return PH_NUM_ERROR;
+    return get_BOARD_PIN()[pin_num].gpio_num;
 }
 void exit_if_no_gpio(int pin_num)
 {
@@ -132,9 +71,7 @@ int pin_get_mode(int pin_num)
 {
     int gpio_num = board_ph_to_gpio(pin_num);
     if (gpio_num < 0)
-    {
         return -1;
-    }
     return gpio_get_mode(gpio_num);
 }
 
@@ -452,16 +389,7 @@ void print_pin_by_search_all_mode_name(char *str)
     printf("|    Mode   | Name | Physical | Name |    Mode   |\n");
     printf("+-----------+------+----------+------+-----------+\n");
 
-    int max_pin = 0;
-    switch (select_board())
-    {
-    case _BOARD_DEF_WANUTPI_1B:
-    case _BOARD_DEF_WANUTPI_1B_EMMC:
-        max_pin = 43;
-        break;
-    default:
-        printf("ERROR: no support for your board\n");
-    }
+    int max_pin = get_board_desc()->pin_num + 1;
     for (int ph = 1; ph < max_pin; ph++)
     {
         int j = 7;
@@ -507,22 +435,24 @@ void print_pin_para()
 void print_pin_by_mode_name(char *str)
 {
     int pins[43] = {-1};
+    get_board_desc();
+
     if (strcasecmp(str, "pwm") == 0)
-        for (int i = 0; i < sizeof(walnutpi1b_pin_pwm) / (sizeof(int) * 2); i++)
-            pins[walnutpi1b_pin_pwm[i][0]] = walnutpi1b_pin_pwm[i][1];
+        for (int i = 0; i < now_board_desc->pwms->count; i++)
+            pins[now_board_desc->pwms->pins[i]] = now_board_desc->pwms->modes[i];
     else if (strcasecmp(str, "uart") == 0)
-        for (int i = 0; i < sizeof(walnutpi1b_pin_uart) / (sizeof(int) * 2); i++)
-            pins[walnutpi1b_pin_uart[i][0]] = walnutpi1b_pin_uart[i][1];
+        for (int i = 0; i < now_board_desc->uarts->count; i++)
+            pins[now_board_desc->uarts->pins[i]] = now_board_desc->uarts->modes[i];
     else if (strcasecmp(str, "i2c") == 0)
-        for (int i = 0; i < sizeof(walnutpi1b_pin_i2c) / (sizeof(int) * 2); i++)
-            pins[walnutpi1b_pin_i2c[i][0]] = walnutpi1b_pin_i2c[i][1];
+        for (int i = 0; i < now_board_desc->i2cs->count; i++)
+            pins[now_board_desc->i2cs->pins[i]] = now_board_desc->i2cs->modes[i];
     else if (strcasecmp(str, "spi") == 0)
-        for (int i = 0; i < sizeof(walnutpi1b_pin_spi) / (sizeof(int) * 2); i++)
-            pins[walnutpi1b_pin_spi[i][0]] = walnutpi1b_pin_spi[i][1];
+        for (int i = 0; i < now_board_desc->spis->count; i++)
+            pins[now_board_desc->spis->pins[i]] = now_board_desc->spis->modes[i];
     printf("+-----------+------+----------+------+-----------+\n");
     printf("|    Mode   | Name | Physical | Name |    Mode   |\n");
     printf("+-----------+------+----------+------+-----------+\n");
-    for (int ph = 1; ph <= 42; ph++)
+    for (int ph = 1; ph <= now_board_desc->pin_num; ph++)
     {
         if (pins[ph] > 0)
         {
