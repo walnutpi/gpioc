@@ -122,7 +122,78 @@ int call_fun(char *buf, int len, char *return_str)
                 sprintf(return_str, "%d", pin_read(val1));
         }
         break;
-
+    case sizeof("pin_get_mode_name_now"):
+        if ((strncmp(buf, "pin_get_mode_name_now", sizeof("pin_get_mode_name_now") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            if (val1 != -1)
+                sprintf(return_str, "%s", pin_get_mode_name_now(val1));
+        }
+        break;
+    case sizeof("pin_get_mode_name_by_num"):
+        if ((strncmp(buf, "pin_get_mode_name_by_num", sizeof("pin_get_mode_name_by_num") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            int val2 = get_value2_int(pvl, value_len);
+            if (val1 != -1 && val2 != -1)
+                sprintf(return_str, "%s", pin_get_mode_name_by_num(val1, val2));
+        }
+        break;
+    // case sizeof("soft_pwm_get_duty_cycle"):
+    case sizeof("soft_pwm_set_duty_cycle"):
+        if ((strncmp(buf, "soft_pwm_set_duty_cycle", sizeof("soft_pwm_set_duty_cycle") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            int val2 = get_value2_int(pvl, value_len);
+            if (val1 != -1 && val2 != -1)
+                soft_pwm_set_duty_cycle(val1, val2);
+        }
+        if ((strncmp(buf, "soft_pwm_get_duty_cycle", sizeof("soft_pwm_get_duty_cycle") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            if (val1 != -1)
+                sprintf(return_str, "%d", soft_pwm_get_duty_cycle(val1));
+        }
+        break;
+    // case sizeof("soft_pwm_get_frequency"):
+    case sizeof("soft_pwm_set_frequency"):
+        if ((strncmp(buf, "soft_pwm_set_frequency", sizeof("soft_pwm_set_frequency") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            int val2 = get_value2_int(pvl, value_len);
+            if (val1 != -1 && val2 != -1)
+                soft_pwm_set_frequency(val1, val2);
+        }
+        if ((strncmp(buf, "soft_pwm_get_frequency", sizeof("soft_pwm_get_frequency") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            if (val1 != -1)
+                sprintf(return_str, "%d", soft_pwm_get_frequency(val1));
+        }
+        break;
+    case sizeof("soft_pwm_start"):
+        if ((strncmp(buf, "soft_pwm_start", sizeof("soft_pwm_start") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            if (val1 != -1)
+                soft_pwm_start(val1);
+        }
+        break;
+    case sizeof("soft_pwm_stop"):
+        if ((strncmp(buf, "soft_pwm_stop", sizeof("soft_pwm_stop") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            if (val1 != -1)
+                soft_pwm_stop(val1);
+        }
+        break;
+    case sizeof("soft_pwm_exists"):
+        if ((strncmp(buf, "soft_pwm_exists", sizeof("soft_pwm_exists") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            if (val1 != -1)
+                sprintf(return_str, "%d", soft_pwm_exists(val1));
+        }
     default:
         break;
     }

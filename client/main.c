@@ -59,15 +59,24 @@ int main()
     // char buf[] = {"pin_set_pullUpDn(42,2)"};
     // char buf[] = {"pin_set_pullUpDn(42,1)"};
     // char buf[] = {"pin_set_mode_by_name(42,\"IN\")"};
-    char buf[] = {"pin_set_mode_by_name(42,\"OUT\")"};
+    // char buf[] = {"pin_set_mode_by_name(42,\"OUT\")"};
     // char buf[] = {"pin_set_mode(42,1)"};
     // char buf[] = {"pin_set_mode(42,0)"};
     // char buf[] = {"pin_write(42,1)"};
     // char buf[] = {"pin_write(42,0)"};
     // char buf[] = {"pin_read(41)"};
     // char buf[] = {"pin_get_mode(12)"};
+    // char buf[] = {"pin_get_mode_name_now(28)"};
+    // char buf[] = {"pin_get_mode_name_by_num(37,3)"};
+
+    char buf[100];
+    strcpy(buf, "soft_pwm_set_duty_cycle(42,10)");
     run_commond(buf, strlen(buf));
+    strcpy(buf, "soft_pwm_set_frequency(42,1000)");
+    run_commond(buf, strlen(buf));
+    strcpy(buf, "soft_pwm_start(42)");
+    run_commond(buf, strlen(buf));
+
     printf("buf={%s}\n", buf);
     return 0;
 }
-
