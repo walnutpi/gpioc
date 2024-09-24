@@ -56,11 +56,18 @@ int run_commond(char *buf, int len)
 int main()
 {
     // char buf[] = {"hello"};
-    char buf[] = {"pin_set_mode_by_name(42,\"IN\")"};
-    // char buf[] = {"pin_write(42,0)"};
+    // char buf[] = {"pin_set_pullUpDn(42,2)"};
+    // char buf[] = {"pin_set_pullUpDn(42,1)"};
+    // char buf[] = {"pin_set_mode_by_name(42,\"IN\")"};
+    char buf[] = {"pin_set_mode_by_name(42,\"OUT\")"};
+    // char buf[] = {"pin_set_mode(42,1)"};
+    // char buf[] = {"pin_set_mode(42,0)"};
+    // char buf[] = {"pin_write(42,1)"};
     // char buf[] = {"pin_write(42,0)"};
     // char buf[] = {"pin_read(41)"};
+    // char buf[] = {"pin_get_mode(12)"};
     run_commond(buf, strlen(buf));
     printf("buf={%s}\n", buf);
     return 0;
 }
+

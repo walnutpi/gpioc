@@ -13,125 +13,47 @@
 #define PORT 10007 // 端口号
 #define BACKLOG 1  // 最大监听数
 
-// str:函数名
-// buf:要匹配的字符串
-// len:buf的大小
-// fun:目标函数
-int call_cmd_int_fun_int(char *str, char *buf, int len, int (*fun)(int), char *return_str)
+int get_value1_int(char *buf, int len)
 {
-    if ((strncmp(buf, str, strlen(str) - 1)) == 0)
+    int val = -1;
+    for (int i = 0; i < len; i++)
     {
-        int val = 0;
-
-        char *pl = strchr(buf, '(');
-        char *pr = strrchr(buf, ')');
-        val = -1;
-        for (char *p = pl + 1; p < pr; p++)
+        if (buf[i] >= '0' && buf[i] <= '9')
         {
-            if ((*p) > '0' && (*p) < '9')
-            {
-                if (val == -1)
-                    val = 0;
-                val *= 10;
-                val += (*p) - '0';
-            }
-            else if ((*p) != ' ')
-                break;
+            if (val == -1)
+                val = 0;
+            val *= 10;
+            val += buf[i] - '0';
         }
-
-        if (val != -1)
-        {
-            int re = fun(val);
-            sprintf(return_str, "%d", re);
-            return re;
-        }
+        else if (buf[i] != ' ')
+            break;
     }
-    return -1;
+    return val;
 }
-int call_cmd_void_fun_int_int(const char *str, char *buf, int len, void (*fun)(int, int))
+int get_value2_int(char *buf, int len)
 {
-
-    if ((strncmp(buf, str, strlen(str) - 1)) == 0)
-    {
-        int val1, val2;
-        // get_int_2_value(&(buf[strlen(str)]) - 1, len - strlen(str), &val1, &val2);
-        char *pl = strchr(buf, '(');
-        char *pr = strrchr(buf, ')');
-        val1 = -1;
-        val2 = -1;
-        for (char *p = pl + 1; p < pr; p++)
-        {
-            if ((*p) >= '0' && (*p) <= '9')
-            {
-                if (val1 == -1)
-                    val1 = 0;
-                val1 *= 10;
-                val1 += (*p) - '0';
-            }
-            else if ((*p) != ' ')
-            {
-                pl = p;
-                break;
-            }
-        }
-        for (pl += 1; pl < pr; pl++)
-        {
-            if ((*pl) >= '0' && (*pl) <= '9')
-            {
-                if (val2 == -1)
-                    val2 = 0;
-                val2 *= 10;
-                val2 += (*pl) - '0';
-            }
-            else if ((*pl) != ' ')
-                break;
-        }
-
-        if (val2 != -1)
-            fun(val1, val2);
-        return 0;
-    }
-    return -1;
+    buf = strchr(buf, ',');
+    if (buf == NULL)
+        return -1;
+    return get_value1_int(buf + 1, len);
 }
-
-// pin_set_mode_by_name(41,"IN")
-int call_cmd_void_fun_int_char(const char *str, char *buf, int len, void (*fun)(int, char *))
+int get_value1_char(char *buf, int len, char *value)
 {
-    if ((strncmp(buf, str, strlen(str) - 1)) == 0)
-    {
-        int val1, val2;
-        char para2[20];
-        char *pl = strchr(buf, '(');
-        char *pr = strrchr(buf, ')');
-        val1 = -1;
-        val2 = -1;
-        for (char *p = pl + 1; p < pr; p++)
-        {
-            if ((*p) >= '0' && (*p) <= '9')
-            {
-                if (val1 == -1)
-                    val1 = 0;
-                val1 *= 10;
-                val1 += (*p) - '0';
-            }
-            else if ((*p) != ' ')
-            {
-                pl = p;
-                break;
-            }
-        }
-        char *marks_l = strchr(buf, '\"') + 1;
-        char *marks_r = strrchr(buf, '\"');
-        int str_len = marks_r - marks_l;
-        strncpy(para2, marks_l, str_len);
-        para2[str_len] = '\0';
-        printf("str_len=%d\n", str_len);
-        printf("val1=%d, para2=%s\n", val1, para2);
-        if (str_len > 0)
-            fun(val1, para2);
-        return 0;
-    }
-    return -1;
+    char *marks_l = strchr(buf, '\"') + 1;
+    char *marks_r = strchr(marks_l + 1, '\"');
+    if (marks_l == NULL || marks_r == NULL)
+        return -1;
+    int str_len = marks_r - marks_l;
+    strncpy(value, marks_l, str_len);
+    value[str_len] = '\0';
+    return 0;
+}
+int get_value2_char(char *buf, int len, char *value)
+{
+    buf = strchr(buf, ',');
+    if (buf == NULL)
+        return -1;
+    return get_value1_char(buf, len, value);
 }
 
 int call_fun(char *buf, int len, char *return_str)
@@ -139,12 +61,71 @@ int call_fun(char *buf, int len, char *return_str)
     time_t timep;
     time(&timep);
     printf("%ld\t[%d] : {%s}\n", timep, len, buf, return_str);
-    call_cmd_int_fun_int("pin_get_mode", buf, len, pin_get_mode, return_str);
-    call_cmd_void_fun_int_int("pin_set_mode", buf, len, pin_set_mode);
-    call_cmd_void_fun_int_char("pin_set_mode_by_name", buf, len, pin_set_mode_by_name);
-    call_cmd_void_fun_int_int("pin_set_pullUpDn", buf, len, pin_set_pullUpDn);
-    call_cmd_void_fun_int_int("pin_write", buf, len, pin_write);
-    call_cmd_int_fun_int("pin_read", buf, len, pin_read, return_str);
+
+    char *pvl = strchr(buf, '(');
+    char *pvr = strchr(buf, ')');
+    int value_len = pvr - pvl;
+    if (pvl == NULL || pvr == NULL)
+        return -1;
+    pvl += 1;
+    switch (pvl - buf)
+    {
+    // case sizeof("pin_set_mode"): //字符串长度相同
+    case sizeof("pin_get_mode"):
+        if ((strncmp(buf, "pin_get_mode", sizeof("pin_get_mode") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            if (val1 != -1)
+                sprintf(return_str, "%d", pin_get_mode(val1));
+        }
+        if ((strncmp(buf, "pin_set_mode", sizeof("pin_set_mode") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            int val2 = get_value2_int(pvl, value_len);
+            if (val1 != -1 && val2 != -1)
+                pin_set_mode(val1, val2);
+        }
+        break;
+    case sizeof("pin_set_mode_by_name"):
+        if ((strncmp(buf, "pin_set_mode_by_name", sizeof("pin_set_mode_by_name") - 1)) == 0)
+        {
+            char val_str[30];
+            int val1 = get_value1_int(pvl, value_len);
+            int val2 = get_value2_char(pvl, value_len, val_str);
+            if (val1 != -1 && val2 != -1)
+                pin_set_mode_by_name(val1, val_str);
+        }
+        break;
+    case sizeof("pin_set_pullUpDn"):
+        if ((strncmp(buf, "pin_set_pullUpDn", sizeof("pin_set_pullUpDn") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            int val2 = get_value2_int(pvl, value_len);
+            if (val1 != -1 && val2 != -1)
+                pin_set_pullUpDn(val1, val2);
+        }
+        break;
+    case sizeof("pin_write"):
+        if ((strncmp(buf, "pin_write", sizeof("pin_write") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            int val2 = get_value2_int(pvl, value_len);
+            if (val1 != -1 && val2 != -1)
+                pin_write(val1, val2);
+        }
+        break;
+    case sizeof("pin_read"):
+        if ((strncmp(buf, "pin_read", sizeof("pin_read") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            if (val1 != -1)
+                sprintf(return_str, "%d", pin_read(val1));
+        }
+        break;
+
+    default:
+        break;
+    }
 }
 
 int run_listen()
