@@ -82,7 +82,7 @@ void pin_set_mode_by_name(int pin_num, char *mode)
     else
     {
         char buf[50];
-        sprintf(buf, "pin_set_mode_by_name(%d,%s)", pin_num, mode);
+        sprintf(buf, "pin_set_mode_by_name(%d,\"%s\")", pin_num, mode);
         run_commond(buf, strlen(buf));
     }
 }
