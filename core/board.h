@@ -5,22 +5,22 @@
 
 // 使用板上排针编号
 
-extern int pin_get_mode(int pin_num);
-extern void pin_set_mode(int pin_num, int mode);
-extern void pin_set_mode_by_name(int pin_num, char *mode);
-extern void pin_set_pullUpDn(int pin_num, int pud);
-extern int pin_read(int pin_num);
-extern void pin_write(int pin_num, int value);
-extern const char *pin_get_mode_name_now(int pin_num);
-extern const char *pin_get_mode_name_by_num(int pin_num, int mode_num);
+extern int board_pin_get_mode(int pin_num);
+extern void board_pin_set_mode(int pin_num, int mode);
+extern void board_pin_set_mode_by_name(int pin_num, char *mode);
+extern void board_pin_set_pullUpDn(int pin_num, int pud);
+extern int board_pin_read(int pin_num);
+extern void board_pin_write(int pin_num, int value);
+extern const char *board_pin_get_mode_name_now(int pin_num);
+extern const char *board_pin_get_mode_name_by_num(int pin_num, int mode_num);
 
-void soft_pwm_set_duty_cycle(int pin_num, int dutycycle);
-void soft_pwm_set_frequency(int pin_num, int freq);
-int soft_pwm_get_duty_cycle(int pin_num);
-int soft_pwm_get_frequency(int pin_num);
-void soft_pwm_start(int pin_num);
-void soft_pwm_stop(int pin_num);
-int soft_pwm_exists(int pin_num);
+void board_soft_pwm_set_duty_cycle(int pin_num, int dutycycle);
+void board_soft_pwm_set_frequency(int pin_num, int freq);
+int board_soft_pwm_get_duty_cycle(int pin_num);
+int board_soft_pwm_get_frequency(int pin_num);
+void board_soft_pwm_start(int pin_num);
+void board_soft_pwm_stop(int pin_num);
+int board_soft_pwm_exists(int pin_num);
 
 // 供gpio指令使用
 extern void print_pins();                                 // 将当前所有引脚的状态输出到终端

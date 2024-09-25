@@ -67,7 +67,7 @@ void exit_if_no_gpio(int pin_num)
         exit(-1);
     }
 }
-int pin_get_mode(int pin_num)
+int board_pin_get_mode(int pin_num)
 {
     int gpio_num = board_ph_to_gpio(pin_num);
     if (gpio_num < 0)
@@ -75,48 +75,48 @@ int pin_get_mode(int pin_num)
     return gpio_get_mode(gpio_num);
 }
 
-void pin_set_mode(int pin_num, int mode)
+void board_pin_set_mode(int pin_num, int mode)
 {
     if (board_ph_to_gpio(pin_num) < 0)
         return;
     gpio_set_mode(board_ph_to_gpio(pin_num), mode);
 }
-void pin_set_mode_by_name(int pin_num, char *mode)
+void board_pin_set_mode_by_name(int pin_num, char *mode)
 {
     if (board_ph_to_gpio(pin_num) < 0)
         return;
     for (int i = 0; i <= 7; i++)
     {
-        const char *str = pin_get_mode_name_by_num(pin_num, i);
+        const char *str = board_pin_get_mode_name_by_num(pin_num, i);
         if (str != NULL)
             if (strcasecmp(str, mode) == 0)
             {
-                pin_set_mode(pin_num, i);
+                board_pin_set_mode(pin_num, i);
             }
     }
 }
-void pin_set_pullUpDn(int pin_num, int pud)
+void board_pin_set_pullUpDn(int pin_num, int pud)
 {
     // exit_if_no_gpio(pin_num);
     if (board_ph_to_gpio(pin_num) < 0)
         return;
     gpio_set_pullUpDn(board_ph_to_gpio(pin_num), pud);
 }
-int pin_read(int pin_num)
+int board_pin_read(int pin_num)
 {
     // exit_if_no_gpio(pin_num);
     if (board_ph_to_gpio(pin_num) < 0)
         return -1;
     return gpio_read(board_ph_to_gpio(pin_num));
 }
-void pin_write(int pin_num, int value)
+void board_pin_write(int pin_num, int value)
 {
     if (board_ph_to_gpio(pin_num) < 0)
         return;
     // exit_if_no_gpio(pin_num);
     gpio_write(board_ph_to_gpio(pin_num), value);
 }
-const char *pin_get_mode_name_now(int pin_num)
+const char *board_pin_get_mode_name_now(int pin_num)
 {
     int gpio_num = board_ph_to_gpio(pin_num);
     if (gpio_num < 0)
@@ -125,7 +125,7 @@ const char *pin_get_mode_name_now(int pin_num)
     }
     return gpio_pin_get_mode_name(gpio_num);
 }
-const char *pin_get_mode_name_by_num(int pin_num, int mode_num)
+const char *board_pin_get_mode_name_by_num(int pin_num, int mode_num)
 {
     int gpio_num = board_ph_to_gpio(pin_num);
     if (gpio_num < 0)
@@ -135,43 +135,43 @@ const char *pin_get_mode_name_by_num(int pin_num, int mode_num)
     return gpio_pin_get_mode_name_by_num(gpio_num, mode_num);
 }
 
-void soft_pwm_set_duty_cycle(int pin_num, int dutycycle)
+void board_soft_pwm_set_duty_cycle(int pin_num, int dutycycle)
 {
     if (board_ph_to_gpio(pin_num) < 0)
         return;
     pwm_set_duty_cycle(board_ph_to_gpio(pin_num), dutycycle);
 }
-void soft_pwm_set_frequency(int pin_num, int freq)
+void board_soft_pwm_set_frequency(int pin_num, int freq)
 {
     if (board_ph_to_gpio(pin_num) < 0)
         return;
     pwm_set_frequency(board_ph_to_gpio(pin_num), freq);
 }
-int soft_pwm_get_duty_cycle(int pin_num)
+int board_soft_pwm_get_duty_cycle(int pin_num)
 {
     if (board_ph_to_gpio(pin_num) < 0)
         return -1;
     return pwm_get_duty_cycle(board_ph_to_gpio(pin_num));
 }
-int soft_pwm_get_frequency(int pin_num)
+int board_soft_pwm_get_frequency(int pin_num)
 {
     if (board_ph_to_gpio(pin_num) < 0)
         return -1;
     return pwm_get_frequency(board_ph_to_gpio(pin_num));
 }
-void soft_pwm_start(int pin_num)
+void board_soft_pwm_start(int pin_num)
 {
     if (board_ph_to_gpio(pin_num) < 0)
         return;
     pwm_start(board_ph_to_gpio(pin_num));
 }
-void soft_pwm_stop(int pin_num)
+void board_soft_pwm_stop(int pin_num)
 {
     if (board_ph_to_gpio(pin_num) < 0)
         return;
     pwm_stop(board_ph_to_gpio(pin_num));
 }
-int soft_pwm_exists(int pin_num)
+int board_soft_pwm_exists(int pin_num)
 {
     if (board_ph_to_gpio(pin_num) < 0)
         return -1;
@@ -181,14 +181,14 @@ int soft_pwm_exists(int pin_num)
 void printf_pins_l(int ph)
 {
     printf("|");
-    if (board_ph_to_gpio(ph) >= 0 && pin_get_mode(ph) < 2)
-        printf(" %d ", pin_read(ph));
+    if (board_ph_to_gpio(ph) >= 0 && board_pin_get_mode(ph) < 2)
+        printf(" %d ", board_pin_read(ph));
     else
         printf("   ");
 
     printf("|");
     if (board_ph_to_gpio(ph) >= 0)
-        printf(" %9s ", pin_get_mode_name_now(ph));
+        printf(" %9s ", board_pin_get_mode_name_now(ph));
     else
         printf(" %9s ", "");
 
@@ -250,13 +250,13 @@ void printf_pins_r(int ph)
 
     printf("|");
     if (board_ph_to_gpio(ph) >= 0)
-        printf(" %-9s ", pin_get_mode_name_now(ph));
+        printf(" %-9s ", board_pin_get_mode_name_now(ph));
     else
         printf(" %9s ", "");
 
     printf("|");
-    if (board_ph_to_gpio(ph) >= 0 && pin_get_mode(ph) < 2)
-        printf(" %d ", pin_read(ph));
+    if (board_ph_to_gpio(ph) >= 0 && board_pin_get_mode(ph) < 2)
+        printf(" %d ", board_pin_read(ph));
     else
         printf("   ");
     printf("|");
@@ -356,7 +356,7 @@ void print_search_hit_l(int ph, int mode_num)
 {
     printf("\033[30;42m");
     printf("|");
-    printf(" %9s ", pin_get_mode_name_by_num(ph, mode_num));
+    printf(" %9s ", board_pin_get_mode_name_by_num(ph, mode_num));
     printf("|");
     printf(" %4s ", get_BOARD_PIN()[ph].name);
     printf("|");
@@ -378,7 +378,7 @@ void print_search_hit_r(int ph, int mode_num)
     printf("|");
     printf(" %-4s ", get_BOARD_PIN()[ph].name);
     printf("|");
-    printf(" %-9s ", pin_get_mode_name_by_num(ph, mode_num));
+    printf(" %-9s ", board_pin_get_mode_name_by_num(ph, mode_num));
     printf("|");
     printf("\033[0m");
 }
@@ -491,7 +491,7 @@ void print_all_gpio_on_ph()
 }
 void print_mode_name_inoutoff(int pin_num)
 {
-    printf("%s ", pin_get_mode_name_by_num(pin_num, 0));
-    printf("%s ", pin_get_mode_name_by_num(pin_num, 1));
-    printf("%s ", pin_get_mode_name_by_num(pin_num, 7));
+    printf("%s ", board_pin_get_mode_name_by_num(pin_num, 0));
+    printf("%s ", board_pin_get_mode_name_by_num(pin_num, 1));
+    printf("%s ", board_pin_get_mode_name_by_num(pin_num, 7));
 }

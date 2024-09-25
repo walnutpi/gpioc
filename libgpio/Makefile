@@ -2,7 +2,8 @@ cc = gcc
 target = libgpio
 head_file = gpio.h
 
-src = $(wildcard *.c)
+src = $(wildcard ../core/*.c)
+src += $(wildcard *.c)
 src := $(filter-out %_py.c, $(src))
 objects = $(patsubst %.c,%.o,$(src))
 

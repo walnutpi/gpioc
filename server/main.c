@@ -8,7 +8,7 @@
 #include <netinet/ip.h>
 #include <time.h>
 #include <string.h>
-#include "../libgpio/board.h"
+#include "../core/board.h"
 
 #define PORT 10007 // 端口号
 #define BACKLOG 1  // 最大监听数
@@ -76,14 +76,14 @@ int call_fun(char *buf, int len, char *return_str)
         {
             int val1 = get_value1_int(pvl, value_len);
             if (val1 != -1)
-                sprintf(return_str, "%d", pin_get_mode(val1));
+                sprintf(return_str, "%d", board_pin_get_mode(val1));
         }
         if ((strncmp(buf, "pin_set_mode", sizeof("pin_set_mode") - 1)) == 0)
         {
             int val1 = get_value1_int(pvl, value_len);
             int val2 = get_value2_int(pvl, value_len);
             if (val1 != -1 && val2 != -1)
-                pin_set_mode(val1, val2);
+                board_pin_set_mode(val1, val2);
         }
         break;
     case sizeof("pin_set_mode_by_name"):
@@ -93,7 +93,7 @@ int call_fun(char *buf, int len, char *return_str)
             int val1 = get_value1_int(pvl, value_len);
             int val2 = get_value2_char(pvl, value_len, val_str);
             if (val1 != -1 && val2 != -1)
-                pin_set_mode_by_name(val1, val_str);
+                board_pin_set_mode_by_name(val1, val_str);
         }
         break;
     case sizeof("pin_set_pullUpDn"):
@@ -102,7 +102,7 @@ int call_fun(char *buf, int len, char *return_str)
             int val1 = get_value1_int(pvl, value_len);
             int val2 = get_value2_int(pvl, value_len);
             if (val1 != -1 && val2 != -1)
-                pin_set_pullUpDn(val1, val2);
+                board_pin_set_pullUpDn(val1, val2);
         }
         break;
     case sizeof("pin_write"):
@@ -111,7 +111,7 @@ int call_fun(char *buf, int len, char *return_str)
             int val1 = get_value1_int(pvl, value_len);
             int val2 = get_value2_int(pvl, value_len);
             if (val1 != -1 && val2 != -1)
-                pin_write(val1, val2);
+                board_pin_write(val1, val2);
         }
         break;
     case sizeof("pin_read"):
@@ -119,7 +119,7 @@ int call_fun(char *buf, int len, char *return_str)
         {
             int val1 = get_value1_int(pvl, value_len);
             if (val1 != -1)
-                sprintf(return_str, "%d", pin_read(val1));
+                sprintf(return_str, "%d", board_pin_read(val1));
         }
         break;
     case sizeof("pin_get_mode_name_now"):
@@ -127,7 +127,7 @@ int call_fun(char *buf, int len, char *return_str)
         {
             int val1 = get_value1_int(pvl, value_len);
             if (val1 != -1)
-                sprintf(return_str, "%s", pin_get_mode_name_now(val1));
+                sprintf(return_str, "%s", board_pin_get_mode_name_now(val1));
         }
         break;
     case sizeof("pin_get_mode_name_by_num"):
@@ -136,7 +136,7 @@ int call_fun(char *buf, int len, char *return_str)
             int val1 = get_value1_int(pvl, value_len);
             int val2 = get_value2_int(pvl, value_len);
             if (val1 != -1 && val2 != -1)
-                sprintf(return_str, "%s", pin_get_mode_name_by_num(val1, val2));
+                sprintf(return_str, "%s", board_pin_get_mode_name_by_num(val1, val2));
         }
         break;
     // case sizeof("soft_pwm_get_duty_cycle"):
@@ -146,13 +146,13 @@ int call_fun(char *buf, int len, char *return_str)
             int val1 = get_value1_int(pvl, value_len);
             int val2 = get_value2_int(pvl, value_len);
             if (val1 != -1 && val2 != -1)
-                soft_pwm_set_duty_cycle(val1, val2);
+                board_soft_pwm_set_duty_cycle(val1, val2);
         }
         if ((strncmp(buf, "soft_pwm_get_duty_cycle", sizeof("soft_pwm_get_duty_cycle") - 1)) == 0)
         {
             int val1 = get_value1_int(pvl, value_len);
             if (val1 != -1)
-                sprintf(return_str, "%d", soft_pwm_get_duty_cycle(val1));
+                sprintf(return_str, "%d", board_soft_pwm_get_duty_cycle(val1));
         }
         break;
     // case sizeof("soft_pwm_get_frequency"):
@@ -162,13 +162,13 @@ int call_fun(char *buf, int len, char *return_str)
             int val1 = get_value1_int(pvl, value_len);
             int val2 = get_value2_int(pvl, value_len);
             if (val1 != -1 && val2 != -1)
-                soft_pwm_set_frequency(val1, val2);
+                board_soft_pwm_set_frequency(val1, val2);
         }
         if ((strncmp(buf, "soft_pwm_get_frequency", sizeof("soft_pwm_get_frequency") - 1)) == 0)
         {
             int val1 = get_value1_int(pvl, value_len);
             if (val1 != -1)
-                sprintf(return_str, "%d", soft_pwm_get_frequency(val1));
+                sprintf(return_str, "%d", board_soft_pwm_get_frequency(val1));
         }
         break;
     case sizeof("soft_pwm_start"):
@@ -176,7 +176,7 @@ int call_fun(char *buf, int len, char *return_str)
         {
             int val1 = get_value1_int(pvl, value_len);
             if (val1 != -1)
-                soft_pwm_start(val1);
+                board_soft_pwm_start(val1);
         }
         break;
     case sizeof("soft_pwm_stop"):
@@ -184,7 +184,7 @@ int call_fun(char *buf, int len, char *return_str)
         {
             int val1 = get_value1_int(pvl, value_len);
             if (val1 != -1)
-                soft_pwm_stop(val1);
+                board_soft_pwm_stop(val1);
         }
         break;
     case sizeof("soft_pwm_exists"):
@@ -192,7 +192,7 @@ int call_fun(char *buf, int len, char *return_str)
         {
             int val1 = get_value1_int(pvl, value_len);
             if (val1 != -1)
-                sprintf(return_str, "%d", soft_pwm_exists(val1));
+                sprintf(return_str, "%d", board_soft_pwm_exists(val1));
         }
     default:
         break;
