@@ -11,7 +11,7 @@
 #include "../core/board.h"
 
 #define PORT 10007           // 目标地址端口号
-#define ADDR "192.168.2.131" // 目标地址
+#define ADDR "127.0.0.1" // 目标地址
 
 // 将传入的字符串发给server，并获得对方的返回值
 // @return: 对方返回了多少个字节的数据

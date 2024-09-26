@@ -1,0 +1,10 @@
+#!/bin/bash
+PATH_PWD="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+
+make
+mv ${PATH_PWD}/gpioc-server /lib/walnutpi/
+cp ${PATH_PWD}/gpioc-server.service /lib/systemd/system
+systemctl enable gpioc-server.service
+systemctl start gpioc-server.service
+
+

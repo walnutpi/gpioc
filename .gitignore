@@ -194,3 +194,4 @@ cython_debug/
 .vscode/settings.json
 exe
 command/_gpiocommand
+server/gpioc-server
