@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "../core/board.h"
+#include "../libgpio/board.h"
 const char *command_name = "gpio";
 
 int do_pri_all_gpio_on_ph(int argc, char *argv[])
@@ -16,7 +16,7 @@ int do_pri_pin_para(int argc, char *argv[])
 int do_pri_mode_name(int argc, char *argv[])
 {
     int ph_num = atoi(argv[2]);
-    printf("%s\n", board_pin_get_mode_name_now(ph_num));
+    printf("%s\n", pin_get_mode_name_now(ph_num));
 }
 int do_pin(int argc, char *argv[])
 {
@@ -56,18 +56,18 @@ int do_mode(int argc, char *argv[])
     char *str = argv[3];
     if (strcasecmp(str, "IN_PULLUP") == 0)
     {
-        board_pin_set_pullUpDn(ph_num, PULL_UP);
-        board_pin_set_mode(ph_num, INPUT);
+        pin_set_pullUpDn(ph_num, PULL_UP);
+        pin_set_mode(ph_num, INPUT);
     }
     else if (strcasecmp(str, "IN_PULLDOWN") == 0)
     {
-        board_pin_set_pullUpDn(ph_num, PULL_DOWN);
-        board_pin_set_mode(ph_num, INPUT);
+        pin_set_pullUpDn(ph_num, PULL_DOWN);
+        pin_set_mode(ph_num, INPUT);
     }
     else
     {
-        board_pin_set_pullUpDn(ph_num, PULL_OFF);
-        board_pin_set_mode_by_name(ph_num, str);
+        pin_set_pullUpDn(ph_num, PULL_OFF);
+        pin_set_mode_by_name(ph_num, str);
     }
 }
 int do_read(int argc, char *argv[])
@@ -79,7 +79,7 @@ int do_read(int argc, char *argv[])
         exit(1);
     }
     pin = atoi(argv[2]);
-    val = board_pin_read(pin);
+    val = pin_read(pin);
 
     printf("%s\n", val == 0 ? "0" : "1");
 }
@@ -104,9 +104,9 @@ int do_write(int argc, char *argv[])
         val = atoi(argv[3]);
 
     if (val == 1)
-        board_pin_write(ph_num, 1);
+        pin_write(ph_num, 1);
     else if (val == 0)
-        board_pin_write(ph_num, 0);
+        pin_write(ph_num, 0);
     else
     {
         fprintf(stderr, "the value error\n");
@@ -122,7 +122,7 @@ int do_toggle(int argc, char *argv[])
         // fprintf(stderr, "Usage: \n\t%s toggle [pin]\n\n", command_name);
         exit(1);
     }
-    board_pin_write(pin, !board_pin_read(pin));
+    pin_write(pin, !pin_read(pin));
 }
 
 struct ops
