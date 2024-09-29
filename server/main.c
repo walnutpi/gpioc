@@ -9,6 +9,7 @@
 #include <time.h>
 #include <string.h>
 #include "../libgpio/board.h"
+#include "../libgpio/softpwm.h"
 
 #define PORT 10007 // 端口号
 #define BACKLOG 1  // 最大监听数
@@ -68,9 +69,8 @@ int call_fun(char *buf, int len, char *return_str)
     if (pvl == NULL || pvr == NULL)
         return -1;
     pvl += 1;
-    switch (pvl - buf)
+    switch (pvl - buf) // pin
     {
-    // case sizeof("pin_set_mode"): //字符串长度相同
     case sizeof("pin_get_mode"):
         if ((strncmp(buf, "pin_get_mode", sizeof("pin_get_mode") - 1)) == 0)
         {
@@ -78,6 +78,8 @@ int call_fun(char *buf, int len, char *return_str)
             if (val1 != -1)
                 sprintf(return_str, "%d", pin_get_mode(val1));
         }
+        // break;
+        // case sizeof("pin_set_mode"): //字符串长度相同
         if ((strncmp(buf, "pin_set_mode", sizeof("pin_set_mode") - 1)) == 0)
         {
             int val1 = get_value1_int(pvl, value_len);
@@ -105,14 +107,7 @@ int call_fun(char *buf, int len, char *return_str)
                 pin_set_pullUpDn(val1, val2);
         }
         break;
-    // case sizeof("gpio_read"):
     case sizeof("pin_write"):
-        if ((strncmp(buf, "gpio_read", sizeof("gpio_read") - 1)) == 0)
-        {
-            int val1 = get_value1_int(pvl, value_len);
-            if (val1 != -1)
-                sprintf(return_str, "%d", gpio_read(val1));
-        }
         if ((strncmp(buf, "pin_write", sizeof("pin_write") - 1)) == 0)
         {
             int val1 = get_value1_int(pvl, value_len);
@@ -121,6 +116,7 @@ int call_fun(char *buf, int len, char *return_str)
                 pin_write(val1, val2);
         }
         break;
+
     case sizeof("pin_read"):
         if ((strncmp(buf, "pin_read", sizeof("pin_read") - 1)) == 0)
         {
@@ -129,6 +125,7 @@ int call_fun(char *buf, int len, char *return_str)
                 sprintf(return_str, "%d", pin_read(val1));
         }
         break;
+
     case sizeof("pin_get_mode_name_now"):
         if ((strncmp(buf, "pin_get_mode_name_now", sizeof("pin_get_mode_name_now") - 1)) == 0)
         {
@@ -146,7 +143,20 @@ int call_fun(char *buf, int len, char *return_str)
                 sprintf(return_str, "%s", pin_get_mode_name_by_num(val1, val2));
         }
         break;
-        // case sizeof("gpio_set_mode"): //字符串长度相同
+
+    default:
+        break;
+    }
+    switch (pvl - buf) // gpio
+    {
+    case sizeof("gpio_read"):
+        if ((strncmp(buf, "gpio_read", sizeof("gpio_read") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            if (val1 != -1)
+                sprintf(return_str, "%d", gpio_read(val1));
+        }
+        break;
     case sizeof("gpio_get_mode"):
         if ((strncmp(buf, "gpio_get_mode", sizeof("gpio_get_mode") - 1)) == 0)
         {
@@ -154,6 +164,8 @@ int call_fun(char *buf, int len, char *return_str)
             if (val1 != -1)
                 sprintf(return_str, "%d", gpio_get_mode(val1));
         }
+        // break;
+        // case sizeof("gpio_set_mode"): //字符串长度相同
         if ((strncmp(buf, "gpio_set_mode", sizeof("gpio_set_mode") - 1)) == 0)
         {
             int val1 = get_value1_int(pvl, value_len);
@@ -162,6 +174,7 @@ int call_fun(char *buf, int len, char *return_str)
                 gpio_set_mode(val1, val2);
         }
         break;
+
     case sizeof("gpio_set_pullUpDn"):
         if ((strncmp(buf, "gpio_set_pullUpDn", sizeof("gpio_set_pullUpDn") - 1)) == 0)
         {
@@ -171,6 +184,7 @@ int call_fun(char *buf, int len, char *return_str)
                 gpio_set_pullUpDn(val1, val2);
         }
         break;
+
     case sizeof("gpio_write"):
         if ((strncmp(buf, "gpio_write", sizeof("gpio_write") - 1)) == 0)
         {
@@ -180,6 +194,7 @@ int call_fun(char *buf, int len, char *return_str)
                 gpio_write(val1, val2);
         }
         break;
+
     case sizeof("gpio_pin_get_mode_name"):
         if ((strncmp(buf, "gpio_pin_get_mode_name", sizeof("gpio_pin_get_mode_name") - 1)) == 0)
         {
@@ -197,61 +212,70 @@ int call_fun(char *buf, int len, char *return_str)
                 sprintf(return_str, "%s", gpio_pin_get_mode_name_by_num(val1, val2));
         }
         break;
-    // case sizeof("soft_pwm_get_duty_cycle"):
-    // case sizeof("soft_pwm_set_duty_cycle"):
-    //     if ((strncmp(buf, "soft_pwm_set_duty_cycle", sizeof("soft_pwm_set_duty_cycle") - 1)) == 0)
-    //     {
-    //         int val1 = get_value1_int(pvl, value_len);
-    //         int val2 = get_value2_int(pvl, value_len);
-    //         if (val1 != -1 && val2 != -1)
-    //             soft_pwm_set_duty_cycle(val1, val2);
-    //     }
-    //     if ((strncmp(buf, "soft_pwm_get_duty_cycle", sizeof("soft_pwm_get_duty_cycle") - 1)) == 0)
-    //     {
-    //         int val1 = get_value1_int(pvl, value_len);
-    //         if (val1 != -1)
-    //             sprintf(return_str, "%d", soft_pwm_get_duty_cycle(val1));
-    //     }
-    //     break;
-    // // case sizeof("soft_pwm_get_frequency"):
-    // case sizeof("soft_pwm_set_frequency"):
-    //     if ((strncmp(buf, "soft_pwm_set_frequency", sizeof("soft_pwm_set_frequency") - 1)) == 0)
-    //     {
-    //         int val1 = get_value1_int(pvl, value_len);
-    //         int val2 = get_value2_int(pvl, value_len);
-    //         if (val1 != -1 && val2 != -1)
-    //             soft_pwm_set_frequency(val1, val2);
-    //     }
-    //     if ((strncmp(buf, "soft_pwm_get_frequency", sizeof("soft_pwm_get_frequency") - 1)) == 0)
-    //     {
-    //         int val1 = get_value1_int(pvl, value_len);
-    //         if (val1 != -1)
-    //             sprintf(return_str, "%d", soft_pwm_get_frequency(val1));
-    //     }
-    //     break;
-    // case sizeof("soft_pwm_start"):
-    //     if ((strncmp(buf, "soft_pwm_start", sizeof("soft_pwm_start") - 1)) == 0)
-    //     {
-    //         int val1 = get_value1_int(pvl, value_len);
-    //         if (val1 != -1)
-    //             soft_pwm_start(val1);
-    //     }
-    //     break;
-    // case sizeof("soft_pwm_stop"):
-    //     if ((strncmp(buf, "soft_pwm_stop", sizeof("soft_pwm_stop") - 1)) == 0)
-    //     {
-    //         int val1 = get_value1_int(pvl, value_len);
-    //         if (val1 != -1)
-    //             soft_pwm_stop(val1);
-    //     }
-    //     break;
-    // case sizeof("soft_pwm_exists"):
-    //     if ((strncmp(buf, "soft_pwm_exists", sizeof("soft_pwm_exists") - 1)) == 0)
-    //     {
-    //         int val1 = get_value1_int(pvl, value_len);
-    //         if (val1 != -1)
-    //             sprintf(return_str, "%d", soft_pwm_exists(val1));
-    //     }
+    default:
+        break;
+    }
+    switch (pvl - buf) // pwm
+    {
+    case sizeof("pwm_set_frequency"):
+        if ((strncmp(buf, "pwm_set_frequency", sizeof("pwm_set_frequency") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            int val2 = get_value2_int(pvl, value_len);
+            if (val1 != -1 && val2 != -1)
+                core_pwm_set_frequency(val1, val2);
+        }
+        // break;
+        // case sizeof("pwm_get_frequency"):
+        if ((strncmp(buf, "pwm_get_frequency", sizeof("pwm_get_frequency") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            if (val1 != -1)
+                sprintf(return_str, "%d", core_pwm_get_frequency(val1));
+        }
+        break;
+    case sizeof("pwm_set_duty_cycle"):
+        if ((strncmp(buf, "pwm_set_duty_cycle", sizeof("pwm_set_duty_cycle") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            int val2 = get_value2_int(pvl, value_len);
+            if (val1 != -1 && val2 != -1)
+                core_pwm_set_duty_cycle(val1, val2);
+        }
+        // break;
+        // case sizeof("pwm_get_duty_cycle"):
+        if ((strncmp(buf, "pwm_get_duty_cycle", sizeof("pwm_get_duty_cycle") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            if (val1 != -1)
+                sprintf(return_str, "%d", core_pwm_get_duty_cycle(val1));
+        }
+        break;
+    case sizeof("pwm_start"):
+        if ((strncmp(buf, "pwm_start", sizeof("pwm_start") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            if (val1 != -1)
+                core_pwm_start(val1);
+        }
+        break;
+    case sizeof("pwm_stop"):
+        if ((strncmp(buf, "pwm_stop", sizeof("pwm_stop") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            if (val1 != -1)
+                core_pwm_stop(val1);
+        }
+        break;
+    case sizeof("pwm_exists"):
+        if ((strncmp(buf, "pwm_exists", sizeof("pwm_exists") - 1)) == 0)
+        {
+            int val1 = get_value1_int(pvl, value_len);
+            if (val1 != -1)
+                sprintf(return_str, "%d", core_pwm_exists(val1));
+        }
+        break;
+
     default:
         break;
     }

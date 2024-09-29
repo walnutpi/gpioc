@@ -4,6 +4,7 @@
 #include <time.h>
 #include <signal.h>
 #include <unistd.h>
+#include "socket.h"
 
 #include "pinctrl.h"
 
@@ -141,7 +142,7 @@ struct pwm *find_pwm(unsigned int gpio)
     return NULL;
 }
 
-int pwm_get_duty_cycle(unsigned int gpio)
+int core_pwm_get_duty_cycle(unsigned int gpio)
 {
     struct pwm *p;
 
@@ -149,7 +150,7 @@ int pwm_get_duty_cycle(unsigned int gpio)
         return p->dutycycle;
     return -1;
 }
-int pwm_get_frequency(unsigned int gpio)
+int core_pwm_get_frequency(unsigned int gpio)
 {
     struct pwm *p;
 
@@ -157,7 +158,7 @@ int pwm_get_frequency(unsigned int gpio)
         return p->freq;
     return -1;
 }
-void pwm_set_duty_cycle(unsigned int gpio, int dutycycle)
+void core_pwm_set_duty_cycle(unsigned int gpio, int dutycycle)
 {
     struct pwm *p;
 
@@ -174,7 +175,7 @@ void pwm_set_duty_cycle(unsigned int gpio, int dutycycle)
     }
 }
 
-void pwm_set_frequency(unsigned int gpio, int freq)
+void core_pwm_set_frequency(unsigned int gpio, int freq)
 {
     struct pwm *p;
     if (freq <= 0) // to avoid divide by zero
@@ -190,7 +191,7 @@ void pwm_set_frequency(unsigned int gpio, int freq)
     }
 }
 
-void pwm_start(unsigned int gpio)
+void core_pwm_start(unsigned int gpio)
 {
     pthread_t threads;
     struct pwm *p;
@@ -208,13 +209,13 @@ void pwm_start(unsigned int gpio)
     pthread_detach(threads);
 }
 
-void pwm_stop(unsigned int gpio)
+void core_pwm_stop(unsigned int gpio)
 {
     remove_pwm(gpio);
 }
 
 // returns 1 if there is a PWM for this gpio, 0 otherwise
-int pwm_exists(unsigned int gpio)
+int core_pwm_exists(unsigned int gpio)
 {
     struct pwm *p = pwm_list;
 
@@ -230,6 +231,85 @@ int pwm_exists(unsigned int gpio)
         }
     }
     return 0;
+}
+/******************************************************************************/
+/*如果是管理员权限运行，则调用上面的core系操作寄存器函数，不是则发送信息给server */
+/******************************************************************************/
+
+int pwm_get_duty_cycle(unsigned int gpio)
+{
+    if (geteuid() == 0)
+        return core_pwm_get_duty_cycle(gpio);
+    char buf[50];
+    sprintf(buf, "pwm_get_duty_cycle(%d)", gpio);
+    socket_run_command(buf, buf);
+    return atoi(buf);
+}
+int pwm_get_frequency(unsigned int gpio)
+{
+    if (geteuid() == 0)
+        return core_pwm_get_frequency(gpio);
+    char buf[50];
+    sprintf(buf, "pwm_get_frequency(%d)", gpio);
+    socket_run_command(buf, buf);
+    return atoi(buf);
+}
+void pwm_set_duty_cycle(unsigned int gpio, int dutycycle)
+{
+    if (geteuid() == 0)
+        core_pwm_set_duty_cycle(gpio, dutycycle);
+    else
+    {
+        char buf[50];
+        sprintf(buf, "pwm_set_duty_cycle(%d,%d)", gpio, dutycycle);
+        socket_run_command(buf, buf);
+    }
+}
+
+void pwm_set_frequency(unsigned int gpio, int freq)
+{
+    if (geteuid() == 0)
+        core_pwm_set_frequency(gpio, freq);
+    else
+    {
+        char buf[50];
+        sprintf(buf, "pwm_set_duty_cycle(%d,%d)", gpio, freq);
+        socket_run_command(buf, buf);
+    }
+}
+
+void pwm_start(unsigned int gpio)
+{
+    if (geteuid() == 0)
+        core_pwm_start(gpio);
+    else
+    {
+        char buf[50];
+        sprintf(buf, "pwm_start(%d)", gpio);
+        socket_run_command(buf, buf);
+    }
+}
+
+void pwm_stop(unsigned int gpio)
+{
+    if (geteuid() == 0)
+        core_pwm_stop(gpio);
+    else
+    {
+        char buf[50];
+        sprintf(buf, "pwm_stop(%d)", gpio);
+        socket_run_command(buf, buf);
+    }
+}
+
+int pwm_exists(unsigned int gpio)
+{
+    if (geteuid() == 0)
+        return core_pwm_exists(gpio);
+    char buf[50];
+    sprintf(buf, "pwm_exists(%d)", gpio);
+    socket_run_command(buf, buf);
+    return atoi(buf);
 }
 
 // int main()
