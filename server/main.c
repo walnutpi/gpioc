@@ -69,84 +69,84 @@ int call_fun(char *buf, int len, char *return_str)
     if (pvl == NULL || pvr == NULL)
         return -1;
     pvl += 1;
-    switch (pvl - buf) // pin
-    {
-    case sizeof("pin_get_mode"):
-        if ((strncmp(buf, "pin_get_mode", sizeof("pin_get_mode") - 1)) == 0)
-        {
-            int val1 = get_value1_int(pvl, value_len);
-            if (val1 != -1)
-                sprintf(return_str, "%d", pin_get_mode(val1));
-        }
-        // break;
-        // case sizeof("pin_set_mode"): //字符串长度相同
-        if ((strncmp(buf, "pin_set_mode", sizeof("pin_set_mode") - 1)) == 0)
-        {
-            int val1 = get_value1_int(pvl, value_len);
-            int val2 = get_value2_int(pvl, value_len);
-            if (val1 != -1 && val2 != -1)
-                pin_set_mode(val1, val2);
-        }
-        break;
-    case sizeof("pin_set_mode_by_name"):
-        if ((strncmp(buf, "pin_set_mode_by_name", sizeof("pin_set_mode_by_name") - 1)) == 0)
-        {
-            char val_str[30];
-            int val1 = get_value1_int(pvl, value_len);
-            int val2 = get_value2_char(pvl, value_len, val_str);
-            if (val1 != -1 && val2 != -1)
-                pin_set_mode_by_name(val1, val_str);
-        }
-        break;
-    case sizeof("pin_set_pullUpDn"):
-        if ((strncmp(buf, "pin_set_pullUpDn", sizeof("pin_set_pullUpDn") - 1)) == 0)
-        {
-            int val1 = get_value1_int(pvl, value_len);
-            int val2 = get_value2_int(pvl, value_len);
-            if (val1 != -1 && val2 != -1)
-                pin_set_pullUpDn(val1, val2);
-        }
-        break;
-    case sizeof("pin_write"):
-        if ((strncmp(buf, "pin_write", sizeof("pin_write") - 1)) == 0)
-        {
-            int val1 = get_value1_int(pvl, value_len);
-            int val2 = get_value2_int(pvl, value_len);
-            if (val1 != -1 && val2 != -1)
-                pin_write(val1, val2);
-        }
-        break;
+    // switch (pvl - buf) // pin
+    // {
+    // case sizeof("pin_get_mode"):
+    //     if ((strncmp(buf, "pin_get_mode", sizeof("pin_get_mode") - 1)) == 0)
+    //     {
+    //         int val1 = get_value1_int(pvl, value_len);
+    //         if (val1 != -1)
+    //             sprintf(return_str, "%d", pin_get_mode(val1));
+    //     }
+    //     // break;
+    //     // case sizeof("pin_set_mode"): //字符串长度相同
+    //     if ((strncmp(buf, "pin_set_mode", sizeof("pin_set_mode") - 1)) == 0)
+    //     {
+    //         int val1 = get_value1_int(pvl, value_len);
+    //         int val2 = get_value2_int(pvl, value_len);
+    //         if (val1 != -1 && val2 != -1)
+    //             pin_set_mode(val1, val2);
+    //     }
+    //     break;
+    // case sizeof("pin_set_mode_by_name"):
+    //     if ((strncmp(buf, "pin_set_mode_by_name", sizeof("pin_set_mode_by_name") - 1)) == 0)
+    //     {
+    //         char val_str[30];
+    //         int val1 = get_value1_int(pvl, value_len);
+    //         int val2 = get_value2_char(pvl, value_len, val_str);
+    //         if (val1 != -1 && val2 != -1)
+    //             pin_set_mode_by_name(val1, val_str);
+    //     }
+    //     break;
+    // case sizeof("pin_set_pullUpDn"):
+    //     if ((strncmp(buf, "pin_set_pullUpDn", sizeof("pin_set_pullUpDn") - 1)) == 0)
+    //     {
+    //         int val1 = get_value1_int(pvl, value_len);
+    //         int val2 = get_value2_int(pvl, value_len);
+    //         if (val1 != -1 && val2 != -1)
+    //             pin_set_pullUpDn(val1, val2);
+    //     }
+    //     break;
+    // case sizeof("pin_write"):
+    //     if ((strncmp(buf, "pin_write", sizeof("pin_write") - 1)) == 0)
+    //     {
+    //         int val1 = get_value1_int(pvl, value_len);
+    //         int val2 = get_value2_int(pvl, value_len);
+    //         if (val1 != -1 && val2 != -1)
+    //             pin_write(val1, val2);
+    //     }
+    //     break;
 
-    case sizeof("pin_read"):
-        if ((strncmp(buf, "pin_read", sizeof("pin_read") - 1)) == 0)
-        {
-            int val1 = get_value1_int(pvl, value_len);
-            if (val1 != -1)
-                sprintf(return_str, "%d", pin_read(val1));
-        }
-        break;
+    // case sizeof("pin_read"):
+    //     if ((strncmp(buf, "pin_read", sizeof("pin_read") - 1)) == 0)
+    //     {
+    //         int val1 = get_value1_int(pvl, value_len);
+    //         if (val1 != -1)
+    //             sprintf(return_str, "%d", pin_read(val1));
+    //     }
+    //     break;
 
-    case sizeof("pin_get_mode_name_now"):
-        if ((strncmp(buf, "pin_get_mode_name_now", sizeof("pin_get_mode_name_now") - 1)) == 0)
-        {
-            int val1 = get_value1_int(pvl, value_len);
-            if (val1 != -1)
-                sprintf(return_str, "%s", pin_get_mode_name_now(val1));
-        }
-        break;
-    case sizeof("pin_get_mode_name_by_num"):
-        if ((strncmp(buf, "pin_get_mode_name_by_num", sizeof("pin_get_mode_name_by_num") - 1)) == 0)
-        {
-            int val1 = get_value1_int(pvl, value_len);
-            int val2 = get_value2_int(pvl, value_len);
-            if (val1 != -1 && val2 != -1)
-                sprintf(return_str, "%s", pin_get_mode_name_by_num(val1, val2));
-        }
-        break;
+    // case sizeof("pin_get_mode_name_now"):
+    //     if ((strncmp(buf, "pin_get_mode_name_now", sizeof("pin_get_mode_name_now") - 1)) == 0)
+    //     {
+    //         int val1 = get_value1_int(pvl, value_len);
+    //         if (val1 != -1)
+    //             sprintf(return_str, "%s", pin_get_mode_name_now(val1));
+    //     }
+    //     break;
+    // case sizeof("pin_get_mode_name_by_num"):
+    //     if ((strncmp(buf, "pin_get_mode_name_by_num", sizeof("pin_get_mode_name_by_num") - 1)) == 0)
+    //     {
+    //         int val1 = get_value1_int(pvl, value_len);
+    //         int val2 = get_value2_int(pvl, value_len);
+    //         if (val1 != -1 && val2 != -1)
+    //             sprintf(return_str, "%s", pin_get_mode_name_by_num(val1, val2));
+    //     }
+    //     break;
 
-    default:
-        break;
-    }
+    // default:
+    //     break;
+    // }
     switch (pvl - buf) // gpio
     {
     case sizeof("gpio_read"):
