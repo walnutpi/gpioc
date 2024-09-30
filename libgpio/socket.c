@@ -41,7 +41,7 @@ int socket_run_command(char *cmd, char *ret)
 
         if (0 > connect(iSocketFD, (void *)&stRemoteAddr, sizeof(stRemoteAddr)))
         {
-            printf("连接失败！\n");
+            // printf("连接失败！\n");
             sleep(1);
         }
         else
