@@ -30,4 +30,5 @@ extern void print_pin_by_mode_name(char *str);            // 传入指定字符�
 extern void print_pin_by_search_all_mode_name(char *str); // 传入字符串，在所有引脚复用功能中查找以该字符串开头的，并直接输出到终端，可能需要自己编写设备树以启用
 extern void print_mode_name_inoutoff(int pin_num);        // 输出pin功能可用的参数
 
+
 #endif

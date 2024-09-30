@@ -2,13 +2,12 @@
 #define _GPIO_H
 // version: 1.0
 
+#define INPUT 0
+#define OUTPUT 1
 
-#define	INPUT			 0
-#define	OUTPUT			 1
-
-#define	PULL_OFF			 0
-#define	PULL_DOWN		 1
-#define	PULL_UP			 2
+#define PULL_OFF 0
+#define PULL_DOWN 1
+#define PULL_UP 2
 
 int pin_get_mode(int pin_num);
 void pin_set_mode(int pin_num, int mode);

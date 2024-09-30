@@ -2,13 +2,12 @@
 PATH_PWD="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 cd ${PATH_PWD}/libgpio
-make
-make install
+make clean
 
 cd ${PATH_PWD}/command
 make
 ./install
 
 cd ${PATH_PWD}/server
-./install
+./uninstall
 

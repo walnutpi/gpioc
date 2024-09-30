@@ -14,12 +14,169 @@
 static int fd_mem = 0;
 struct pins _pins[448];
 
+struct sunxi_pinctrl_hw_info sunxi_pinctrl_hw_info[SUNXI_PCTL_HW_TYPE_CNT] = {
+    {
+        .initial_bank_offset = 0x0,
+        .mux_regs_offset = 0x0,
+        .data_regs_offset = 0x10,
+        .dlevel_regs_offset = 0x14,
+        .bank_mem_size = 0x24,
+        .pull_regs_offset = 0x1c,
+        .dlevel_pins_per_reg = 16,
+        .dlevel_pins_bits = 2,
+        .dlevel_pins_mask = 0x3,
+        .irq_mux_val = 0x6,
+        .irq_cfg_reg = 0x200,
+        .irq_ctrl_reg = 0x210,
+        .irq_status_reg = 0x214,
+        .irq_debounce_reg = 0x218,
+        .irq_mem_base = 0x200,
+        .irq_mem_size = 0x20,
+        .irq_mem_used = 0x20,
+        .power_mode_sel_reg = 0x340,
+        .power_mode_ctrl_reg = 0x344,
+        .power_mode_val_reg = 0x348,
+        .pio_pow_ctrl_reg = 0x350,
+        .power_mode_reverse = false,
+    },
+    {
+        .initial_bank_offset = 0x0,
+        .mux_regs_offset = 0x0,
+        .data_regs_offset = 0x10,
+        .dlevel_regs_offset = 0x14,
+        .bank_mem_size = 0x30,
+        .pull_regs_offset = 0x24,
+        .dlevel_pins_per_reg = 8,
+        .dlevel_pins_bits = 4,
+        .dlevel_pins_mask = 0xF,
+        .irq_mux_val = 0xE,
+        .irq_cfg_reg = 0x200,
+        .irq_ctrl_reg = 0x210,
+        .irq_status_reg = 0x214,
+        .irq_debounce_reg = 0x218,
+        .irq_mem_base = 0x200,
+        .irq_mem_size = 0x20,
+        .irq_mem_used = 0x20,
+        .power_mode_sel_reg = 0x340,
+        .power_mode_ctrl_reg = 0x344,
+        .power_mode_val_reg = 0x348,
+        .pio_pow_ctrl_reg = 0x350,
+        .power_mode_reverse = false,
+    },
+    {
+
+        .initial_bank_offset = 0x80,
+        .mux_regs_offset = 0x00,
+        .data_regs_offset = 0x10,
+        .dlevel_regs_offset = 0x20,
+        .bank_mem_size = 0x80,
+        .pull_regs_offset = 0x30,
+        .dlevel_pins_per_reg = 8,
+        .dlevel_pins_bits = 4,
+        .dlevel_pins_mask = 0xF,
+        .irq_mux_val = 0xE,
+        .irq_cfg_reg = 0xc0,
+        .irq_ctrl_reg = 0xd0,
+        .irq_status_reg = 0xd4,
+        .irq_debounce_reg = 0xd8,
+        .irq_mem_base = 0xc0,
+        .irq_mem_size = 0x80,
+        .irq_mem_used = 0x20,
+        .power_mode_sel_reg = 0x340,
+        .power_mode_ctrl_reg = 0x344,
+        .power_mode_val_reg = 0x348,
+        .pio_pow_ctrl_reg = 0x350,
+        .power_mode_reverse = false,
+    },
+    {
+        .initial_bank_offset = 0x0,
+        .mux_regs_offset = 0x0,
+        .data_regs_offset = 0x10,
+        .dlevel_regs_offset = 0x14,
+        .bank_mem_size = 0x30,
+        .pull_regs_offset = 0x24,
+        .dlevel_pins_per_reg = 8,
+        .dlevel_pins_bits = 4,
+        .dlevel_pins_mask = 0xF,
+        .irq_mux_val = 0xE,
+        .irq_cfg_reg = 0x200,
+        .irq_ctrl_reg = 0x210,
+        .irq_status_reg = 0x214,
+        .irq_debounce_reg = 0x218,
+        .irq_mem_base = 0x200,
+        .irq_mem_size = 0x20,
+        .irq_mem_used = 0x20,
+        .power_mode_sel_reg = 0x380,
+        .mode_sel_vccio_bit = 12,
+        .power_mode_ctrl_reg = 0x384,
+        .mode_ctrl_vccio_bit = 12,
+        .power_mode_val_reg = 0x388,
+        .mode_val_vccio_bit = 16,
+        .pio_pow_ctrl_reg = 0x390,
+        .power_mode_reverse = true,
+        .power_mode_detect = true,
+    },
+    {
+        .initial_bank_offset = 0x80,
+        .mux_regs_offset = 0x0,
+        .data_regs_offset = 0x10,
+        .dlevel_regs_offset = 0x20,
+        .bank_mem_size = 0x80,
+        .pull_regs_offset = 0x30,
+        .dlevel_pins_per_reg = 8,
+        .dlevel_pins_bits = 4,
+        .dlevel_pins_mask = 0xF,
+        .irq_mux_val = 0xE,
+        .irq_cfg_reg = 0xC0,
+        .irq_ctrl_reg = 0xD0,
+        .irq_status_reg = 0xD4,
+        .irq_debounce_reg = 0xD8,
+        .irq_mem_base = 0xC0,
+        .irq_mem_size = 0x80,
+        .irq_mem_used = 0x20,
+        .power_mode_sel_reg = 0x40,
+        .power_mode_ctrl_reg = 0x48,
+        .power_mode_val_reg = 0x48,
+        .pio_pow_ctrl_reg = 0x70,
+        .power_mode_reverse = false,
+    },
+    {
+        .initial_bank_offset = 0x0,
+        .mux_regs_offset = 0x0,
+        .data_regs_offset = 0x10,
+        .dlevel_regs_offset = 0x14,
+        .bank_mem_size = 0x24,
+        .pull_regs_offset = 0x1c,
+        .dlevel_pins_per_reg = 16,
+        .dlevel_pins_bits = 2,
+        .dlevel_pins_mask = 0x3,
+        .irq_mux_val = 0x6,
+        .irq_cfg_reg = 0x200,
+        .irq_ctrl_reg = 0x210,
+        .irq_status_reg = 0x214,
+        .irq_debounce_reg = 0x218,
+        .irq_mem_base = 0x200,
+        .irq_mem_size = 0x20,
+        .irq_mem_used = 0x20,
+        .power_mode_sel_reg = 0x340,
+        .power_mode_ctrl_reg = 0x344,
+        .power_mode_val_reg = 0x348,
+        .pio_pow_ctrl_reg = 0x350,
+        .power_mode_reverse = false,
+        .power_mode_detect = true,
+    },
+};
+
 static const struct sunxi_pinctrl_desc *compatible_to_pinctrl_desc(char *str)
 {
     if (strcmp(str, "allwinner,sun50i-h616-pinctrl") == 0)
         return &h616_pinctrl_data;
     else if (strcmp(str, "allwinner,sun50i-h616-r-pinctrl") == 0)
         return &sun50i_h616_r_pinctrl_data;
+    else if (strcmp(str, "allwinner,sun55iw3-pinctrl") == 0)
+        return &sun55iw3_pinctrl_data;
+    else if (strcmp(str, "allwinner,sun55iw3-r-pinctrl") == 0)
+        return &sun55iw3_r_pinctrl_data;
     else
     {
         printf("can not support pinctrl compatible : %s\n", str);
@@ -38,17 +195,43 @@ void dtb_get_compatible_str(char *path_pinctrl, char *buf)
         fclose(file);
     }
 }
-void dtb_get_reg_number(char *path_pinctrl, uint32_t *reg, uint32_t *offset)
+int dtb_get_address_cells(char *path_node)
 {
     char file_path[100];
-    sprintf(file_path, "%s/reg", path_pinctrl);
+    sprintf(file_path, "%s/#address-cells", path_node);
 
     int fd = open(file_path, O_RDONLY);
 
     uint8_t tmp[4];
     read(fd, tmp, 4);
+    return (tmp[0] << 24) + (tmp[1] << 16) + (tmp[2] << 8) + tmp[3];
+}
+int dtb_get_size_cells(char *path_node)
+{
+    char file_path[100];
+    sprintf(file_path, "%s/#size-cells", path_node);
+
+    int fd = open(file_path, O_RDONLY);
+
+    uint8_t tmp[4];
+    read(fd, tmp, 4);
+    return (tmp[0] << 24) + (tmp[1] << 16) + (tmp[2] << 8) + tmp[3];
+}
+void dtb_get_reg_number(char *path_node, int address_cells, int size_cells, uint32_t *reg, uint32_t *offset)
+{
+    char file_path[100];
+    sprintf(file_path, "%s/reg", path_node);
+
+    int fd = open(file_path, O_RDONLY);
+
+    uint8_t tmp[4];
+    if (address_cells == 2)
+        read(fd, tmp, 4);
+    read(fd, tmp, 4);
     *reg = (tmp[0] << 24) + (tmp[1] << 16) + (tmp[2] << 8) + tmp[3];
 
+    if (size_cells == 2)
+        read(fd, tmp, 4);
     read(fd, tmp, 4);
     *offset = (tmp[0] << 24) + (tmp[1] << 16) + (tmp[2] << 8) + tmp[3];
     close(fd);
@@ -60,32 +243,38 @@ int sunxi_init()
         return true;
 
     struct dirent *entry;
-    DIR *dir = opendir("/proc/device-tree/soc/");
-    if (dir == NULL)
+    DIR *dir_dtree = opendir("/proc/device-tree/");
+    DIR *dir_soc;
+    if (dir_dtree == NULL)
+    {
+        printf("无法打开目录\n");
+        return 1;
+    }
+    char path_soc[300];
+    while ((entry = readdir(dir_dtree)) != NULL)
+    {
+        if (strncmp(entry->d_name, "soc", 3) == 0)
+        {
+            sprintf(path_soc, "/proc/device-tree/%s", entry->d_name);
+            dir_soc = opendir(path_soc);
+        }
+    }
+    closedir(dir_dtree);
+
+    if (dir_soc == NULL)
     {
         printf("error! can not open dir : /proc/device-tree/soc/\n");
         exit(-1);
     }
-    // d1有一些不一样，待后续添加
-    // 	pctl->variant = variant;
-    // 	if (pctl->variant >= PINCTRL_SUN20I_D1) {
-    // 		pctl->bank_mem_size = D1_BANK_MEM_SIZE;
-    // 		pctl->pull_regs_offset = D1_PULL_REGS_OFFSET;
-    // 		pctl->dlevel_field_width = D1_DLEVEL_FIELD_WIDTH;
-    // 	} else {
-    // 		pctl->bank_mem_size = BANK_MEM_SIZE;
-    // 		pctl->pull_regs_offset = PULL_REGS_OFFSET;
-    // 		pctl->dlevel_field_width = DLEVEL_FIELD_WIDTH;
-    // 	}
 
     // 遍历设备树中的pinctrl节点
     char count_scan = 0;
-    while ((entry = readdir(dir)) != NULL)
+    while ((entry = readdir(dir_soc)) != NULL)
     {
         if (strncmp(entry->d_name, "pinctrl@", 8) == 0)
         {
-            char path_pinctrl[100];
-            sprintf(path_pinctrl, "/proc/device-tree/soc/%s", entry->d_name);
+            char path_pinctrl[600];
+            sprintf(path_pinctrl, "%s/%s", path_soc, entry->d_name);
 
             // 读取compatible值
             char buf[50] = "";
@@ -100,8 +289,10 @@ int sunxi_init()
             // 读取reg属性所描述的地址
             uint32_t men_reg;
             uint32_t men_offset;
-            dtb_get_reg_number(path_pinctrl, &men_reg, &men_offset);
 
+            int address_cells = dtb_get_address_cells(path_soc);
+            int size_cells = dtb_get_size_cells(path_soc);
+            dtb_get_reg_number(path_pinctrl, address_cells, size_cells,&men_reg, &men_offset);
             fd_mem = open("/dev/mem", O_RDWR);
 
             if (fd_mem < 0)
@@ -115,11 +306,12 @@ int sunxi_init()
             for (int i = 0; i < pinctrl_desc->npins; i++)
             {
                 _pins[pinctrl_desc->pins[i].pin.number].pinctrl_desc = &(pinctrl_desc->pins[i]);
-                _pins[pinctrl_desc->pins[i].pin.number].mem_bank_base = mmap_gpio + ((pinctrl_desc->pins[i].pin.number) / 32 * BANK_MEM_SIZE);
+                _pins[pinctrl_desc->pins[i].pin.number].mem_bank_base = mmap_gpio + ((pinctrl_desc->pins[i].pin.number) / 32 * sunxi_pinctrl_hw_info[pinctrl_desc->hw_type].bank_mem_size);
+                _pins[pinctrl_desc->pins[i].pin.number].reg_info = &sunxi_pinctrl_hw_info[pinctrl_desc->hw_type];
             }
         }
     }
-    closedir(dir);
+    closedir(dir_soc);
     if (count_scan == 0)
         return false;
 
@@ -135,7 +327,7 @@ void sunxi_pin_set_mode(int gpio_num, int mode)
     int offset = ((index - ((index >> 3) << 3)) << 2);
 
     uint32_t *reg;
-    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + ((index >> 3) << 2));
+    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + _pins[gpio_num].reg_info->mux_regs_offset + ((index >> 3) << 2));
     val = *reg;
 
     switch (mode)
@@ -165,31 +357,40 @@ int sunxi_pin_get_mode(int gpio_num)
 
     int offset = ((index - ((index >> 3) << 3)) << 2);
     uint32_t *reg;
-    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + ((index >> 3) << 2));
+    if (_pins[gpio_num].mem_bank_base == NULL)
+    {
+        return 0xff;
+    }
+    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + _pins[gpio_num].reg_info->mux_regs_offset +((index >> 3) << 2));
 
     val = *reg;
-    mode = (val >> offset) & 7;
-
+    mode = (val >> offset) & 0xf;
     return mode;
 }
 
 const char *sunxi_pin_get_mode_name(int gpio_num)
 {
     int mode = sunxi_pin_get_mode(gpio_num);
-    if (mode == 7)
-        return "OFF";
+
+    if (_pins[gpio_num].pinctrl_desc == NULL)
+    {
+        return "Pin number not recorded";
+    }
     struct sunxi_desc_function *functions = _pins[gpio_num].pinctrl_desc->functions;
+
     for (int i = 0; functions[i].name != NULL; i++)
     {
         if (functions[i].muxval == mode)
             return functions[i].name;
     }
-    return "unkonw";
+    return "off";
 }
 const char *sunxi_pin_get_mode_name_by_num(int gpio_num, int mode_num)
 {
-    if (mode_num == 7)
-        return "OFF";
+    if (_pins[gpio_num].pinctrl_desc == NULL)
+    {
+        return "Pin number not recorded";
+    }
     struct sunxi_desc_function *functions = _pins[gpio_num].pinctrl_desc->functions;
     for (int i = 0; functions[i].name != NULL; i++)
     {
@@ -207,7 +408,7 @@ int sunxi_gpio_read(int gpio_num)
     uint32_t val;
 
     uint32_t *reg;
-    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + 0x10);
+    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + _pins[gpio_num].reg_info->data_regs_offset);
 
     val = *reg;
 
@@ -221,7 +422,7 @@ void sunxi_gpio_write(int gpio_num, int value)
     uint32_t val;
 
     uint32_t *reg;
-    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + 0x10);
+    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + _pins[gpio_num].reg_info->data_regs_offset);
 
     val = *reg;
 
@@ -270,7 +471,7 @@ void sunxi_gpio_set_PullUpDn(int gpio_num, int pud)
     offset = ((index - ((index >> 4) << 4)) << 1);
     pullOffset = 0x1C;
     uint32_t *reg;
-    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + 0x1C + ((index >> 4) << 2));
+    reg = (uint32_t *)(_pins[gpio_num].mem_bank_base + _pins[gpio_num].reg_info->pull_regs_offset + ((index >> 4) << 2));
 
     val = *reg;
 
@@ -303,7 +504,7 @@ void sunxi_print_who_has_function(char *name_buf, int len)
     {
         if (strncmp(entry->d_name, "pinctrl@", 8) == 0)
         {
-            char path_pinctrl[100];
+            char path_pinctrl[300];
             sprintf(path_pinctrl, "/proc/device-tree/soc/%s", entry->d_name);
 
             // 读取compatible值

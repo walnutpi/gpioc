@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+echo_red() {
+    echo -e "\r\033[31m$1\033[0m"
+}
+echo_green() {
+    echo -e "\r\033[32m$1\033[0m"
+}
+echo_blue() {
+    echo -e "\r\033[36m$1\033[0m"
+}
+
+
+PATH_PWD="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+VERSION=$(uname -r)
+VERSION_digit=${VERSION:0:1}
+
+
+bin_path="/usr/bin/gpio"
+bin_file_name="gpio.sh"
+comple_path="/etc/bash_completion.d/gpio"
+comple_file_name="gpio-completion.sh"
+
+
+if [ -f $bin_path ]; then
+    rm $bin_path
+fi
+
+rm $comple_path
+
