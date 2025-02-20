@@ -5,8 +5,8 @@ cd ${PATH_PWD}/libgpio
 make clean
 
 cd ${PATH_PWD}/command
-make
-./install
+make clean
+./uninstall
 
 cd ${PATH_PWD}/server
 ./uninstall

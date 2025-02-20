@@ -61,7 +61,7 @@ int call_fun(char *buf, int len, char *return_str)
 {
     time_t timep;
     time(&timep);
-    printf("%ld\t[%d] : {%s}\n", timep, len, buf, return_str);
+    printf("%ld\t[%d] : {%s}\n", timep, buf, return_str);
 
     char *pvl = strchr(buf, '(');
     char *pvr = strchr(buf, ')');

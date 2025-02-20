@@ -36,7 +36,10 @@ class Pin:
 
     def __init__(self, gpio_num):
         if isinstance(gpio_num, tuple):
-            self.id = int(gpio_num[1])
+            if gpio_num[0] ==  1:
+                self.id = int(gpio_num[1])+11*32
+            else:
+                self.id = int(gpio_num[1])
         else:
             self.id = int(gpio_num)
 

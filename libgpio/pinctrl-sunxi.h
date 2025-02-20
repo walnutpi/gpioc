@@ -354,7 +354,9 @@ extern const struct sunxi_pinctrl_desc sun55iw3_r_pinctrl_data;
 struct pins
 {
     const struct sunxi_desc_pin *pinctrl_desc; //单个引脚的描述
-    uint8_t *mem_bank_base; //指向mmap映射后的bank基地址
+	uint32_t pinctrl_base; //控制器基地址
+    uint8_t *mmap_pinctrl_base; //指向mmap映射后的控制器基地址
+    uint8_t *mmap_bank_base; //指向mmap映射后的bank基地址
 	struct sunxi_pinctrl_hw_info *reg_info; //记录各寄存器的偏移地址
 };
 extern struct pins _pins[448];
@@ -370,4 +372,7 @@ extern void sunxi_gpio_write(int gpio_num, int value);
 extern void sunxi_gpio_set_PullUpDn (int gpio_num, int pud);
 
 extern void sunxi_print_who_has_function(char *name_buf, int len);
+
+extern void sunxi_gpio_mode_rename(int gpio_num, int mode_num, char *name);
+
 #endif

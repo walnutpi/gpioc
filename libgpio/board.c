@@ -10,6 +10,7 @@
 static struct BOARD_DESC *board_list[] = {
     &walnutpi_1b,
     &walnutpi_1b_emmc,
+    &walnutpi_2b,
 };
 
 static struct BOARD_DESC *now_board_desc = NULL;
@@ -39,6 +40,16 @@ struct BOARD_DESC *get_board_desc()
         if (strcmp(model, board_list[i]->model) == 0)
         {
             now_board_desc = board_list[i];
+            if (now_board_desc->mode_renames != NULL)
+            {
+                struct BOARD_mode_rename *board_reanme_pins = now_board_desc->mode_renames;
+
+                for (int pin = 0; pin < board_reanme_pins->count; pin++)
+                {
+                    struct PIN_mode_rename *rename_pin = &(board_reanme_pins->the_pins[pin]);
+                    gpio_mode_rename(rename_pin->pin, rename_pin->mode, rename_pin->newname);
+                }
+            }
             return now_board_desc;
         }
     }
@@ -85,7 +96,7 @@ void pin_set_mode_by_name(int pin_num, char *mode)
 {
     if (board_ph_to_gpio(pin_num) < 0)
         return;
-    for (int i = 0; i <= 7; i++)
+    for (int i = 0; i <= 0xf; i++)
     {
         const char *str = pin_get_mode_name_by_num(pin_num, i);
         if (str != NULL)
@@ -439,16 +450,16 @@ void print_pin_by_mode_name(char *str)
 
     if (strcasecmp(str, "pwm") == 0)
         for (int i = 0; i < now_board_desc->pwms->count; i++)
-            pins[now_board_desc->pwms->pins[i]] = now_board_desc->pwms->modes[i];
+            pins[now_board_desc->pwms->the_pins[i].pin] = now_board_desc->pwms->the_pins[i].mode;
     else if (strcasecmp(str, "uart") == 0)
         for (int i = 0; i < now_board_desc->uarts->count; i++)
-            pins[now_board_desc->uarts->pins[i]] = now_board_desc->uarts->modes[i];
+            pins[now_board_desc->uarts->the_pins[i].pin] = now_board_desc->uarts->the_pins[i].mode;
     else if (strcasecmp(str, "i2c") == 0)
         for (int i = 0; i < now_board_desc->i2cs->count; i++)
-            pins[now_board_desc->i2cs->pins[i]] = now_board_desc->i2cs->modes[i];
+            pins[now_board_desc->i2cs->the_pins[i].pin] = now_board_desc->i2cs->the_pins[i].mode;
     else if (strcasecmp(str, "spi") == 0)
         for (int i = 0; i < now_board_desc->spis->count; i++)
-            pins[now_board_desc->spis->pins[i]] = now_board_desc->spis->modes[i];
+            pins[now_board_desc->spis->the_pins[i].pin] = now_board_desc->spis->the_pins[i].mode;
     printf("+-----------+------+----------+------+-----------+\n");
     printf("|    Mode   | Name | Physical | Name |    Mode   |\n");
     printf("+-----------+------+----------+------+-----------+\n");
@@ -488,10 +499,4 @@ void print_all_gpio_on_ph()
         if (board_pins[ph].gpio_num >= 0)
             printf(" %d ", ph);
     }
-}
-void print_mode_name_inoutoff(int pin_num)
-{
-    printf("%s ", pin_get_mode_name_by_num(pin_num, 0));
-    printf("%s ", pin_get_mode_name_by_num(pin_num, 1));
-    printf("%s ", pin_get_mode_name_by_num(pin_num, 7));
 }

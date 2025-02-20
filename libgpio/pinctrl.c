@@ -45,6 +45,10 @@ const char *(*chip_gpio_pin_get_mode_name_by_num[])(int, int) = {
     0,
     sunxi_pin_get_mode_name_by_num,
 };
+void (*chip_mode_rename[])(int, int, char *)={
+    0,
+    sunxi_gpio_mode_rename,
+};
 
 int chip_detect()
 {
@@ -95,6 +99,10 @@ const char *core_gpio_pin_get_mode_name_by_num(int gpio_num, int mode_num)
 {
     return chip_gpio_pin_get_mode_name_by_num[chip_detect()](gpio_num, mode_num);
 }
+void gpio_mode_rename(int gpio_num, int mode_num, char *name)
+{
+    return chip_mode_rename[chip_detect()](gpio_num, mode_num, name);
+}
 
 /******************************************************************************/
 /*如果是管理员权限运行，则调用上面的core系操作寄存器函数，不是则发送信息给server */
@@ -112,7 +120,9 @@ int gpio_get_mode(int gpio_num)
 void gpio_set_mode(int gpio_num, int mode)
 {
     if (geteuid() == 0)
+    {
         core_gpio_set_mode(gpio_num, mode);
+    }
     else
     {
         char buf[50];
@@ -187,3 +197,4 @@ const char *gpio_pin_get_mode_name_by_num(int gpio_num, int mode_num)
     strncpy(str, buf, strlen(buf));
     return str;
 }
+

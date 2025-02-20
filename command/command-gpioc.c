@@ -42,8 +42,7 @@ int do_pins(int argc, char *argv[])
 }
 int do_pri_mode_para(int argc, char *argv[])
 {
-    print_mode_name_inoutoff(atoi(argv[2]));
-    printf(" IN_PULLUP IN_PULLDOWN");
+    printf("IN OUT OFF IN_PULLUP IN_PULLDOWN");
 }
 int do_mode(int argc, char *argv[])
 {

@@ -28,7 +28,6 @@ extern void print_all_gpio_on_ph();                       // 输出所有可作�
 extern void print_pin_para();                             // 输出pin功能可用的参数
 extern void print_pin_by_mode_name(char *str);            // 传入指定字符串，输出所对应的引脚，这里输出的引脚都在板上带有可直接调用的设备树插件
 extern void print_pin_by_search_all_mode_name(char *str); // 传入字符串，在所有引脚复用功能中查找以该字符串开头的，并直接输出到终端，可能需要自己编写设备树以启用
-extern void print_mode_name_inoutoff(int pin_num);        // 输出pin功能可用的参数
 
 
 #endif

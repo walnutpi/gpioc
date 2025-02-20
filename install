@@ -2,11 +2,11 @@
 PATH_PWD="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 cd ${PATH_PWD}/libgpio
-make
+make -j$(nproc)
 make install
 
 cd ${PATH_PWD}/command
-make
+make -j$(nproc)
 ./install
 
 cd ${PATH_PWD}/server

@@ -14,196 +14,196 @@
 static const struct sunxi_desc_pin sun55iw3_r_pins[] = {
 	/* BANK L */
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 0),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_twi0"),		/* s_twi0_sck */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 0),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "I2C6_SCL"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 0, 0),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 1),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_twi0"),		/* s_twi0_sda */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 1),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "I2C6_SDA"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 0, 1),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 2),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_uart0"),		/* s_uart0_tx */
-		SUNXI_FUNCTION(0x3, "s_uart1"),		/* s_uart1_tx */
-		SUNXI_FUNCTION(0x4, "mcu_pwm0_0"),	/* mcu_pwm0_0 */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 2),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "UART8_TX"),
+		SUNXI_FUNCTION(0x3, "UART9_TX"),
+		SUNXI_FUNCTION(0x4, "PWM3-0"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 0, 2),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 3),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_uart0"),		/* s_uart0_rx */
-		SUNXI_FUNCTION(0x3, "s_uart1"),		/* s_uart1_rx */
-		SUNXI_FUNCTION(0x4, "mcu_pwm0_1"),	/* mcu_pwm0_1 */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 3),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "UART8_RX"),
+		SUNXI_FUNCTION(0x3, "UART9_RX"),
+		SUNXI_FUNCTION(0x4, "PWM3-1"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 0, 3),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 4),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_jtag"),		/* s_jtag_ms */
-		SUNXI_FUNCTION(0x4, "mcu_pwm0_2"),	/* mcu_pwm0_2 */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 4),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "S_JTAG_MS"),
+		SUNXI_FUNCTION(0x4, "PWM3-2"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 0, 4),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 5),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_jtag"),		/* s_jtag_ck */
-		SUNXI_FUNCTION(0x4, "mcu_pwm0_3"),	/* mcu_pwm0_3 */
-		SUNXI_FUNCTION(0x5, "i2s0"),		/* i2s0_mclk */
-		SUNXI_FUNCTION(0x6, "dmic"),		/* dmic_data3 */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 5),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "S_JTAG_CK"),
+		SUNXI_FUNCTION(0x4, "PWM3-3"),
+		SUNXI_FUNCTION(0x5, "I2S0_MCLK"),
+		SUNXI_FUNCTION(0x6, "DMIC_DATA3"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 0, 5),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 6),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_jtag"),		/* s_jtag_do */
-		SUNXI_FUNCTION(0x3, "mcu_pwm0_4"),	/* mcu_pwm0_4 */
-		SUNXI_FUNCTION(0x4, "i2s0_din"),	/* i2s0_din1 */
-		SUNXI_FUNCTION(0x5, "i2s0_dout"),	/* i2s0_dout0 */
-		SUNXI_FUNCTION(0x6, "dmic"),		/* dmic_data2 */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 6),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "S_JTAG_DO"),
+		SUNXI_FUNCTION(0x3, "PWM3-4"),
+		SUNXI_FUNCTION(0x4, "I2S0_DIN1"),
+		SUNXI_FUNCTION(0x5, "I2S0_DOUT0"),
+		SUNXI_FUNCTION(0x6, "DMIC_DATA2"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 0, 6),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 7),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_jtag"),		/* s_jtag_di */
-		SUNXI_FUNCTION(0x3, "mcu_pwm0_5"),	/* mcu_pwm0_5 */
-		SUNXI_FUNCTION(0x4, "i2s0_dout"),	/* i2s0_dout1 */
-		SUNXI_FUNCTION(0x5, "i2s0_din"),	/* i2s0_din0 */
-		SUNXI_FUNCTION(0x6, "dmic"),		/* dmic_data1 */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 7),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "S_JTAG_DI"),
+		SUNXI_FUNCTION(0x3, "PWM3-5"),
+		SUNXI_FUNCTION(0x4, "I2S0_DOUT1"),
+		SUNXI_FUNCTION(0x5, "I2S0_DIN0"),
+		SUNXI_FUNCTION(0x6, "DMIC_DATA1"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 0, 7),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 8),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_twi1"),		/* s_twi1_sck */
-		SUNXI_FUNCTION(0x3, "d_jtag"),		/* d_jtag_ms */
-		SUNXI_FUNCTION(0x4, "r_jtag"),		/* r_jtag_ms */
-		SUNXI_FUNCTION(0x5, "i2s0"),		/* i2s0_bclk */
-		SUNXI_FUNCTION(0x6, "dmic"),		/* dmic_data0 */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 8),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "I2C7_SCL"),
+		SUNXI_FUNCTION(0x3, "D_JTAG_MS"),
+		SUNXI_FUNCTION(0x4, "R_JTAG_MS"),
+		SUNXI_FUNCTION(0x5, "I2S0_BCLK"),
+		SUNXI_FUNCTION(0x6, "DMIC_DATA0"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 0, 8),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 9),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_twi1"),		/* s_twi1_sda */
-		SUNXI_FUNCTION(0x3, "d_jtag"),		/* d_jtag_ck */
-		SUNXI_FUNCTION(0x4, "r_jtag"),		/* r_jtag_ck */
-		SUNXI_FUNCTION(0x5, "s_pwm0_1"),	/* s_pwm0_1 */
-		SUNXI_FUNCTION(0x6, "dmic"),		/* dmic_clk */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 9),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "I2C7_SDA"),
+		SUNXI_FUNCTION(0x3, "D_JTAG_CK"),
+		SUNXI_FUNCTION(0x4, "R_JTAG_CK"),
+		SUNXI_FUNCTION(0x5, "PWM2-1"),
+		SUNXI_FUNCTION(0x6, "DMIC_CLK"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 0, 9),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 10),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_pwm0_0"),	/* s_pwm0_0 */
-		SUNXI_FUNCTION(0x3, "d_jtag"),		/* d_jtag_do */
-		SUNXI_FUNCTION(0x4, "r_jtag"),		/* r_jtag_do */
-		SUNXI_FUNCTION(0x5, "dmic"),		/* dmic */
-		SUNXI_FUNCTION(0x6, "s_spi0"),		/* s_spi0_cs */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 10),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "PWM2-0"),
+		SUNXI_FUNCTION(0x3, "D_JTAG_DO"),
+		SUNXI_FUNCTION(0x4, "R_JTAG_DO"),
+		SUNXI_FUNCTION(0x5, "DMIC"),
+		SUNXI_FUNCTION(0x6, "S_SPI0_CS"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 0, 10),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 11),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_cir"),		/* s_cir_in */
-		SUNXI_FUNCTION(0x3, "d_jtag"),		/* d_jtag_di */
-		SUNXI_FUNCTION(0x4, "r_jtag"),		/* r_jtag_di */
-		SUNXI_FUNCTION(0x5, "s_pwm0_1"),	/* s_pwm0_1 */
-		SUNXI_FUNCTION(0x6, "s_spi0"),		/* s_spi0_clk */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 11),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "S_CIR_IN"),
+		SUNXI_FUNCTION(0x3, "D_JTAG_DI"),
+		SUNXI_FUNCTION(0x4, "R_JTAG_DI"),
+		SUNXI_FUNCTION(0x5, "PWM2-1"),
+		SUNXI_FUNCTION(0x6, "S_SPI0_CLK"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 0, 11),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 12),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_twi2"),		/* s_twi2_sck */
-		SUNXI_FUNCTION(0x3, "mcu_pwm0_6"),	/* mcu_pwm0_6 */
-		SUNXI_FUNCTION(0x4, "s_uart0"),		/* r_uart0_tx */
-		SUNXI_FUNCTION(0x6, "s_spi0"),		/* s_spi0_mosi */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 12),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "I2C8_SCL"),
+		SUNXI_FUNCTION(0x3, "PWM3-6"),
+		SUNXI_FUNCTION(0x4, "R_UART0_TX"),
+		SUNXI_FUNCTION(0x6, "S_SPI0_MOSI"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 0, 12),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 13),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_twi2"),		/* s_twi2_sda */
-		SUNXI_FUNCTION(0x3, "mcu_pwm0_7"),	/* mcu_pwm0_7 */
-		SUNXI_FUNCTION(0x4, "s_uart0"),		/* r_uart0_rx */
-		SUNXI_FUNCTION(0x6, "s_spi0"),		/* s_spi0_miso */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 13),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "I2C8_SDA"),
+		SUNXI_FUNCTION(0x3, "PWM3-7"),
+		SUNXI_FUNCTION(0x4, "R_UART0_RX"),
+		SUNXI_FUNCTION(0x6, "S_SPI0_MISO"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 0, 13),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	/* BANK M */
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 0),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_uart0"),		/* s_uart0_tx */
-		SUNXI_FUNCTION(0x3, "s_uart1"),		/* s_uart0_tx */
-		SUNXI_FUNCTION(0x4, "mcu_pwm0_0"),	/* mcu_pwm0_0 */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 1, 0),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "UART8_TX"),
+		SUNXI_FUNCTION(0x3, "UART8_TX"),
+		SUNXI_FUNCTION(0x4, "PWM3-0"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 1, 0),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 1),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_uart0"),		/* s_uart1_rx */
-		SUNXI_FUNCTION(0x3, "s_uart1"),		/* s_uart1_rx */
-		SUNXI_FUNCTION(0x4, "mcu_pwm0_1"),	/* mcu_pwm0_1 */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 1, 1),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "UART9_RX"),
+		SUNXI_FUNCTION(0x3, "UART9_RX"),
+		SUNXI_FUNCTION(0x4, "PWM3-1"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 1, 1),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 2),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_twi1"),		/* s_twi1_sck */
-		SUNXI_FUNCTION(0x3, "r_jtag"),		/* s_jtag_ms */
-		SUNXI_FUNCTION(0x4, "mcu_pwm0_4"),	/* mcu_pwm0_4 */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 1, 2),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "I2C7_SCL"),
+		SUNXI_FUNCTION(0x3, "S_JTAG_MS"),
+		SUNXI_FUNCTION(0x4, "PWM3-4"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 1, 2),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 3),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_twi1"),		/* s_twi_sda */
-		SUNXI_FUNCTION(0x3, "r_jtag"),		/* r_jtag_ck */
-		SUNXI_FUNCTION(0x4, "mcu_pwm0_5"),	/* mcu_pwm0_5 */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 1, 3),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "I2C7_SDA"),
+		SUNXI_FUNCTION(0x3, "R_JTAG_CK"),
+		SUNXI_FUNCTION(0x4, "PWM3-5"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 1, 3),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 4),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "mcu_pwm0_6"),	/* mcu_pwm0_6 */
-		SUNXI_FUNCTION(0x3, "r_jtag"),		/* r_jtag_do */
-		SUNXI_FUNCTION(0x4, "s_twi2"),		/* s_twi2_sck */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 1, 4),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "PWM3-6"),
+		SUNXI_FUNCTION(0x3, "R_JTAG_DO"),
+		SUNXI_FUNCTION(0x4, "I2C8_SCL"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 1, 4),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 
 	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 5),
-		SUNXI_FUNCTION(0x0, "gpio_in"),		/* gpio_in */
-		SUNXI_FUNCTION(0x1, "gpio_out"),	/* gpio_out */
-		SUNXI_FUNCTION(0x2, "s_cir"),		/* s_cir_in */
-		SUNXI_FUNCTION(0x3, "r_jtag"),		/* r_jtag_di */
-		SUNXI_FUNCTION(0x4, "s_twi2"),		/* s_twi2_sda */
-		SUNXI_FUNCTION(0x5, "mcu_pwm0_7"),	/* mcu_pwm0_7 */
-		SUNXI_FUNCTION_IRQ_BANK(0xe, 1, 5),
-		SUNXI_FUNCTION(0xf, "io_disabled")),	/* io_disabled */
+		SUNXI_FUNCTION(0x0, "IN"),		
+		SUNXI_FUNCTION(0x1, "OUT"),	
+		SUNXI_FUNCTION(0x2, "S_CIR_IN"),
+		SUNXI_FUNCTION(0x3, "R_JTAG_DI"),
+		SUNXI_FUNCTION(0x4, "I2C8_SDA"),
+		SUNXI_FUNCTION(0x5, "PWM3-7"),
+		SUNXI_FUNCTION_IRQ_BANK(0XE, 1, 5),
+		SUNXI_FUNCTION(0xf, "OFF")),	
 };
 
 static const unsigned int sun55iw3_r_irq_bank_map[] = {

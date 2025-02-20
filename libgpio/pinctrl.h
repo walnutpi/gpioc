@@ -20,6 +20,8 @@ extern void gpio_print_who_has_function(char *name_buf, int len);
 extern const char *gpio_pin_get_mode_name(int gpio_num);
 extern const char *gpio_pin_get_mode_name_by_num(int gpio_num, int mode_num);
 
+extern void gpio_mode_rename(int gpio_num, int mode_num, char *name);
+
 // 直接调用寄存器进行操作
 extern int core_gpio_get_mode(int gpio_num);
 extern void core_gpio_set_mode(int gpio_num, int mode);
