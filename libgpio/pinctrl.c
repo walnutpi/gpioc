@@ -6,6 +6,7 @@
 #include "socket.h"
 
 #include "pinctrl-sunxi/pinctrl-sunxi.h"
+#include "pinctrl-k230/pinctrl-k230.h"
 
 struct chip_ops
 {
@@ -32,6 +33,18 @@ struct chip_ops ops_list[] = {
         .gpio_pin_get_mode_name = sunxi_pin_get_mode_name,
         .gpio_pin_get_mode_name_by_num = sunxi_pin_get_mode_name_by_num,
         .mode_rename = sunxi_gpio_mode_rename,
+    },
+    {
+        .init = k230_init,
+        .pin_set_mode = k230_pin_set_mode,
+        .pin_get_mode = k230_pin_get_mode,
+        .gpio_read = k230_gpio_read,
+        .gpio_write = k230_gpio_write,
+        .gpio_set_PullUpDn = k230_gpio_set_PullUpDn,
+        .who_has_function = k230_who_has_function,
+        .gpio_pin_get_mode_name = k230_gpio_pin_get_mode_name,
+        .gpio_pin_get_mode_name_by_num = k230_gpio_pin_get_mode_name_by_num,
+        .mode_rename = k230_mode_rename,
     },
 
 };

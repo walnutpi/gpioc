@@ -2,7 +2,7 @@ cc = gcc
 target = libgpio
 head_file = gpio.h
 
-src = $(wildcard *.c pinctrl-sunxi/*.c)
+src = $(wildcard *.c pinctrl-sunxi/*.c pinctrl-k230/*.c)
 src := $(filter-out %_py.c, $(src))
 objects = $(patsubst %.c,%.o,$(src))
 

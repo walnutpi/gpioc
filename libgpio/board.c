@@ -11,6 +11,7 @@ static struct BOARD_DESC *board_list[] = {
     &walnutpi_1b,
     &walnutpi_1b_emmc,
     &walnutpi_2b,
+    &canMVk230,
 };
 
 static struct BOARD_DESC *now_board_desc = NULL;
@@ -54,7 +55,7 @@ struct BOARD_DESC *get_board_desc()
         }
     }
 
-    printf("you /proc/device-tree/model string is not in support list");
+    printf("\n/proc/device-tree/model string [%s] is not in support list\n", model);
     exit(-1);
 }
 
