@@ -367,12 +367,12 @@ extern int sunxi_pin_get_mode (int gpio_num);
 extern const char *sunxi_pin_get_mode_name(int gpio_num);
 extern const char *sunxi_pin_get_mode_name_by_num(int gpio_num, int mode_num);
 
-extern int sunxi_gpio_read(int gpio_num);
-extern void sunxi_gpio_write(int gpio_num, int value);
-extern void sunxi_gpio_set_PullUpDn (int gpio_num, int pud);
+extern int sunxi_pinctrl_read(int gpio_num);
+extern void sunxi_pinctrl_write(int gpio_num, int value);
+extern void sunxi_pinctrl_set_pullUpDn (int gpio_num, int pud);
 
 extern void sunxi_print_who_has_function(char *name_buf, int len);
 
-extern void sunxi_gpio_mode_rename(int gpio_num, int mode_num, char *name);
+extern void sunxi_pinctrl_mode_rename(int gpio_num, int mode_num, char *name);
 
 #endif

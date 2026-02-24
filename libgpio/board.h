@@ -1,10 +1,8 @@
 #ifndef _BOARD_H
 #define _BOARD_H
-
-#include "pinctrl.h"
+#include "pinctrl/pinctrl.h"
 
 // 使用板上排针编号
-
 extern int pin_get_mode(int pin_num);
 extern void pin_set_mode(int pin_num, int mode);
 extern void pin_set_mode_by_name(int pin_num, char *mode);
@@ -28,6 +26,5 @@ extern void print_all_gpio_on_ph();                       // 输出所有可作�
 extern void print_pin_para();                             // 输出pin功能可用的参数
 extern void print_pin_by_mode_name(char *str);            // 传入指定字符串，输出所对应的引脚，这里输出的引脚都在板上带有可直接调用的设备树插件
 extern void print_pin_by_search_all_mode_name(char *str); // 传入字符串，在所有引脚复用功能中查找以该字符串开头的，并直接输出到终端，可能需要自己编写设备树以启用
-
 
 #endif

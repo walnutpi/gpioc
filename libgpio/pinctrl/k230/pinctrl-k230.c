@@ -25,18 +25,18 @@ int k230_pin_get_mode(int gpio_num)
     usleep(1000);
     return func;
 }
-int k230_gpio_read(int gpio_num)
+int k230_pinctrl_read(int gpio_num)
 {
     return 0;
 }
-void k230_gpio_write(int gpio_num, int value) {}
-void k230_gpio_set_PullUpDn(int gpio_num, int pud) {}
+void k230_pinctrl_write(int gpio_num, int value) {}
+void k230_pinctrl_set_pullUpDn(int gpio_num, int pud) {}
 void k230_who_has_function(char *name_buf, int len) {}
-const char *k230_gpio_pin_get_mode_name(int gpio_num)
+const char *k230_pinctrl_pin_get_mode_name(int gpio_num)
 {
     return "off";
 }
-const char *k230_gpio_pin_get_mode_name_by_num(int gpio_num, int mode_num)
+const char *k230_pinctrl_pin_get_mode_name_by_num(int gpio_num, int mode_num)
 {
     return "off";
 }

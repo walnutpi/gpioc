@@ -410,7 +410,7 @@ const char *sunxi_pin_get_mode_name_by_num(int gpio_num, int mode_num)
     return NULL;
 }
 
-int sunxi_gpio_read(int gpio_num)
+int sunxi_pinctrl_read(int gpio_num)
 {
     sunxi_init();
     int bank = gpio_num >> 5;
@@ -424,7 +424,7 @@ int sunxi_gpio_read(int gpio_num)
 
     return (val & GPIO_BIT(index)) ? 1 : 0;
 }
-void sunxi_gpio_write(int gpio_num, int value)
+void sunxi_pinctrl_write(int gpio_num, int value)
 {
     sunxi_init();
     unsigned int bank = gpio_num >> 5;
@@ -447,7 +447,7 @@ void sunxi_gpio_write(int gpio_num, int value)
         *reg = val;
     }
 }
-void sunxi_gpio_set_PullUpDn(int gpio_num, int pud)
+void sunxi_pinctrl_set_pullUpDn(int gpio_num, int pud)
 {
     sunxi_init();
     uint32_t val;
@@ -539,7 +539,7 @@ void sunxi_print_who_has_function(char *name_buf, int len)
     }
     closedir(dir);
 }
-void sunxi_gpio_mode_rename(int gpio_num, int mode_num, char *name)
+void sunxi_pinctrl_mode_rename(int gpio_num, int mode_num, char *name)
 {
     sunxi_init();
     if (_pins[gpio_num].pinctrl_desc == NULL)

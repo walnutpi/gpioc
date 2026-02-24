@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "pinctrl.h"
+#include "pinctrl/pinctrl.h"
 #include "softpwm.h"
 #include "board.h"
 #include "board-pin.h"
@@ -48,7 +48,7 @@ struct BOARD_DESC *get_board_desc()
                 for (int pin = 0; pin < board_reanme_pins->count; pin++)
                 {
                     struct PIN_mode_rename *rename_pin = &(board_reanme_pins->the_pins[pin]);
-                    gpio_mode_rename(rename_pin->pin, rename_pin->mode, rename_pin->newname);
+                    pinctrl_mode_rename(rename_pin->pin, rename_pin->mode, rename_pin->newname);
                 }
             }
             return now_board_desc;
@@ -84,14 +84,14 @@ int pin_get_mode(int pin_num)
     int gpio_num = board_ph_to_gpio(pin_num);
     if (gpio_num < 0)
         return -1;
-    return gpio_get_mode(gpio_num);
+    return pinctrl_get_mode(gpio_num);
 }
 
 void pin_set_mode(int pin_num, int mode)
 {
     if (board_ph_to_gpio(pin_num) < 0)
         return;
-    gpio_set_mode(board_ph_to_gpio(pin_num), mode);
+    pinctrl_set_mode(board_ph_to_gpio(pin_num), mode);
 }
 void pin_set_mode_by_name(int pin_num, char *mode)
 {
@@ -112,21 +112,21 @@ void pin_set_pullUpDn(int pin_num, int pud)
     // exit_if_no_gpio(pin_num);
     if (board_ph_to_gpio(pin_num) < 0)
         return;
-    gpio_set_pullUpDn(board_ph_to_gpio(pin_num), pud);
+    pinctrl_set_pullUpDn(board_ph_to_gpio(pin_num), pud);
 }
 int pin_read(int pin_num)
 {
     // exit_if_no_gpio(pin_num);
     if (board_ph_to_gpio(pin_num) < 0)
         return -1;
-    return gpio_read(board_ph_to_gpio(pin_num));
+    return pinctrl_read(board_ph_to_gpio(pin_num));
 }
 void pin_write(int pin_num, int value)
 {
     if (board_ph_to_gpio(pin_num) < 0)
         return;
     // exit_if_no_gpio(pin_num);
-    gpio_write(board_ph_to_gpio(pin_num), value);
+    pinctrl_write(board_ph_to_gpio(pin_num), value);
 }
 const char *pin_get_mode_name_now(int pin_num)
 {
@@ -135,7 +135,7 @@ const char *pin_get_mode_name_now(int pin_num)
     {
         return "";
     }
-    return gpio_pin_get_mode_name(gpio_num);
+    return pinctrl_pin_get_mode_name(gpio_num);
 }
 const char *pin_get_mode_name_by_num(int pin_num, int mode_num)
 {
@@ -144,7 +144,7 @@ const char *pin_get_mode_name_by_num(int pin_num, int mode_num)
     {
         return "";
     }
-    return gpio_pin_get_mode_name_by_num(gpio_num, mode_num);
+    return pinctrl_pin_get_mode_name_by_num(gpio_num, mode_num);
 }
 
 void soft_pwm_set_duty_cycle(int pin_num, int dutycycle)
@@ -409,7 +409,7 @@ void print_pin_by_search_all_mode_name(char *str)
         {
             for (j = 0; j < 7; j++) // 遍历引脚的复用功能0到7
             {
-                const char *mode_desc = gpio_pin_get_mode_name_by_num(board_ph_to_gpio(ph), j);
+                const char *mode_desc = pinctrl_pin_get_mode_name_by_num(board_ph_to_gpio(ph), j);
                 if (mode_desc != NULL)
                 {
                     if (strncasecmp(str, mode_desc, strlen(str)) == 0)

@@ -10,7 +10,7 @@ classifiers = [
     'Programming Language :: Python :: 3',
 ]
 
-pinctrl_files = glob.glob('libgpio/*.c')
+pinctrl_files = glob.glob('libgpio/pinctrl/**/*.c', recursive=True)
 softpwm_files = glob.glob('libgpio/*.c')
 with open('version', 'r') as file:
     version_str = file.read().strip()
