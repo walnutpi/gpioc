@@ -2,106 +2,95 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdbool.h>
 #include "socket.h"
 
-#include "pinctrl-sunxi.h"
+#include "pinctrl-sunxi/pinctrl-sunxi.h"
 
+struct chip_ops
+{
+    bool (*init)(void);
+    void (*pin_set_mode)(int gpio_num, int mode);
+    int (*pin_get_mode)(int gpio_num);
+    int (*gpio_read)(int gpio_num);
+    void (*gpio_write)(int gpio_num, int value);
+    void (*gpio_set_PullUpDn)(int gpio_num, int pud);
+    void (*who_has_function)(char *name_buf, int len);
+    const char *(*gpio_pin_get_mode_name)(int gpio_num);
+    const char *(*gpio_pin_get_mode_name_by_num)(int gpio_num, int mode_num);
+    void (*mode_rename)(int gpio_num, int mode_num, char *name);
+};
+struct chip_ops ops_list[] = {
+    {
+        .init = sunxi_init,
+        .pin_set_mode = sunxi_pin_set_mode,
+        .pin_get_mode = sunxi_pin_get_mode,
+        .gpio_read = sunxi_gpio_read,
+        .gpio_write = sunxi_gpio_write,
+        .gpio_set_PullUpDn = sunxi_gpio_set_PullUpDn,
+        .who_has_function = sunxi_print_who_has_function,
+        .gpio_pin_get_mode_name = sunxi_pin_get_mode_name,
+        .gpio_pin_get_mode_name_by_num = sunxi_pin_get_mode_name_by_num,
+        .mode_rename = sunxi_gpio_mode_rename,
+    },
+
+};
 static int _ops_select = 0;
-
-void (*chip_pin_set_mode[])(int, int) = {
-    0,
-    sunxi_pin_set_mode,
-};
-
-int (*chip_pin_get_mode[])(int) = {
-    0,
-    sunxi_pin_get_mode,
-};
-
-int (*chip_gpio_read[])(int) = {
-    0,
-    sunxi_gpio_read,
-};
-
-void (*chip_gpio_write[])(int, int) = {
-    0,
-    sunxi_gpio_write,
-};
-
-void (*chip_gpio_set_PullUpDn[])(int, int) = {
-    0,
-    sunxi_gpio_set_PullUpDn,
-};
-
-void (*chip_who_has_function[])(char *, int) = {
-    0,
-    sunxi_print_who_has_function,
-};
-const char *(*chip_gpio_pin_get_mode_name[])(int) = {
-    0,
-    sunxi_pin_get_mode_name,
-};
-const char *(*chip_gpio_pin_get_mode_name_by_num[])(int, int) = {
-    0,
-    sunxi_pin_get_mode_name_by_num,
-};
-void (*chip_mode_rename[])(int, int, char *)={
-    0,
-    sunxi_gpio_mode_rename,
-};
-
-int chip_detect()
+struct chip_ops *get_chip_ops()
 {
     if (_ops_select == 0)
     {
-        if (sunxi_init())
+        for (int i = 0; i < sizeof(ops_list) / sizeof(struct chip_ops); i++)
         {
-            _ops_select = 1;
+            if (ops_list[i].init && ops_list[i].init())
+            {
+                _ops_select = i;
+                break;
+            }
         }
     }
-
-    return _ops_select;
+    return &ops_list[_ops_select];
 }
 
 int core_gpio_get_mode(int gpio_num)
 {
-    return chip_pin_get_mode[chip_detect()](gpio_num);
+    return get_chip_ops()->pin_get_mode(gpio_num);
 }
 
 void core_gpio_set_mode(int gpio_num, int mode)
 {
-    chip_pin_set_mode[chip_detect()](gpio_num, mode);
+    get_chip_ops()->pin_set_mode(gpio_num, mode);
 }
 
 void core_gpio_set_pullUpDn(int gpio_num, int pud)
 {
-    chip_gpio_set_PullUpDn[chip_detect()](gpio_num, pud);
+    get_chip_ops()->gpio_set_PullUpDn(gpio_num, pud);
 }
 
 int core_gpio_read(int gpio_num)
 {
-    return chip_gpio_read[chip_detect()](gpio_num);
+    return get_chip_ops()->gpio_read(gpio_num);
 }
 
 void core_gpio_write(int gpio_num, int value)
 {
-    chip_gpio_write[chip_detect()](gpio_num, value);
+    get_chip_ops()->gpio_write(gpio_num, value);
 }
 void core_gpio_print_who_has_function(char *name_buf, int len)
 {
-    chip_who_has_function[chip_detect()](name_buf, len);
+    get_chip_ops()->who_has_function(name_buf, len);
 }
 const char *core_gpio_pin_get_mode_name(int gpio_num)
 {
-    return chip_gpio_pin_get_mode_name[chip_detect()](gpio_num);
+    return get_chip_ops()->gpio_pin_get_mode_name(gpio_num);
 }
 const char *core_gpio_pin_get_mode_name_by_num(int gpio_num, int mode_num)
 {
-    return chip_gpio_pin_get_mode_name_by_num[chip_detect()](gpio_num, mode_num);
+    return get_chip_ops()->gpio_pin_get_mode_name_by_num(gpio_num, mode_num);
 }
 void gpio_mode_rename(int gpio_num, int mode_num, char *name)
 {
-    return chip_mode_rename[chip_detect()](gpio_num, mode_num, name);
+    get_chip_ops()->mode_rename(gpio_num, mode_num, name);
 }
 
 /******************************************************************************/
@@ -167,7 +156,7 @@ void gpio_write(int gpio_num, int value)
 void gpio_print_who_has_function(char *name_buf, int len)
 {
     if (geteuid() == 0)
-        chip_who_has_function[chip_detect()](name_buf, len);
+        core_gpio_print_who_has_function(name_buf, len);
     else
     {
         char buf[50];
@@ -197,4 +186,3 @@ const char *gpio_pin_get_mode_name_by_num(int gpio_num, int mode_num)
     strncpy(str, buf, strlen(buf));
     return str;
 }
-

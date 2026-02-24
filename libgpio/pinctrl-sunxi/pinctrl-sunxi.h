@@ -360,7 +360,7 @@ struct pins
 	struct sunxi_pinctrl_hw_info *reg_info; //记录各寄存器的偏移地址
 };
 extern struct pins _pins[448];
-int sunxi_init(void);
+bool sunxi_init(void);
 
 extern void sunxi_pin_set_mode (int gpio_num, int mode);
 extern int sunxi_pin_get_mode (int gpio_num);

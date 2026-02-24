@@ -8,7 +8,7 @@
 #include <fcntl.h>
 #include <dirent.h>
 
-#include "pinctrl.h"
+#include "../pinctrl.h"
 #include "pinctrl-sunxi.h"
 
 static int fd_mem = 0;
@@ -237,7 +237,7 @@ void dtb_get_reg_number(char *path_node, int address_cells, int size_cells, uint
     close(fd);
 }
 
-int sunxi_init()
+bool sunxi_init()
 {
     if (fd_mem > 0) // 代表已经初始化过了
         return true;
