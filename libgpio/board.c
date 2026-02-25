@@ -104,6 +104,7 @@ void pin_set_mode_by_name(int pin_num, char *mode)
             if (strcasecmp(str, mode) == 0)
             {
                 pin_set_mode(pin_num, i);
+                return;
             }
     }
 }
