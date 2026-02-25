@@ -1,6 +1,7 @@
 #include "pinctrl-k230.h"
 #include "../pinctrl.h"
 #include "drv_fpioa.h"
+#include "k230_gpio.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -253,6 +254,7 @@ const char *_fpioa_func_desc[] = {
 };
 bool k230_init()
 {
+    kd_pin_init();
     return true;
 }
 void k230_pin_set_mode(int gpio_num, int mode)
@@ -265,14 +267,16 @@ void k230_pin_set_mode(int gpio_num, int mode)
         cfg.u.bit.ie = 1;
         cfg.u.bit.oe = 0;
         cfg.u.bit.io_sel = 0;
+        kd_pin_set_ddr(gpio_num, 0);
         break;
     case 1:
-        cfg.u.bit.ie = 0;
+        cfg.u.bit.ie = 1;
         cfg.u.bit.oe = 1;
         cfg.u.bit.io_sel = 0;
+        kd_pin_set_ddr(gpio_num, 1);
         break;
     default:
-        cfg.u.bit.ie = 0;
+        cfg.u.bit.ie = 1;
         cfg.u.bit.oe = 0;
         cfg.u.bit.io_sel = mode - 1;
         break;
@@ -285,20 +289,18 @@ int k230_pin_get_mode(int gpio_num)
     drv_fpioa_get_pin_cfg(gpio_num, &cfg.u.value);
     if (cfg.u.bit.io_sel == 0)
     {
-        if (cfg.u.bit.ie)
-            return 0;
-        else if (cfg.u.bit.oe)
-            return 1;
+        return kd_pin_get_ddr(gpio_num);
     }
     return cfg.u.bit.io_sel + 1;
 }
 int k230_pinctrl_read(int gpio_num)
 {
-    fpioa_iomux_cfg_t cfg;
-    drv_fpioa_get_pin_cfg(gpio_num, &cfg.u.value);
-    return cfg.u.bit.di;
+    return kd_pin_get_dr(gpio_num);
 }
-void k230_pinctrl_write(int gpio_num, int value) {}
+void k230_pinctrl_write(int gpio_num, int value)
+{
+    kd_pin_set_dr(gpio_num, value);
+}
 void k230_pinctrl_set_pullUpDn(int gpio_num, int pud)
 {
     fpioa_iomux_cfg_t cfg;
@@ -329,11 +331,10 @@ const char *k230_pinctrl_pin_get_mode_name(int gpio_num)
     if (GPIO71 >= func)
     {
         drv_fpioa_get_pin_cfg(gpio_num, &cfg.u.value);
-        if (cfg.u.bit.ie)
-            return "IN";
-        else if (cfg.u.bit.oe)
+        if (kd_pin_get_ddr(gpio_num))
             return "OUT";
-        return "OFF";
+        else
+            return "IN";
     }
     return _fpioa_func_desc[func];
 }
