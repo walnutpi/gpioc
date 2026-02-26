@@ -1,7 +1,7 @@
-from gpioc.chips.T527 import *
+from gpioc.chips.K230 import *
 import time
-key = PB7
-led = PB8
+key = IO21
+led = IO52
 key.init(key.IN,key.PULL_UP)
 led.init(led.OUT)
 
