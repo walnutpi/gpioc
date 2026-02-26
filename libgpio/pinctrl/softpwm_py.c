@@ -1,7 +1,5 @@
 #include <Python.h>
-
-
-
+#include "softpwm.h"
 
 static PyObject *py_set_duty_cycle(PyObject *self, PyObject *args)
 {
@@ -35,9 +33,6 @@ static PyObject *py_get_frequency(PyObject *self, PyObject *args)
     ret = PyArg_ParseTuple(args, "i", &gpio_num);
     return Py_BuildValue("i", pwm_get_frequency(gpio_num));
 }
-
-
-
 
 static PyObject *py_start(PyObject *self, PyObject *args)
 {
@@ -78,7 +73,7 @@ PyMethodDef pwm_methods[] = {
 };
 static struct PyModuleDef module_pinctrl = {
     PyModuleDef_HEAD_INIT,
-    "gpioc._pwm",      // name of module
+    "gpioc._softpwm",    // name of module
     moduledocstring, // module documentation, may be NULL
     -1,              // size of per-interpreter state of the module, or -1 if the module keeps state in global variables.
     pwm_methods};

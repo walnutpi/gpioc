@@ -9,7 +9,7 @@
 #include <time.h>
 #include <string.h>
 #include "../libgpio/board.h"
-#include "../libgpio/softpwm.h"
+#include "../libgpio/pinctrl/softpwm.h"
 
 #define PORT 10007 // 端口号
 #define BACKLOG 1  // 最大监听数

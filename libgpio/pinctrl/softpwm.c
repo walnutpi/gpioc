@@ -5,8 +5,8 @@
 #include <signal.h>
 #include <unistd.h>
 
-#include "pinctrl/pinctrl.h"
-#include "pinctrl/socket.h"
+#include "pinctrl.h"
+#include "socket.h"
 
 #define NS_1S 1000000000
 #define DUTY_CYCLE_FULL 100

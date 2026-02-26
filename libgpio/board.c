@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "pinctrl/pinctrl.h"
-#include "softpwm.h"
+#include "pinctrl/softpwm.h"
 #include "board.h"
 #include "board-pin.h"
 
