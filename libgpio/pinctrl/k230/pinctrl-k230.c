@@ -13,6 +13,9 @@
 #include <fcntl.h>
 #include <dirent.h>
 
+// 记录要对哪个引脚功能显示的名字做覆盖
+const char *rename_pin_descs[72][5] = {0};
+
 const char *_fpioa_func_desc[] = {
     "GPIO0",
     "GPIO1",
@@ -323,34 +326,38 @@ void k230_pinctrl_set_pullUpDn(int gpio_num, int pud)
     drv_fpioa_set_pin_cfg(gpio_num, cfg.u.value);
 }
 void k230_who_has_function(char *name_buf, int len) {}
-const char *k230_pinctrl_pin_get_mode_name(int gpio_num)
-{
-    fpioa_func_t func;
-    fpioa_iomux_cfg_t cfg;
-    drv_fpioa_get_pin_func(gpio_num, &func);
-    if (GPIO71 >= func)
-    {
-        drv_fpioa_get_pin_cfg(gpio_num, &cfg.u.value);
-        if (kd_pin_get_ddr(gpio_num))
-            return "OUT";
-        else
-            return "IN";
-    }
-    return _fpioa_func_desc[func];
-}
+
 const char *k230_pinctrl_pin_get_mode_name_by_num(int gpio_num, int mode_num)
 {
+    const char *mode_name;
     fpioa_func_t funcs[FPIOA_PIN_MAX_FUNCS];
     if (mode_num > FPIOA_PIN_MAX_FUNCS)
         return "RESERVED";
     switch (mode_num)
     {
     case 0:
-        return "IN";
+        mode_name = "IN";
+        break;
     case 1:
-        return "OUT";
+        mode_name = "OUT";
+        break;
+    default:
+        drv_fpioa_pin_supported_funcs(gpio_num, funcs);
+        mode_name = _fpioa_func_desc[funcs[mode_num - 1]];
+        break;
     }
-    drv_fpioa_pin_supported_funcs(gpio_num, funcs);
-    return _fpioa_func_desc[funcs[mode_num - 1]];
+    if (rename_pin_descs[gpio_num][mode_num])
+        mode_name = rename_pin_descs[gpio_num][mode_num];
+    return mode_name;
 }
-void k230_mode_rename(int gpio_num, int mode_num, char *name) {}
+const char *k230_pinctrl_pin_get_mode_name(int gpio_num)
+{
+    int mode_num = k230_pin_get_mode(gpio_num);
+    return k230_pinctrl_pin_get_mode_name_by_num(gpio_num, mode_num);
+}
+void k230_mode_rename(int gpio_num, int mode_num, char *name)
+{
+    if (mode_num > FPIOA_PIN_MAX_FUNCS)
+        return;
+    rename_pin_descs[gpio_num][mode_num] = name;
+}

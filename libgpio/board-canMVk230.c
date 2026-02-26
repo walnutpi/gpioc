@@ -91,7 +91,13 @@ static struct BOARD_PIN_PER canMVk230_i2cs =
         .count = sizeof(PIN_PER_I2C) / sizeof(struct PIN_with_PER),
         .the_pins = PIN_PER_I2C,
 };
-static struct PIN_mode_rename pin_mode_renames[] = {};
+static struct PIN_mode_rename pin_mode_renames[] = {
+    DEF_A_BOARD_PIN_MODE_RENAME(16, 4, "SPI0_MOSI"),
+    DEF_A_BOARD_PIN_MODE_RENAME(17, 4, "SPI0_MISO"),
+    DEF_A_BOARD_PIN_MODE_RENAME(15, 4, "SPI0_CLK"),
+    DEF_A_BOARD_PIN_MODE_RENAME(14, 4, "SPI0_CS0"),
+    DEF_A_BOARD_PIN_MODE_RENAME(61, 4, "SPI0_CS1"),
+};
 static struct BOARD_mode_rename canMVk230_pin_mode_renames =
     {
         .count = sizeof(pin_mode_renames) / sizeof(struct PIN_mode_rename),
