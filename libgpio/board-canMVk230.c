@@ -17,9 +17,9 @@ struct BOARD_PIN canMVk230_pins[] = {
     DEF_A_BOARD_PIN(13, 42, "IO42", PH_COLOR_GREEEN),
     DEF_A_BOARD_PIN(14, PH_GND, "GND", PH_COLOR_BLACK),
     DEF_A_BOARD_PIN(15, 43, "IO43", PH_COLOR_GREEEN),
-    DEF_A_BOARD_PIN(16, 46, "IO10", PH_COLOR_GREEEN),
+    DEF_A_BOARD_PIN(16, 46, "IO46", PH_COLOR_GREEEN),
     DEF_A_BOARD_PIN(17, PH_3V3, "3.3v", PH_COLOR_YELLOW),
-    DEF_A_BOARD_PIN(18, 47, "IO9", PH_COLOR_GREEEN),
+    DEF_A_BOARD_PIN(18, 47, "IO47", PH_COLOR_GREEEN),
     DEF_A_BOARD_PIN(19, 16, "IO16", PH_COLOR_GREEEN),
     DEF_A_BOARD_PIN(20, PH_GND, "GND", PH_COLOR_BLACK),
     DEF_A_BOARD_PIN(21, 17, "IO17", PH_COLOR_GREEEN),
@@ -47,29 +47,11 @@ struct BOARD_PIN canMVk230_pins[] = {
 };
 
 static struct PIN_with_PER PIN_PER_PWM[] = {
-    DEF_A_BOARD_PIN_PER(5, 5),
-    DEF_A_BOARD_PIN_PER(7, 5),
-    DEF_A_BOARD_PIN_PER(13, 4),
-    DEF_A_BOARD_PIN_PER(15, 4),
-    DEF_A_BOARD_PIN_PER(19, 4),
-    DEF_A_BOARD_PIN_PER(21, 4),
-    DEF_A_BOARD_PIN_PER(23, 4),
-    DEF_A_BOARD_PIN_PER(27, 4),
-    DEF_A_BOARD_PIN_PER(29, 3),
-    DEF_A_BOARD_PIN_PER(31, 4),
-    DEF_A_BOARD_PIN_PER(33, 4),
-    DEF_A_BOARD_PIN_PER(35, 4),
-    DEF_A_BOARD_PIN_PER(37, 4),
-    DEF_A_BOARD_PIN_PER(16, 4),
-    DEF_A_BOARD_PIN_PER(22, 4),
-    DEF_A_BOARD_PIN_PER(24, 4),
-    DEF_A_BOARD_PIN_PER(26, 4),
-    DEF_A_BOARD_PIN_PER(28, 4),
-    DEF_A_BOARD_PIN_PER(32, 4),
-    DEF_A_BOARD_PIN_PER(36, 4),
-    DEF_A_BOARD_PIN_PER(38, 4),
-    DEF_A_BOARD_PIN_PER(40, 4),
-    DEF_A_BOARD_PIN_PER(42, 6),
+    DEF_A_BOARD_PIN_PER(13, 3),
+    DEF_A_BOARD_PIN_PER(15, 3),
+    DEF_A_BOARD_PIN_PER(16, 3),
+    DEF_A_BOARD_PIN_PER(18, 3),
+
 };
 static struct BOARD_PIN_PER canMVk230_pwms =
     {
@@ -77,20 +59,8 @@ static struct BOARD_PIN_PER canMVk230_pwms =
         .the_pins = PIN_PER_PWM,
 };
 static struct PIN_with_PER PIN_PER_UART[] = {
-    DEF_A_BOARD_PIN_PER(11, 3),
-    DEF_A_BOARD_PIN_PER(13, 2),
-    DEF_A_BOARD_PIN_PER(15, 2),
-    DEF_A_BOARD_PIN_PER(23, 2),
-    DEF_A_BOARD_PIN_PER(35, 2),
-    DEF_A_BOARD_PIN_PER(37, 2),
-    DEF_A_BOARD_PIN_PER(8, 2),
-    DEF_A_BOARD_PIN_PER(10, 2),
-    DEF_A_BOARD_PIN_PER(12, 3),
-    DEF_A_BOARD_PIN_PER(22, 2),
-    DEF_A_BOARD_PIN_PER(24, 2),
-    DEF_A_BOARD_PIN_PER(26, 2),
-    DEF_A_BOARD_PIN_PER(38, 3),
-    DEF_A_BOARD_PIN_PER(40, 3),
+    DEF_A_BOARD_PIN_PER(8, 4),
+    DEF_A_BOARD_PIN_PER(10, 4),
 
 };
 static struct BOARD_PIN_PER canMVk230_uarts =
@@ -100,11 +70,11 @@ static struct BOARD_PIN_PER canMVk230_uarts =
 };
 
 static struct PIN_with_PER PIN_PER_SPI[] = {
-    DEF_A_BOARD_PIN_PER(19, 3),
-    DEF_A_BOARD_PIN_PER(21, 3),
-    DEF_A_BOARD_PIN_PER(23, 3),
-    DEF_A_BOARD_PIN_PER(24, 3),
-    DEF_A_BOARD_PIN_PER(26, 1),
+    DEF_A_BOARD_PIN_PER(19, 4),
+    DEF_A_BOARD_PIN_PER(21, 4),
+    DEF_A_BOARD_PIN_PER(23, 4),
+    DEF_A_BOARD_PIN_PER(24, 4),
+    DEF_A_BOARD_PIN_PER(26, 4),
 };
 static struct BOARD_PIN_PER canMVk230_spis =
     {
@@ -113,18 +83,15 @@ static struct BOARD_PIN_PER canMVk230_spis =
 };
 
 static struct PIN_with_PER PIN_PER_I2C[] = {
-    DEF_A_BOARD_PIN_PER(3, 2),
-    DEF_A_BOARD_PIN_PER(5, 2),
-    DEF_A_BOARD_PIN_PER(27, 3),
-    DEF_A_BOARD_PIN_PER(28, 3),
+    DEF_A_BOARD_PIN_PER(3, 4),
+    DEF_A_BOARD_PIN_PER(5, 4),
 };
 static struct BOARD_PIN_PER canMVk230_i2cs =
     {
         .count = sizeof(PIN_PER_I2C) / sizeof(struct PIN_with_PER),
         .the_pins = PIN_PER_I2C,
 };
-static struct PIN_mode_rename pin_mode_renames[] = {
-};
+static struct PIN_mode_rename pin_mode_renames[] = {};
 static struct BOARD_mode_rename canMVk230_pin_mode_renames =
     {
         .count = sizeof(pin_mode_renames) / sizeof(struct PIN_mode_rename),

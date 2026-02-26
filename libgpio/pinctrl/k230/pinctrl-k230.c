@@ -351,6 +351,6 @@ const char *k230_pinctrl_pin_get_mode_name_by_num(int gpio_num, int mode_num)
         return "OUT";
     }
     drv_fpioa_pin_supported_funcs(gpio_num, funcs);
-    return _fpioa_func_desc[funcs[mode_num - 2]];
+    return _fpioa_func_desc[funcs[mode_num - 1]];
 }
 void k230_mode_rename(int gpio_num, int mode_num, char *name) {}
