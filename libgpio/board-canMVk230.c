@@ -106,6 +106,7 @@ static struct BOARD_mode_rename canMVk230_pin_mode_renames =
 struct BOARD_DESC canMVk230 = {
     .model = "CanMV-K230",
     .pin_num = 42,
+    .header_num = 40,
     .pins = canMVk230_pins,
     .pwms = &canMVk230_pwms,
     .uarts = &canMVk230_uarts,

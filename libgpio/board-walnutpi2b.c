@@ -134,6 +134,7 @@ static struct BOARD_mode_rename walnutpi2b_pin_mode_renames =
 struct BOARD_DESC walnutpi_2b = {
     .model = "walnutpi-2b",
     .pin_num = 42,
+    .header_num = 40,
     .pins = walnutpi2b_pins,
     .pwms = &walnutpi2b_pwms,
     .uarts = &walnutpi2b_uarts,

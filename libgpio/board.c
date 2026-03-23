@@ -277,24 +277,27 @@ void printf_pins_r(int ph)
 
 void print_pins()
 {
+    get_board_desc();
     printf("+---+-----------+------+----------+------+-----------+---+\n");
     printf("| V |    Mode   | Name | Physical | Name |    Mode   | V |\n");
     printf("+---+-----------+------+----------+------+-----------+---+\n");
-    for (int ph = 1; ph < 40; ph++)
+
+    for (int ph = 1; ph < now_board_desc->pin_num; ph++)
     {
         printf_pins_l(ph);
         ph++;
         printf_pins_r(ph);
         printf("\n");
+
+        if (ph == now_board_desc->header_num)
+        {
+            printf("+---+-----------+------+----------+------+-----------+---+\n");
+            printf("\n");
+            printf("+---+-----------+------+----------+------+-----------+---+\n");
+            printf("| V |    Mode   | Name | Physical | Name |    Mode   | V |\n");
+            printf("+---+-----------+------+----------+------+-----------+---+\n");
+        }
     }
-    printf("+---+-----------+------+----------+------+-----------+---+\n");
-    printf("\n");
-    printf("+---+-----------+------+----------+------+-----------+---+\n");
-    printf("| V |    Mode   | Name | Physical | Name |    Mode   | V |\n");
-    printf("+---+-----------+------+----------+------+-----------+---+\n");
-    printf_pins_l(41);
-    printf_pins_r(42);
-    printf("\n");
     printf("+---+-----------+------+----------+------+-----------+---+\n");
 }
 
@@ -488,7 +491,7 @@ void print_pin_by_mode_name(char *str)
                 printf("\n");
             }
         }
-        if (ph == 40)
+        if (ph == now_board_desc->header_num)
             printf("+-----------+------+----------+------+-----------+\n");
     }
     printf("+-----------+------+----------+------+-----------+\n");

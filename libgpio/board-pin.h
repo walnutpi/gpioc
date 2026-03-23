@@ -71,6 +71,7 @@ struct BOARD_DESC
 {
     char *model;            // 设备树model字段
     int pin_num;            // 共有几个pin脚
+    int header_num;           // 板载排针引脚的个数
     struct BOARD_PIN *pins; // 描述板子所带的所有引脚
     struct BOARD_PIN_PER *pwms;
     struct BOARD_PIN_PER *uarts;

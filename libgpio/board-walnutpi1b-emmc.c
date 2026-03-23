@@ -97,6 +97,7 @@ static struct BOARD_PIN_PER walnutpi1b_emmc_i2cs =
 struct BOARD_DESC walnutpi_1b_emmc = {
     .model = "walnutpi-1b-emmc",
     .pin_num = 42,
+    .header_num = 40,
     .pins = walnutpi1b_emmc_pins,
     .pwms = &walnutpi1b_emmc_pwms,
     .uarts = &walnutpi1b_emmc_uarts,
