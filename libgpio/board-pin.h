@@ -83,5 +83,6 @@ extern struct BOARD_DESC walnutpi_1b;
 extern struct BOARD_DESC walnutpi_1b_emmc;
 extern struct BOARD_DESC walnutpi_2b;
 extern struct BOARD_DESC canMVk230;
+extern struct BOARD_DESC xcamK230;
 
 #endif
