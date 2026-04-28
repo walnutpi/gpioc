@@ -1,6 +1,6 @@
 #include "board-pin.h"
 #include "pin-num.h"
-struct BOARD_PIN xcamK230_pins[] = {
+struct BOARD_PIN cybercamK230_pins[] = {
     DEF_A_BOARD_PIN(0, 0, "", 0),
     DEF_A_BOARD_PIN(1, PH_5V, "5v", PH_COLOR_RED),
     DEF_A_BOARD_PIN(2, PH_GND, "GND", PH_COLOR_BLACK),
@@ -25,14 +25,14 @@ static struct PIN_with_PER PIN_PER_PWM[] = {
     DEF_A_BOARD_PIN_PER(16, 3),
 
 };
-static struct BOARD_PIN_PER xcamK230_pwms =
+static struct BOARD_PIN_PER cybercamK230_pwms =
     {
         .count = sizeof(PIN_PER_PWM) / sizeof(struct PIN_with_PER),
         .the_pins = PIN_PER_PWM,
 };
 static struct PIN_with_PER PIN_PER_UART[] = {
 };
-static struct BOARD_PIN_PER xcamK230_uarts =
+static struct BOARD_PIN_PER cybercamK230_uarts =
     {
         .count = sizeof(PIN_PER_UART) / sizeof(struct PIN_with_PER),
         .the_pins = PIN_PER_UART,
@@ -45,7 +45,7 @@ static struct PIN_with_PER PIN_PER_SPI[] = {
     DEF_A_BOARD_PIN_PER(8, 4),
     DEF_A_BOARD_PIN_PER(10, 4),
 };
-static struct BOARD_PIN_PER xcamK230_spis =
+static struct BOARD_PIN_PER cybercamK230_spis =
     {
         .count = sizeof(PIN_PER_SPI) / sizeof(struct PIN_with_PER),
         .the_pins = PIN_PER_SPI,
@@ -53,7 +53,7 @@ static struct BOARD_PIN_PER xcamK230_spis =
 
 static struct PIN_with_PER PIN_PER_I2C[] = {
 };
-static struct BOARD_PIN_PER xcamK230_i2cs =
+static struct BOARD_PIN_PER cybercamK230_i2cs =
     {
         .count = sizeof(PIN_PER_I2C) / sizeof(struct PIN_with_PER),
         .the_pins = PIN_PER_I2C,
@@ -65,19 +65,19 @@ static struct PIN_mode_rename pin_mode_renames[] = {
     DEF_A_BOARD_PIN_MODE_RENAME(14, 4, "SPI0_CS0"),
     DEF_A_BOARD_PIN_MODE_RENAME(61, 4, "SPI0_CS1"),
 };
-static struct BOARD_mode_rename xcamK230_pin_mode_renames =
+static struct BOARD_mode_rename cybercamK230_pin_mode_renames =
     {
         .count = sizeof(pin_mode_renames) / sizeof(struct PIN_mode_rename),
         .the_pins = pin_mode_renames,
 };
-struct BOARD_DESC xcamK230 = {
-    .model = "01studio-xcam",
+struct BOARD_DESC cybercamK230 = {
+    .model = "CyberCAM",
     .pin_num = 16,
     .header_num = 12,
-    .pins = xcamK230_pins,
-    .pwms = &xcamK230_pwms,
-    .uarts = &xcamK230_uarts,
-    .spis = &xcamK230_spis,
-    .i2cs = &xcamK230_i2cs,
-    .mode_renames = &xcamK230_pin_mode_renames,
+    .pins = cybercamK230_pins,
+    .pwms = &cybercamK230_pwms,
+    .uarts = &cybercamK230_uarts,
+    .spis = &cybercamK230_spis,
+    .i2cs = &cybercamK230_i2cs,
+    .mode_renames = &cybercamK230_pin_mode_renames,
 };
