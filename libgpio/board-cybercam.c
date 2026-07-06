@@ -14,10 +14,14 @@ struct BOARD_PIN cybercamK230_pins[] = {
     DEF_A_BOARD_PIN(10, 61, "IO61", PH_COLOR_GREEEN),
     DEF_A_BOARD_PIN(11, PH_GND, "ADC0", PH_COLOR_GREEEN),
     DEF_A_BOARD_PIN(12, PH_GND, "ADC1", PH_COLOR_GREEEN),
-    DEF_A_BOARD_PIN(13, 21, "KEY", PH_COLOR_BLACK),
-    DEF_A_BOARD_PIN(14, 52, "LED", PH_COLOR_BLACK),
-    DEF_A_BOARD_PIN(15, 46, "LIGHT", PH_COLOR_BLACK),
-    DEF_A_BOARD_PIN(16, 47, "BEEP", PH_COLOR_BLACK),
+    DEF_A_BOARD_PIN(13, 11, "IO11", PH_COLOR_GREEEN),
+    DEF_A_BOARD_PIN(14, 12, "IO12", PH_COLOR_GREEEN),
+    DEF_A_BOARD_PIN(15, PH_GND, "GND", PH_COLOR_BLACK),
+    DEF_A_BOARD_PIN(16, PH_5V, "5v", PH_COLOR_RED),
+    DEF_A_BOARD_PIN(17, 21, "KEY", PH_COLOR_BLACK),
+    DEF_A_BOARD_PIN(18, 52, "LED", PH_COLOR_BLACK),
+    DEF_A_BOARD_PIN(19, 46, "LIGHT", PH_COLOR_BLACK),
+    DEF_A_BOARD_PIN(20, 47, "BEEP", PH_COLOR_BLACK),
 };
 
 static struct PIN_with_PER PIN_PER_PWM[] = {
@@ -70,11 +74,35 @@ static struct BOARD_mode_rename cybercamK230_pin_mode_renames =
         .count = sizeof(pin_mode_renames) / sizeof(struct PIN_mode_rename),
         .the_pins = pin_mode_renames,
 };
+static struct HEADER_DESC cybercamK230_headers[] = {
+    {
+        .name = "P1",
+        .type = HEADER_TYPE_DUAL_ROW,
+        .start_pin = 1,
+        .count = 12,
+        .label = 0,
+    },
+    {
+        .name = "J1",
+        .type = HEADER_TYPE_SINGLE_ROW,
+        .start_pin = 13,
+        .count = 4,
+        .label = 0,
+    },
+    {
+        .name = "J2",
+        .type = HEADER_TYPE_DUAL_ROW,
+        .start_pin = 17,
+        .count = 4,
+        .label = 0,
+    },
+};
 struct BOARD_DESC cybercamK230 = {
     .model = "CyberCAM",
-    .pin_num = 16,
-    .header_num = 12,
+    .pin_num = 20,
     .pins = cybercamK230_pins,
+    .header_count = 3,
+    .headers = cybercamK230_headers,
     .pwms = &cybercamK230_pwms,
     .uarts = &cybercamK230_uarts,
     .spis = &cybercamK230_spis,

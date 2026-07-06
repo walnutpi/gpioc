@@ -103,11 +103,28 @@ static struct BOARD_mode_rename canMVk230_pin_mode_renames =
         .count = sizeof(pin_mode_renames) / sizeof(struct PIN_mode_rename),
         .the_pins = pin_mode_renames,
 };
+static struct HEADER_DESC canMVk230_headers[] = {
+    {
+        .name = "P1",
+        .type = HEADER_TYPE_DUAL_ROW,
+        .start_pin = 1,
+        .count = 40,
+        .label = 0,
+    },
+    {
+        .name = "J2",
+        .type = HEADER_TYPE_DUAL_ROW,
+        .start_pin = 41,
+        .count = 2,
+        .label = 0,
+    },
+};
 struct BOARD_DESC canMVk230 = {
     .model = "CanMV-K230",
     .pin_num = 42,
-    .header_num = 40,
     .pins = canMVk230_pins,
+    .header_count = 2,
+    .headers = canMVk230_headers,
     .pwms = &canMVk230_pwms,
     .uarts = &canMVk230_uarts,
     .spis = &canMVk230_spis,

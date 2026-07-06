@@ -94,11 +94,28 @@ static struct BOARD_PIN_PER walnutpi1b_emmc_i2cs =
         .count = sizeof(PIN_PER_I2C) / sizeof(struct PIN_with_PER),
         .the_pins = PIN_PER_I2C,
 };
+static struct HEADER_DESC walnutpi1b_emmc_headers[] = {
+    {
+        .name = "P1",
+        .type = HEADER_TYPE_DUAL_ROW,
+        .start_pin = 1,
+        .count = 40,
+        .label = 0,
+    },
+    {
+        .name = "J2",
+        .type = HEADER_TYPE_DUAL_ROW,
+        .start_pin = 41,
+        .count = 2,
+        .label = 0,
+    },
+};
 struct BOARD_DESC walnutpi_1b_emmc = {
     .model = "walnutpi-1b-emmc",
     .pin_num = 42,
-    .header_num = 40,
     .pins = walnutpi1b_emmc_pins,
+    .header_count = 2,
+    .headers = walnutpi1b_emmc_headers,
     .pwms = &walnutpi1b_emmc_pwms,
     .uarts = &walnutpi1b_emmc_uarts,
     .spis = &walnutpi1b_emmc_spis,
