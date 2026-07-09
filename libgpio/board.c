@@ -206,7 +206,7 @@ static void print_pin_value_and_mode_left(int ph)
     else
         printf(" %9s ", "");
     printf("|");
-    printf(" %6s ", get_BOARD_PIN()[ph].name);
+    printf(" %8s ", get_BOARD_PIN()[ph].name);
     switch (get_BOARD_PIN()[ph].color)
     {
     case PH_COLOR_RED:
@@ -260,7 +260,7 @@ static void print_pin_value_and_mode_right(int ph)
         printf(" %-2d ", ph);
     printf("|");
     printf("\033[0m");
-    printf(" %-6s ", get_BOARD_PIN()[ph].name);
+    printf(" %-8s ", get_BOARD_PIN()[ph].name);
     printf("|");
     if (board_ph_to_gpio(ph) >= 0)
         printf(" %-9s ", pin_get_mode_name_now(ph));
@@ -278,9 +278,9 @@ static void print_header_dual_row(struct HEADER_DESC *header)
 {
     if (header->label)
         printf("\n=== %s ===\n", header->label);
-    printf("+---+-----------+--------+----------+--------+-----------+---+\n");
-    printf("| V |    Mode   |  Name  | Physical |  Name  |    Mode   | V |\n");
-    printf("+---+-----------+--------+----------+--------+-----------+---+\n");
+    printf("+---+-----------+----------+----------+----------+-----------+---+\n");
+    printf("| V |    Mode   |   Name   | Physical |   Name   |    Mode   | V |\n");
+    printf("+---+-----------+----------+----------+----------+-----------+---+\n");
 
     int end = header->start_pin + header->count - 1;
     if (end % 2 == 1)
@@ -291,16 +291,16 @@ static void print_header_dual_row(struct HEADER_DESC *header)
         print_pin_value_and_mode_right(ph + 1);
         printf("\n");
     }
-    printf("+---+-----------+--------+----------+--------+-----------+---+\n");
+    printf("+---+-----------+----------+----------+----------+-----------+---+\n");
 }
 
 static void print_header_single_row(struct HEADER_DESC *header)
 {
     if (header->label)
         printf("\n=== %s ===\n", header->label);
-    printf("+---+-----------+--------+----------+\n");
-    printf("| V |    Mode   |  Name  | Physical |\n");
-    printf("+---+-----------+--------+----------+\n");
+    printf("+---+-----------+----------+----------+\n");
+    printf("| V |    Mode   |   Name   | Physical |\n");
+    printf("+---+-----------+----------+----------+\n");
 
     int end = header->start_pin + header->count;
     for (int ph = header->start_pin; ph < end; ph++)
@@ -317,7 +317,7 @@ static void print_header_single_row(struct HEADER_DESC *header)
         else
             printf(" %9s ", "");
         printf("|");
-        printf(" %6s ", get_BOARD_PIN()[ph].name);
+        printf(" %8s ", get_BOARD_PIN()[ph].name);
         switch (get_BOARD_PIN()[ph].color)
         {
         case PH_COLOR_RED:
@@ -344,7 +344,7 @@ static void print_header_single_row(struct HEADER_DESC *header)
         printf("||    |");
         printf("\n");
     }
-    printf("+---+-----------+--------+----------+\n");
+    printf("+---+-----------+----------+----------+\n");
 }
 
 void print_pins()
@@ -375,7 +375,7 @@ static void print_search_none_dual_l(int ph)
     printf("|");
     printf(" %9s ", "");
     printf("|");
-    printf(" %6s ", get_BOARD_PIN()[ph].name);
+    printf(" %8s ", get_BOARD_PIN()[ph].name);
     switch (get_BOARD_PIN()[ph].color)
     {
     case PH_COLOR_RED:
@@ -427,13 +427,17 @@ static void print_search_none_dual_r(int ph)
         printf(" %-2d ", ph);
     printf("|");
     printf("\033[0m");
-    printf(" %-6s ", get_BOARD_PIN()[ph].name);
+    printf(" %-8s ", get_BOARD_PIN()[ph].name);
     printf("|");
     printf(" %9s ", "");
     printf("|");
 }
 static void print_search_none_single(int ph)
 {
+    printf("|");
+    printf(" %9s ", "");
+    printf("|");
+    printf(" %-8s ", get_BOARD_PIN()[ph].name);
     switch (get_BOARD_PIN()[ph].color)
     {
     case PH_COLOR_RED:
@@ -458,10 +462,7 @@ static void print_search_none_single(int ph)
         printf(" %2d ", ph);
     printf("|");
     printf("\033[0m");
-    printf(" %-6s ", get_BOARD_PIN()[ph].name);
-    printf("|");
-    printf(" %9s ", "");
-    printf("|");
+    printf("|    |");
 }
 
 static void print_search_hit_dual_l(int ph, int mode_num)
@@ -470,7 +471,7 @@ static void print_search_hit_dual_l(int ph, int mode_num)
     printf("|");
     printf(" %9s ", pin_get_mode_name_by_num(ph, mode_num));
     printf("|");
-    printf(" %6s ", get_BOARD_PIN()[ph].name);
+    printf(" %8s ", get_BOARD_PIN()[ph].name);
     printf("|");
     if (get_BOARD_PIN()[ph].gpio_num == PH_NC)
         printf(" -- ");
@@ -488,7 +489,7 @@ static void print_search_hit_dual_r(int ph, int mode_num)
     else
         printf(" %-2d ", ph);
     printf("|");
-    printf(" %-6s ", get_BOARD_PIN()[ph].name);
+    printf(" %-8s ", get_BOARD_PIN()[ph].name);
     printf("|");
     printf(" %-9s ", pin_get_mode_name_by_num(ph, mode_num));
     printf("|");
@@ -498,14 +499,14 @@ static void print_search_hit_single(int ph, int mode_num)
 {
     printf("\033[30;42m");
     printf("|");
+    printf(" %-9s ", pin_get_mode_name_by_num(ph, mode_num));
+    printf("|");
+    printf(" %-8s ", get_BOARD_PIN()[ph].name);
+    printf("|");
     if (get_BOARD_PIN()[ph].gpio_num == PH_NC)
         printf(" -- ");
     else
         printf(" %2d ", ph);
-    printf("|");
-    printf(" %-6s ", get_BOARD_PIN()[ph].name);
-    printf("|");
-    printf(" %-9s ", pin_get_mode_name_by_num(ph, mode_num));
     printf("|");
     printf("\033[0m");
 }
@@ -526,15 +527,15 @@ void print_pin_by_search_all_mode_name(char *str)
             printf("\n=== %s ===\n", h->label);
         if (is_dual)
         {
-            printf("+-----------+--------+----------+--------+-----------+\n");
-            printf("|    Mode   |  Name  | Physical |  Name  |    Mode   |\n");
-            printf("+-----------+--------+----------+--------+-----------+\n");
+            printf("+-----------+----------+----------+----------+-----------+\n");
+            printf("|    Mode   |   Name   | Physical |   Name   |    Mode   |\n");
+            printf("+-----------+----------+----------+----------+-----------+\n");
         }
         else
         {
-            printf("+----------+--------+-----------+\n");
-            printf("| Physical |  Name  |    Mode   |\n");
-            printf("+----------+--------+-----------+\n");
+            printf("+-----------+----------+----------+\n");
+            printf("|    Mode   |   Name   | Physical |\n");
+            printf("+-----------+----------+----------+\n");
         }
 
         for (int ph = h->start_pin; ph < end; ph++)
@@ -593,9 +594,9 @@ void print_pin_by_search_all_mode_name(char *str)
             }
         }
         if (is_dual)
-            printf("+-----------+--------+----------+--------+-----------+\n");
+            printf("+-----------+----------+----------+----------+-----------+\n");
         else
-            printf("+----------+--------+-----------+\n");
+            printf("+-----------+----------+----------+\n");
     }
 }
 
@@ -632,15 +633,15 @@ void print_pin_by_mode_name(char *str)
             printf("\n=== %s ===\n", h->label);
         if (is_dual)
         {
-            printf("+-----------+--------+----------+--------+-----------+\n");
-            printf("|    Mode   |  Name  | Physical |  Name  |    Mode   |\n");
-            printf("+-----------+--------+----------+--------+-----------+\n");
+            printf("+-----------+----------+----------+----------+-----------+\n");
+            printf("|    Mode   |   Name   | Physical |   Name   |    Mode   |\n");
+            printf("+-----------+----------+----------+----------+-----------+\n");
         }
         else
         {
-            printf("+----------+--------+-----------+\n");
-            printf("| Physical |  Name  |    Mode   |\n");
-            printf("+----------+--------+-----------+\n");
+            printf("+-----------+----------+----------+\n");
+            printf("|    Mode   |   Name   | Physical |\n");
+            printf("+-----------+----------+----------+\n");
         }
 
         for (int ph = h->start_pin; ph < end; ph++)
@@ -683,9 +684,9 @@ void print_pin_by_mode_name(char *str)
             }
         }
         if (is_dual)
-            printf("+-----------+--------+----------+--------+-----------+\n");
+            printf("+-----------+----------+----------+----------+-----------+\n");
         else
-            printf("+----------+--------+-----------+\n");
+            printf("+-----------+----------+----------+\n");
     }
 }
 
