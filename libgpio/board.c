@@ -35,6 +35,9 @@ struct BOARD_DESC *get_board_desc()
 
     model = strtok(buffer, "\n");
 
+    if (strcmp(model, "WalnutPi ZeroW") == 0)
+        model = "walnutpi-1b";
+
     for (i = 0; i < sizeof(board_list) / sizeof(board_list[0]); i++)
     {
         if (strcmp(model, board_list[i]->model) == 0)
