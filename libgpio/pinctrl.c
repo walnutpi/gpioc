@@ -177,24 +177,19 @@ void gpio_print_who_has_function(char *name_buf, int len)
 }
 const char *gpio_pin_get_mode_name(int gpio_num)
 {
+    static char str[50];
     if (geteuid() == 0)
         return core_gpio_pin_get_mode_name(gpio_num);
-    char buf[50];
-    sprintf(buf, "gpio_pin_get_mode_name(%d)", gpio_num);
-    socket_run_command(buf, buf);
-    char *str = (char *)malloc(strlen(buf));
-    strncpy(str, buf, strlen(buf));
+    sprintf(str, "gpio_pin_get_mode_name(%d)", gpio_num);
+    socket_run_command(str, str);
     return str;
 }
 const char *gpio_pin_get_mode_name_by_num(int gpio_num, int mode_num)
 {
+    static char str[50];
     if (geteuid() == 0)
         return core_gpio_pin_get_mode_name_by_num(gpio_num, mode_num);
-    char buf[50];
-    sprintf(buf, "gpio_pin_get_mode_name_by_num(%d,%d)", gpio_num, mode_num);
-    socket_run_command(buf, buf);
-    char *str = (char *)malloc(strlen(buf));
-    strncpy(str, buf, strlen(buf));
+    sprintf(str, "gpio_pin_get_mode_name_by_num(%d,%d)", gpio_num, mode_num);
+    socket_run_command(str, str);
     return str;
 }
-
