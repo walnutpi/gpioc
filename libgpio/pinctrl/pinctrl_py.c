@@ -20,7 +20,7 @@ static PyObject *py_write(PyObject *self, PyObject *args)
     int gpio_num, value;
     ret = PyArg_ParseTuple(args, "ii", &gpio_num, &value);
 
-    gpio_write(gpio_num, value);
+    pinctrl_write(gpio_num, value);
 
     Py_RETURN_NONE;
 }
@@ -30,7 +30,7 @@ static PyObject *py_read(PyObject *self, PyObject *args)
     int gpio_num;
     ret = PyArg_ParseTuple(args, "i", &gpio_num);
 
-    return Py_BuildValue("i", gpio_read(gpio_num));
+    return Py_BuildValue("i", pinctrl_read(gpio_num));
 }
 static PyObject *py_set_PullUpDn(PyObject *self, PyObject *args)
 {
@@ -38,7 +38,7 @@ static PyObject *py_set_PullUpDn(PyObject *self, PyObject *args)
     int gpio_num, pud;
     ret = PyArg_ParseTuple(args, "ii", &gpio_num, &pud);
 
-    gpio_set_pullUpDn(gpio_num, pud);
+    pinctrl_set_pullUpDn(gpio_num, pud);
 
     Py_RETURN_NONE;
 }
@@ -47,7 +47,7 @@ static PyObject *py_set_mode(PyObject *self, PyObject *args)
    int ret;
     int gpio_num, mode;
     ret = PyArg_ParseTuple(args, "ii", &gpio_num, &mode);
-    gpio_set_mode(gpio_num, mode);
+    pinctrl_set_mode(gpio_num, mode);
     Py_RETURN_NONE;
 }
 

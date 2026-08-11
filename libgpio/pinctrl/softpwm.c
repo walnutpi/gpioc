@@ -4,9 +4,9 @@
 #include <time.h>
 #include <signal.h>
 #include <unistd.h>
-#include "socket.h"
 
 #include "pinctrl.h"
+#include "socket.h"
 
 #define NS_1S 1000000000
 #define DUTY_CYCLE_FULL 100
@@ -81,22 +81,22 @@ void full_sleep(struct timespec *req)
 void *pwm_thread(void *threadarg)
 {
     struct pwm *p = (struct pwm *)threadarg;
-    gpio_set_mode(p->gpio, OUTPUT);
+    pinctrl_set_mode(p->gpio, OUTPUT);
     while (p->running)
     {
         if (p->dutycycle > 0)
         {
-            gpio_write(p->gpio, 1);
+            pinctrl_write(p->gpio, 1);
             full_sleep(&p->req_on);
         }
 
         if (p->dutycycle < DUTY_CYCLE_FULL)
         {
-            gpio_write(p->gpio, 0);
+            pinctrl_write(p->gpio, 0);
             full_sleep(&p->req_off);
         }
     }
-    gpio_write(p->gpio, 0);
+    pinctrl_write(p->gpio, 0);
     // clean up
     free(p);
     pthread_exit(NULL);

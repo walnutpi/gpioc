@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "pinctrl.h"
-#include "softpwm.h"
+#include "pinctrl/pinctrl.h"
+#include "pinctrl/softpwm.h"
 #include "board.h"
 #include "board-pin.h"
 
@@ -11,6 +11,8 @@ static struct BOARD_DESC *board_list[] = {
     &walnutpi_1b,
     &walnutpi_1b_emmc,
     &walnutpi_2b,
+    &canMVk230,
+    &cybercamK230,
 };
 
 static struct BOARD_DESC *now_board_desc = NULL;
@@ -47,14 +49,14 @@ struct BOARD_DESC *get_board_desc()
                 for (int pin = 0; pin < board_reanme_pins->count; pin++)
                 {
                     struct PIN_mode_rename *rename_pin = &(board_reanme_pins->the_pins[pin]);
-                    gpio_mode_rename(rename_pin->pin, rename_pin->mode, rename_pin->newname);
+                    pinctrl_mode_rename(rename_pin->pin, rename_pin->mode, rename_pin->newname);
                 }
             }
             return now_board_desc;
         }
     }
 
-    printf("you /proc/device-tree/model string is not in support list");
+    printf("\n/proc/device-tree/model string [%s] is not in support list\n", model);
     exit(-1);
 }
 
@@ -83,14 +85,14 @@ int pin_get_mode(int pin_num)
     int gpio_num = board_ph_to_gpio(pin_num);
     if (gpio_num < 0)
         return -1;
-    return gpio_get_mode(gpio_num);
+    return pinctrl_get_mode(gpio_num);
 }
 
 void pin_set_mode(int pin_num, int mode)
 {
     if (board_ph_to_gpio(pin_num) < 0)
         return;
-    gpio_set_mode(board_ph_to_gpio(pin_num), mode);
+    pinctrl_set_mode(board_ph_to_gpio(pin_num), mode);
 }
 void pin_set_mode_by_name(int pin_num, char *mode)
 {
@@ -103,6 +105,7 @@ void pin_set_mode_by_name(int pin_num, char *mode)
             if (strcasecmp(str, mode) == 0)
             {
                 pin_set_mode(pin_num, i);
+                return;
             }
     }
 }
@@ -111,21 +114,21 @@ void pin_set_pullUpDn(int pin_num, int pud)
     // exit_if_no_gpio(pin_num);
     if (board_ph_to_gpio(pin_num) < 0)
         return;
-    gpio_set_pullUpDn(board_ph_to_gpio(pin_num), pud);
+    pinctrl_set_pullUpDn(board_ph_to_gpio(pin_num), pud);
 }
 int pin_read(int pin_num)
 {
     // exit_if_no_gpio(pin_num);
     if (board_ph_to_gpio(pin_num) < 0)
         return -1;
-    return gpio_read(board_ph_to_gpio(pin_num));
+    return pinctrl_read(board_ph_to_gpio(pin_num));
 }
 void pin_write(int pin_num, int value)
 {
     if (board_ph_to_gpio(pin_num) < 0)
         return;
     // exit_if_no_gpio(pin_num);
-    gpio_write(board_ph_to_gpio(pin_num), value);
+    pinctrl_write(board_ph_to_gpio(pin_num), value);
 }
 const char *pin_get_mode_name_now(int pin_num)
 {
@@ -134,7 +137,7 @@ const char *pin_get_mode_name_now(int pin_num)
     {
         return "";
     }
-    return gpio_pin_get_mode_name(gpio_num);
+    return pinctrl_pin_get_mode_name(gpio_num);
 }
 const char *pin_get_mode_name_by_num(int pin_num, int mode_num)
 {
@@ -143,7 +146,7 @@ const char *pin_get_mode_name_by_num(int pin_num, int mode_num)
     {
         return "";
     }
-    return gpio_pin_get_mode_name_by_num(gpio_num, mode_num);
+    return pinctrl_pin_get_mode_name_by_num(gpio_num, mode_num);
 }
 
 void soft_pwm_set_duty_cycle(int pin_num, int dutycycle)
@@ -189,23 +192,21 @@ int soft_pwm_exists(int pin_num)
     return pwm_exists(board_ph_to_gpio(pin_num));
 }
 
-void printf_pins_l(int ph)
+static void print_pin_value_and_mode_left(int ph)
 {
+    // 左列: | V | Mode | Name | Physical |
     printf("|");
     if (board_ph_to_gpio(ph) >= 0 && pin_get_mode(ph) < 2)
         printf(" %d ", pin_read(ph));
     else
         printf("   ");
-
     printf("|");
     if (board_ph_to_gpio(ph) >= 0)
         printf(" %9s ", pin_get_mode_name_now(ph));
     else
         printf(" %9s ", "");
-
     printf("|");
-    printf(" %4s ", get_BOARD_PIN()[ph].name);
-
+    printf(" %8s ", get_BOARD_PIN()[ph].name);
     switch (get_BOARD_PIN()[ph].color)
     {
     case PH_COLOR_RED:
@@ -231,8 +232,10 @@ void printf_pins_l(int ph)
     printf("|");
     printf("\033[0m");
 }
-void printf_pins_r(int ph)
+
+static void print_pin_value_and_mode_right(int ph)
 {
+    // 右列: | Physical | Name | Mode | V |
     switch (get_BOARD_PIN()[ph].color)
     {
     case PH_COLOR_RED:
@@ -257,14 +260,12 @@ void printf_pins_r(int ph)
         printf(" %-2d ", ph);
     printf("|");
     printf("\033[0m");
-    printf(" %4s ", get_BOARD_PIN()[ph].name);
-
+    printf(" %-8s ", get_BOARD_PIN()[ph].name);
     printf("|");
     if (board_ph_to_gpio(ph) >= 0)
         printf(" %-9s ", pin_get_mode_name_now(ph));
     else
         printf(" %9s ", "");
-
     printf("|");
     if (board_ph_to_gpio(ph) >= 0 && pin_get_mode(ph) < 2)
         printf(" %d ", pin_read(ph));
@@ -273,37 +274,108 @@ void printf_pins_r(int ph)
     printf("|");
 }
 
-void print_pins()
+static void print_header_dual_row(struct HEADER_DESC *header)
 {
-    printf("+---+-----------+------+----------+------+-----------+---+\n");
-    printf("| V |    Mode   | Name | Physical | Name |    Mode   | V |\n");
-    printf("+---+-----------+------+----------+------+-----------+---+\n");
-    for (int ph = 1; ph < 40; ph++)
+    if (header->label)
+        printf("\n=== %s ===\n", header->label);
+    printf("+---+-----------+----------+----------+----------+-----------+---+\n");
+    printf("| V |    Mode   |   Name   | Physical |   Name   |    Mode   | V |\n");
+    printf("+---+-----------+----------+----------+----------+-----------+---+\n");
+
+    int end = header->start_pin + header->count - 1;
+    if (end % 2 == 1)
+        end--; // 确保成对
+    for (int ph = header->start_pin; ph <= end; ph += 2)
     {
-        printf_pins_l(ph);
-        ph++;
-        printf_pins_r(ph);
+        print_pin_value_and_mode_left(ph);
+        print_pin_value_and_mode_right(ph + 1);
         printf("\n");
     }
-    printf("+---+-----------+------+----------+------+-----------+---+\n");
-    printf("\n");
-    printf("+---+-----------+------+----------+------+-----------+---+\n");
-    printf("| V |    Mode   | Name | Physical | Name |    Mode   | V |\n");
-    printf("+---+-----------+------+----------+------+-----------+---+\n");
-    printf_pins_l(41);
-    printf_pins_r(42);
-    printf("\n");
-    printf("+---+-----------+------+----------+------+-----------+---+\n");
+    printf("+---+-----------+----------+----------+----------+-----------+---+\n");
 }
 
-void print_search_none_l(int ph)
+static void print_header_single_row(struct HEADER_DESC *header)
 {
+    if (header->label)
+        printf("\n=== %s ===\n", header->label);
+    printf("+---+-----------+----------+----------+\n");
+    printf("| V |    Mode   |   Name   | Physical |\n");
+    printf("+---+-----------+----------+----------+\n");
 
+    int end = header->start_pin + header->count;
+    for (int ph = header->start_pin; ph < end; ph++)
+    {
+        // 与双排针左半边一致的样式: V | Mode | Name | Physical |
+        printf("|");
+        if (board_ph_to_gpio(ph) >= 0 && pin_get_mode(ph) < 2)
+            printf(" %d ", pin_read(ph));
+        else
+            printf("   ");
+        printf("|");
+        if (board_ph_to_gpio(ph) >= 0)
+            printf(" %9s ", pin_get_mode_name_now(ph));
+        else
+            printf(" %9s ", "");
+        printf("|");
+        printf(" %8s ", get_BOARD_PIN()[ph].name);
+        switch (get_BOARD_PIN()[ph].color)
+        {
+        case PH_COLOR_RED:
+            printf("\033[37;41m");
+            break;
+        case PH_COLOR_BLUE:
+            printf("\033[37;44m");
+            break;
+        case PH_COLOR_YELLOW:
+            printf("\033[30;43m");
+            break;
+        case PH_COLOR_GREEEN:
+            printf("\033[30;42m");
+            break;
+        default:
+            printf("\033[37;40m");
+        }
+        printf("|");
+        if (get_BOARD_PIN()[ph].gpio_num == PH_NC)
+            printf(" -- ");
+        else
+            printf(" %2d ", ph);
+        printf("\033[0m");
+        printf("||    |");
+        printf("\n");
+    }
+    printf("+---+-----------+----------+----------+\n");
+}
+
+void print_pins()
+{
+    get_board_desc();
+
+    // 按接头打印
+    for (int i = 0; i < now_board_desc->header_count; i++)
+    {
+        struct HEADER_DESC *h = &now_board_desc->headers[i];
+        printf("\n");
+        switch (h->type)
+        {
+        case HEADER_TYPE_DUAL_ROW:
+            print_header_dual_row(h);
+            break;
+        case HEADER_TYPE_SINGLE_ROW:
+            print_header_single_row(h);
+            break;
+        }
+    }
+
+    // 所有引脚都由 headers 覆盖，不在此处额外打印
+}
+
+static void print_search_none_dual_l(int ph)
+{
     printf("|");
     printf(" %9s ", "");
     printf("|");
-    printf(" %4s ", get_BOARD_PIN()[ph].name);
-
+    printf(" %8s ", get_BOARD_PIN()[ph].name);
     switch (get_BOARD_PIN()[ph].color)
     {
     case PH_COLOR_RED:
@@ -329,7 +401,7 @@ void print_search_none_l(int ph)
     printf("|");
     printf("\033[0m");
 }
-void print_search_none_r(int ph)
+static void print_search_none_dual_r(int ph)
 {
     switch (get_BOARD_PIN()[ph].color)
     {
@@ -355,21 +427,51 @@ void print_search_none_r(int ph)
         printf(" %-2d ", ph);
     printf("|");
     printf("\033[0m");
-    printf(" %-4s ", get_BOARD_PIN()[ph].name);
-
+    printf(" %-8s ", get_BOARD_PIN()[ph].name);
     printf("|");
     printf(" %9s ", "");
-
     printf("|");
 }
+static void print_search_none_single(int ph)
+{
+    printf("|");
+    printf(" %9s ", "");
+    printf("|");
+    printf(" %-8s ", get_BOARD_PIN()[ph].name);
+    switch (get_BOARD_PIN()[ph].color)
+    {
+    case PH_COLOR_RED:
+        printf("\033[37;41m");
+        break;
+    case PH_COLOR_BLUE:
+        printf("\033[37;44m");
+        break;
+    case PH_COLOR_YELLOW:
+        printf("\033[30;43m");
+        break;
+    case PH_COLOR_GREEEN:
+        printf("\033[30;42m");
+        break;
+    default:
+        printf("\033[37;40m");
+    }
+    printf("|");
+    if (get_BOARD_PIN()[ph].gpio_num == PH_NC)
+        printf(" -- ");
+    else
+        printf(" %2d ", ph);
+    printf("|");
+    printf("\033[0m");
+    printf("|    |");
+}
 
-void print_search_hit_l(int ph, int mode_num)
+static void print_search_hit_dual_l(int ph, int mode_num)
 {
     printf("\033[30;42m");
     printf("|");
     printf(" %9s ", pin_get_mode_name_by_num(ph, mode_num));
     printf("|");
-    printf(" %4s ", get_BOARD_PIN()[ph].name);
+    printf(" %8s ", get_BOARD_PIN()[ph].name);
     printf("|");
     if (get_BOARD_PIN()[ph].gpio_num == PH_NC)
         printf(" -- ");
@@ -378,7 +480,7 @@ void print_search_hit_l(int ph, int mode_num)
     printf("|");
     printf("\033[0m");
 }
-void print_search_hit_r(int ph, int mode_num)
+static void print_search_hit_dual_r(int ph, int mode_num)
 {
     printf("\033[30;42m");
     printf("|");
@@ -387,62 +489,122 @@ void print_search_hit_r(int ph, int mode_num)
     else
         printf(" %-2d ", ph);
     printf("|");
-    printf(" %-4s ", get_BOARD_PIN()[ph].name);
+    printf(" %-8s ", get_BOARD_PIN()[ph].name);
     printf("|");
     printf(" %-9s ", pin_get_mode_name_by_num(ph, mode_num));
     printf("|");
     printf("\033[0m");
 }
+static void print_search_hit_single(int ph, int mode_num)
+{
+    printf("\033[30;42m");
+    printf("|");
+    printf(" %-9s ", pin_get_mode_name_by_num(ph, mode_num));
+    printf("|");
+    printf(" %-8s ", get_BOARD_PIN()[ph].name);
+    printf("|");
+    if (get_BOARD_PIN()[ph].gpio_num == PH_NC)
+        printf(" -- ");
+    else
+        printf(" %2d ", ph);
+    printf("|");
+    printf("\033[0m");
+}
+
 void print_pin_by_search_all_mode_name(char *str)
 {
     printf("serach: %s\n", str);
-    printf("+-----------+------+----------+------+-----------+\n");
-    printf("|    Mode   | Name | Physical | Name |    Mode   |\n");
-    printf("+-----------+------+----------+------+-----------+\n");
 
-    int max_pin = get_board_desc()->pin_num + 1;
-    for (int ph = 1; ph < max_pin; ph++)
+    struct BOARD_DESC *desc = get_board_desc();
+
+    for (int hi = 0; hi < desc->header_count; hi++)
     {
-        int j = 7;
-        if (board_ph_to_gpio(ph) > 0) // 不是电源引脚
+        struct HEADER_DESC *h = &desc->headers[hi];
+        int is_dual = (h->type == HEADER_TYPE_DUAL_ROW);
+        int end = h->start_pin + h->count;
+
+        if (h->label)
+            printf("\n=== %s ===\n", h->label);
+        if (is_dual)
         {
-            for (j = 0; j < 7; j++) // 遍历引脚的复用功能0到7
+            printf("+-----------+----------+----------+----------+-----------+\n");
+            printf("|    Mode   |   Name   | Physical |   Name   |    Mode   |\n");
+            printf("+-----------+----------+----------+----------+-----------+\n");
+        }
+        else
+        {
+            printf("+-----------+----------+----------+\n");
+            printf("|    Mode   |   Name   | Physical |\n");
+            printf("+-----------+----------+----------+\n");
+        }
+
+        for (int ph = h->start_pin; ph < end; ph++)
+        {
+            int j = 7;
+            int hit = 0;
+            if (board_ph_to_gpio(ph) > 0)
             {
-                const char *mode_desc = gpio_pin_get_mode_name_by_num(board_ph_to_gpio(ph), j);
-                if (mode_desc != NULL)
+                for (j = 0; j < 7; j++)
                 {
-                    if (strncasecmp(str, mode_desc, strlen(str)) == 0)
+                    const char *mode_desc = pinctrl_pin_get_mode_name_by_num(board_ph_to_gpio(ph), j);
+                    if (mode_desc != NULL)
                     {
-                        if (ph % 2 == 1)
-                            print_search_hit_l(ph, j);
-                        else
+                        if (strncasecmp(str, mode_desc, strlen(str)) == 0)
                         {
-                            print_search_hit_r(ph, j);
-                            printf("\n");
+                            hit = 1;
+                            if (is_dual)
+                            {
+                                if ((ph - h->start_pin) % 2 == 0)
+                                {
+                                    print_search_hit_dual_l(ph, j);
+                                }
+                                else
+                                {
+                                    print_search_hit_dual_r(ph, j);
+                                    printf("\n");
+                                }
+                            }
+                            else
+                            {
+                                print_search_hit_single(ph, j);
+                                printf("\n");
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
             }
-        }
-        if (j >= 7)
-        {
-            // 输出代表空的行
-            if (ph % 2 == 1)
-                print_search_none_l(ph);
-            else
+            if (!hit)
             {
-                print_search_none_r(ph);
-                printf("\n");
+                if (is_dual)
+                {
+                    if ((ph - h->start_pin) % 2 == 0)
+                        print_search_none_dual_l(ph);
+                    else
+                    {
+                        print_search_none_dual_r(ph);
+                        printf("\n");
+                    }
+                }
+                else
+                {
+                    print_search_none_single(ph);
+                    printf("\n");
+                }
             }
         }
+        if (is_dual)
+            printf("+-----------+----------+----------+----------+-----------+\n");
+        else
+            printf("+-----------+----------+----------+\n");
     }
-    printf("+-----------+------+----------+------+-----------+\n");
 }
+
 void print_pin_para()
 {
     printf("pwm uart i2c spi");
 }
+
 void print_pin_by_mode_name(char *str)
 {
     int pins[43] = {-1};
@@ -460,41 +622,78 @@ void print_pin_by_mode_name(char *str)
     else if (strcasecmp(str, "spi") == 0)
         for (int i = 0; i < now_board_desc->spis->count; i++)
             pins[now_board_desc->spis->the_pins[i].pin] = now_board_desc->spis->the_pins[i].mode;
-    printf("+-----------+------+----------+------+-----------+\n");
-    printf("|    Mode   | Name | Physical | Name |    Mode   |\n");
-    printf("+-----------+------+----------+------+-----------+\n");
-    for (int ph = 1; ph <= now_board_desc->pin_num; ph++)
+
+    for (int hi = 0; hi < now_board_desc->header_count; hi++)
     {
-        if (pins[ph] > 0)
+        struct HEADER_DESC *h = &now_board_desc->headers[hi];
+        int is_dual = (h->type == HEADER_TYPE_DUAL_ROW);
+        int end = h->start_pin + h->count;
+
+        if (h->label)
+            printf("\n=== %s ===\n", h->label);
+        if (is_dual)
         {
-            if (ph % 2 == 1)
-                print_search_hit_l(ph, pins[ph]);
-            else
-            {
-                print_search_hit_r(ph, pins[ph]);
-                printf("\n");
-            }
+            printf("+-----------+----------+----------+----------+-----------+\n");
+            printf("|    Mode   |   Name   | Physical |   Name   |    Mode   |\n");
+            printf("+-----------+----------+----------+----------+-----------+\n");
         }
         else
         {
+            printf("+-----------+----------+----------+\n");
+            printf("|    Mode   |   Name   | Physical |\n");
+            printf("+-----------+----------+----------+\n");
+        }
 
-            if (ph % 2 == 1)
-                print_search_none_l(ph);
+        for (int ph = h->start_pin; ph < end; ph++)
+        {
+            if (pins[ph] > 0)
+            {
+                if (is_dual)
+                {
+                    if ((ph - h->start_pin) % 2 == 0)
+                        print_search_hit_dual_l(ph, pins[ph]);
+                    else
+                    {
+                        print_search_hit_dual_r(ph, pins[ph]);
+                        printf("\n");
+                    }
+                }
+                else
+                {
+                    print_search_hit_single(ph, pins[ph]);
+                    printf("\n");
+                }
+            }
             else
             {
-                print_search_none_r(ph);
-                printf("\n");
+                if (is_dual)
+                {
+                    if ((ph - h->start_pin) % 2 == 0)
+                        print_search_none_dual_l(ph);
+                    else
+                    {
+                        print_search_none_dual_r(ph);
+                        printf("\n");
+                    }
+                }
+                else
+                {
+                    print_search_none_single(ph);
+                    printf("\n");
+                }
             }
         }
-        if (ph == 40)
-            printf("+-----------+------+----------+------+-----------+\n");
+        if (is_dual)
+            printf("+-----------+----------+----------+----------+-----------+\n");
+        else
+            printf("+-----------+----------+----------+\n");
     }
-    printf("+-----------+------+----------+------+-----------+\n");
 }
+
 void print_all_gpio_on_ph()
 {
     struct BOARD_PIN *board_pins = get_BOARD_PIN();
-    for (int ph = 1; ph <= 42; ph++)
+    for (int ph = 1; ph <= now_board_desc->pin_num; ph++)
     {
         if (board_pins[ph].gpio_num >= 0)
             printf(" %d ", ph);

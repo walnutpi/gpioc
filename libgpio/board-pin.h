@@ -22,6 +22,21 @@ struct BOARD_PIN
     char *name;   // 要显示出来的引脚名称
     int color;    // 引脚颜色
 };
+
+// 接头类型
+enum HEADER_TYPE {
+    HEADER_TYPE_DUAL_ROW,   // 双排针（2列），如树莓派标准 2×20
+    HEADER_TYPE_SINGLE_ROW, // 单排针（1列）
+};
+
+// 接头描述
+struct HEADER_DESC {
+    char *name;              // 接头名称，如 "J1", "P1"
+    enum HEADER_TYPE type;   // 接头类型
+    int start_pin;           // 该接头起始引脚在 pins[] 中的索引
+    int count;               // 该接头包含的引脚个数
+    char *label;             // 打印时显示的标签
+};
 #define DEF_A_BOARD_PIN(_pin_num, _gpio_num, _name, _color) \
     {                                                       \
         .pin_num = _pin_num,                                \
@@ -72,6 +87,8 @@ struct BOARD_DESC
     char *model;            // 设备树model字段
     int pin_num;            // 共有几个pin脚
     struct BOARD_PIN *pins; // 描述板子所带的所有引脚
+    int header_count;       // 接头数量
+    struct HEADER_DESC *headers; // 接头描述数组
     struct BOARD_PIN_PER *pwms;
     struct BOARD_PIN_PER *uarts;
     struct BOARD_PIN_PER *spis;
@@ -81,5 +98,7 @@ struct BOARD_DESC
 extern struct BOARD_DESC walnutpi_1b;
 extern struct BOARD_DESC walnutpi_1b_emmc;
 extern struct BOARD_DESC walnutpi_2b;
+extern struct BOARD_DESC canMVk230;
+extern struct BOARD_DESC cybercamK230;
 
 #endif

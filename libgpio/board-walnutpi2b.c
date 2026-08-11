@@ -131,10 +131,28 @@ static struct BOARD_mode_rename walnutpi2b_pin_mode_renames =
         .count = sizeof(pin_mode_renames) / sizeof(struct PIN_mode_rename),
         .the_pins = pin_mode_renames,
 };
+static struct HEADER_DESC walnutpi2b_headers[] = {
+    {
+        .name = "P1",
+        .type = HEADER_TYPE_DUAL_ROW,
+        .start_pin = 1,
+        .count = 40,
+        .label = 0,
+    },
+    {
+        .name = "J2",
+        .type = HEADER_TYPE_DUAL_ROW,
+        .start_pin = 41,
+        .count = 2,
+        .label = 0,
+    },
+};
 struct BOARD_DESC walnutpi_2b = {
     .model = "walnutpi-2b",
     .pin_num = 42,
     .pins = walnutpi2b_pins,
+    .header_count = 2,
+    .headers = walnutpi2b_headers,
     .pwms = &walnutpi2b_pwms,
     .uarts = &walnutpi2b_uarts,
     .spis = &walnutpi2b_spis,

@@ -9,7 +9,7 @@
 #include <time.h>
 #include <string.h>
 #include "../libgpio/board.h"
-#include "../libgpio/softpwm.h"
+#include "../libgpio/pinctrl/softpwm.h"
 
 #define PORT 10007 // 端口号
 #define BACKLOG 1  // 最大监听数
@@ -149,67 +149,67 @@ int call_fun(char *buf, int len, char *return_str)
     // }
     switch (pvl - buf) // gpio
     {
-    case sizeof("gpio_read"):
-        if ((strncmp(buf, "gpio_read", sizeof("gpio_read") - 1)) == 0)
+    case sizeof("pinctrl_read"):
+        if ((strncmp(buf, "pinctrl_read", sizeof("pinctrl_read") - 1)) == 0)
         {
             int val1 = get_value1_int(pvl, value_len);
             if (val1 != -1)
-                sprintf(return_str, "%d", gpio_read(val1));
+                sprintf(return_str, "%d", pinctrl_read(val1));
         }
         break;
-    case sizeof("gpio_get_mode"):
-        if ((strncmp(buf, "gpio_get_mode", sizeof("gpio_get_mode") - 1)) == 0)
+    case sizeof("pinctrl_get_mode"):
+        if ((strncmp(buf, "pinctrl_get_mode", sizeof("pinctrl_get_mode") - 1)) == 0)
         {
             int val1 = get_value1_int(pvl, value_len);
             if (val1 != -1)
-                sprintf(return_str, "%d", gpio_get_mode(val1));
+                sprintf(return_str, "%d", pinctrl_get_mode(val1));
         }
         // break;
-        // case sizeof("gpio_set_mode"): //字符串长度相同
-        if ((strncmp(buf, "gpio_set_mode", sizeof("gpio_set_mode") - 1)) == 0)
+        // case sizeof("pinctrl_set_mode"): //字符串长度相同
+        if ((strncmp(buf, "pinctrl_set_mode", sizeof("pinctrl_set_mode") - 1)) == 0)
         {
             int val1 = get_value1_int(pvl, value_len);
             int val2 = get_value2_int(pvl, value_len);
             if (val1 != -1 && val2 != -1)
-                gpio_set_mode(val1, val2);
+                pinctrl_set_mode(val1, val2);
         }
         break;
 
-    case sizeof("gpio_set_pullUpDn"):
-        if ((strncmp(buf, "gpio_set_pullUpDn", sizeof("gpio_set_pullUpDn") - 1)) == 0)
+    case sizeof("pinctrl_set_pullUpDn"):
+        if ((strncmp(buf, "pinctrl_set_pullUpDn", sizeof("pinctrl_set_pullUpDn") - 1)) == 0)
         {
             int val1 = get_value1_int(pvl, value_len);
             int val2 = get_value2_int(pvl, value_len);
             if (val1 != -1 && val2 != -1)
-                gpio_set_pullUpDn(val1, val2);
+                pinctrl_set_pullUpDn(val1, val2);
         }
         break;
 
-    case sizeof("gpio_write"):
-        if ((strncmp(buf, "gpio_write", sizeof("gpio_write") - 1)) == 0)
+    case sizeof("pinctrl_write"):
+        if ((strncmp(buf, "pinctrl_write", sizeof("pinctrl_write") - 1)) == 0)
         {
             int val1 = get_value1_int(pvl, value_len);
             int val2 = get_value2_int(pvl, value_len);
             if (val1 != -1 && val2 != -1)
-                gpio_write(val1, val2);
+                pinctrl_write(val1, val2);
         }
         break;
 
-    case sizeof("gpio_pin_get_mode_name"):
-        if ((strncmp(buf, "gpio_pin_get_mode_name", sizeof("gpio_pin_get_mode_name") - 1)) == 0)
+    case sizeof("pinctrl_pin_get_mode_name"):
+        if ((strncmp(buf, "pinctrl_pin_get_mode_name", sizeof("pinctrl_pin_get_mode_name") - 1)) == 0)
         {
             int val1 = get_value1_int(pvl, value_len);
             if (val1 != -1)
-                sprintf(return_str, "%s", gpio_pin_get_mode_name(val1));
+                sprintf(return_str, "%s", pinctrl_pin_get_mode_name(val1));
         }
         break;
-    case sizeof("gpio_pin_get_mode_name_by_num"):
-        if ((strncmp(buf, "gpio_pin_get_mode_name_by_num", sizeof("gpio_pin_get_mode_name_by_num") - 1)) == 0)
+    case sizeof("pinctrl_pin_get_mode_name_by_num"):
+        if ((strncmp(buf, "pinctrl_pin_get_mode_name_by_num", sizeof("pinctrl_pin_get_mode_name_by_num") - 1)) == 0)
         {
             int val1 = get_value1_int(pvl, value_len);
             int val2 = get_value2_int(pvl, value_len);
             if (val1 != -1 && val2 != -1)
-                sprintf(return_str, "%s", gpio_pin_get_mode_name_by_num(val1, val2));
+                sprintf(return_str, "%s", pinctrl_pin_get_mode_name_by_num(val1, val2));
         }
         break;
     default:
